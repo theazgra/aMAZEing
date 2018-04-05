@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,12 +23,25 @@ namespace aMaze_ingSolver
         {
             InitializeComponent();
 
+            LoadImage();
+            
+        }
+
+        private void LoadImage()
+        {
+            scaleFactor.Value = 1;
             _image = Image.FromFile(_mazeFile);
             _drawBmp = new Bitmap(_image);
-            //_image = Image.FromFile("../maze/normal.png");
-            imgBox.Image = _image;
-
             _maze = new Maze(_image);
+
+            _maze.OnTreeBuildFinished += _maze_OnTreeBuildFinished;
+            _maze.BuildTree();
+            DrawImage();
+        }
+
+        private void _maze_OnTreeBuildFinished(TimeSpan timeSpan)
+        {
+            infoText.Text = string.Format("Tree built time: {0} ms", timeSpan.Milliseconds);
         }
 
         private void miLoadMaze_Click(object sender, EventArgs e)
@@ -39,8 +53,11 @@ namespace aMaze_ingSolver
             };
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                _image = Image.FromFile(ofd.FileName);
-                imgBox.Image = _image;
+                if (File.Exists(ofd.FileName))
+                {
+                    _mazeFile = ofd.FileName;
+                    LoadImage();
+                }
             }
         }
 

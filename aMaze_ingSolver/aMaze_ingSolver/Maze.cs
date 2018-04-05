@@ -1,6 +1,7 @@
 ﻿using aMaze_ingSolver.Tree;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -12,6 +13,9 @@ namespace aMaze_ingSolver
 {
     class Maze
     {
+        public delegate void TreeBuilt(TimeSpan timeSpan);
+        public event TreeBuilt OnTreeBuildFinished;
+
         private Bitmap _bmp;
         private Point _start;
         private Point _finish;
@@ -30,7 +34,18 @@ namespace aMaze_ingSolver
             FindFinish();
 
             Tree = new Tree.Tree(new Vertex(_start, null), _mazeMatrix);
+            
+        }
+
+        public void BuildTree()
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             Tree.BuildTree();
+
+            stopwatch.Stop();
+            OnTreeBuildFinished?.Invoke(stopwatch.Elapsed);
         }
 
         private void FindStart()

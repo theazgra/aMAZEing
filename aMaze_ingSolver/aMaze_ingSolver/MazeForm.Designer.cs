@@ -38,7 +38,7 @@
             this.lbScaleFactor = new System.Windows.Forms.Label();
             this.chbShowVertices = new System.Windows.Forms.CheckBox();
             this.splitter1 = new System.Windows.Forms.Splitter();
-            this.chbShowEdges = new System.Windows.Forms.CheckBox();
+            this.infoText = new System.Windows.Forms.Label();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imgBox)).BeginInit();
             this.settingsPanel.SuspendLayout();
@@ -80,8 +80,8 @@
             // 
             // settingsPanel
             // 
+            this.settingsPanel.Controls.Add(this.infoText);
             this.settingsPanel.Controls.Add(this.groupBox1);
-            this.settingsPanel.Controls.Add(this.chbShowEdges);
             this.settingsPanel.Controls.Add(this.chbShowVertices);
             this.settingsPanel.Dock = System.Windows.Forms.DockStyle.Left;
             this.settingsPanel.Location = new System.Drawing.Point(0, 27);
@@ -147,17 +147,15 @@
             this.splitter1.TabIndex = 3;
             this.splitter1.TabStop = false;
             // 
-            // chbShowEdges
+            // infoText
             // 
-            this.chbShowEdges.AutoSize = true;
-            this.chbShowEdges.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.chbShowEdges.Location = new System.Drawing.Point(12, 187);
-            this.chbShowEdges.Name = "chbShowEdges";
-            this.chbShowEdges.Size = new System.Drawing.Size(122, 24);
-            this.chbShowEdges.TabIndex = 0;
-            this.chbShowEdges.Text = "Show edges";
-            this.chbShowEdges.UseVisualStyleBackColor = true;
-            this.chbShowEdges.CheckedChanged += new System.EventHandler(this.ChbShowVertices_CheckedChanged);
+            this.infoText.AutoSize = true;
+            this.infoText.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.infoText.Location = new System.Drawing.Point(13, 122);
+            this.infoText.Name = "infoText";
+            this.infoText.Size = new System.Drawing.Size(53, 20);
+            this.infoText.TabIndex = 2;
+            this.infoText.Text = "label1";
             // 
             // MazeForm
             // 
@@ -194,7 +192,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label lbScaleFactor;
         private System.Windows.Forms.TrackBar scaleFactor;
-        private System.Windows.Forms.CheckBox chbShowEdges;
+        private System.Windows.Forms.Label infoText;
     }
 }
 
