@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2015
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aMaze_ingSolver", "aMaze_ingSolver\aMaze_ingSolver.csproj", "{E6586CCF-61B3-4A51-B1D7-4978B55A110E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E6586CCF-61B3-4A51-B1D7-4978B55A110E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6586CCF-61B3-4A51-B1D7-4978B55A110E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6586CCF-61B3-4A51-B1D7-4978B55A110E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6586CCF-61B3-4A51-B1D7-4978B55A110E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6E289995-5048-4245-AB4B-394264BFF0E6}
+	EndGlobalSection
+EndGlobal
