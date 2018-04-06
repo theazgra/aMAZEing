@@ -21,6 +21,19 @@ namespace aMaze_ingSolver.GraphUtils
             return Direction.NoDirection;
         }
 
+        public static int Modulo(int value, int moduloValue)
+        {
+            if(value < 0)
+            {
+                return moduloValue + value;
+            }
+
+            else
+            {
+                return value % moduloValue;
+            }
+        }
+
         
     }
 }

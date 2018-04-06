@@ -94,8 +94,19 @@ namespace aMaze_ingSolver.GraphUtils
 
         public bool Equals(Vertex other)
         {
+            if(other == null)
+            {
+                return false;
+            }
             return (this.X == other.X && this.Y == other.Y);
         }
+
+        public bool HasNeighbour(Direction direction)
+        {
+            return this.GetNeighbour(direction) == null;
+        }
+
+
 
         public IEnumerable<Vertex> CollectVertices()
         {
