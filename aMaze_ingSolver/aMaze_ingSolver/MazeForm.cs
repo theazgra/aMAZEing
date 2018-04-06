@@ -45,14 +45,10 @@ namespace aMaze_ingSolver
             _maze = new Maze(_image);
 
             lbMatrixInfo.Text = string.Format("Matrix build time: {0} ms.", _maze.MatrixBuildTime.ToString("mm':'ss':'fff"));
-
-
-
-            //_maze.OnTreeBuildFinished += OnTreeBuildFinish;
+            
             _maze.Graph.OnBuildProgress += Tree_OnBuildProgress;
             _maze.Graph.OnBuildCompleted += Graph_OnBuildCompleted;
 
-            //infoText.Text = "Loading maze...";
             _maze.BuildTree();
             DrawImage();
         }
@@ -125,7 +121,7 @@ namespace aMaze_ingSolver
         {
             ClearImage();
             if (chbShowVertices.Checked)
-            {
+            { 
                 foreach (Vertex vertex in _maze.Graph.Vertices)
                 {
                     _drawBmp.SetPixel(vertex.X, vertex.Y, Color.Red);

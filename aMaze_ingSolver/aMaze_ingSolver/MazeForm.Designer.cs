@@ -33,6 +33,7 @@
             this.miLoadMaze = new System.Windows.Forms.ToolStripButton();
             this.imgBox = new System.Windows.Forms.PictureBox();
             this.settingsPanel = new System.Windows.Forms.Panel();
+            this.lbMatrixInfo = new System.Windows.Forms.Label();
             this.lbInfo = new System.Windows.Forms.Label();
             this.chbShowStartEnd = new System.Windows.Forms.CheckBox();
             this.chbShowVertices = new System.Windows.Forms.CheckBox();
@@ -44,7 +45,6 @@
             this.chbInvoke = new System.Windows.Forms.CheckBox();
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.imgPanel = new System.Windows.Forms.Panel();
-            this.lbMatrixInfo = new System.Windows.Forms.Label();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imgBox)).BeginInit();
             this.settingsPanel.SuspendLayout();
@@ -99,6 +99,16 @@
             this.settingsPanel.Padding = new System.Windows.Forms.Padding(5);
             this.settingsPanel.Size = new System.Drawing.Size(258, 545);
             this.settingsPanel.TabIndex = 2;
+            // 
+            // lbMatrixInfo
+            // 
+            this.lbMatrixInfo.AutoSize = true;
+            this.lbMatrixInfo.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.lbMatrixInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.lbMatrixInfo.Location = new System.Drawing.Point(5, 506);
+            this.lbMatrixInfo.Name = "lbMatrixInfo";
+            this.lbMatrixInfo.Size = new System.Drawing.Size(0, 17);
+            this.lbMatrixInfo.TabIndex = 3;
             // 
             // lbInfo
             // 
@@ -227,16 +237,6 @@
             this.imgPanel.Padding = new System.Windows.Forms.Padding(10);
             this.imgPanel.Size = new System.Drawing.Size(617, 545);
             this.imgPanel.TabIndex = 4;
-            // 
-            // lbMatrixInfo
-            // 
-            this.lbMatrixInfo.AutoSize = true;
-            this.lbMatrixInfo.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.lbMatrixInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.lbMatrixInfo.Location = new System.Drawing.Point(5, 506);
-            this.lbMatrixInfo.Name = "lbMatrixInfo";
-            this.lbMatrixInfo.Size = new System.Drawing.Size(0, 17);
-            this.lbMatrixInfo.TabIndex = 3;
             // 
             // MazeForm
             // 

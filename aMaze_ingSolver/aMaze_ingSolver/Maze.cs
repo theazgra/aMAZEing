@@ -19,20 +19,17 @@ namespace aMaze_ingSolver
         private BoolMatrix _mazeMatrix;
         public Graph Graph { get; private set; }
         public TimeSpan MatrixBuildTime { get; private set; }
+        Stopwatch s = new Stopwatch();
 
         public Maze(Image img)
         {
             _bmp = new Bitmap(img);
-
-            Stopwatch s = new Stopwatch();
             s.Start();
             _mazeMatrix = new BoolMatrix(_bmp);
             s.Stop();
             MatrixBuildTime = s.Elapsed;
             Graph = new Graph(_mazeMatrix);
         }
-
-        
 
         public void BuildTree()
         {
