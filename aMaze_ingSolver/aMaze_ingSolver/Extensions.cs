@@ -1,4 +1,4 @@
-﻿using aMaze_ingSolver.Tree;
+﻿using aMaze_ingSolver.GraphUtils;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -47,18 +47,28 @@ namespace aMaze_ingSolver
             return string.Format("[R:{0};G:{1};B:{2}]", c.R, c.G, c.B);
         }
 
+        public static bool IsPath(this BoolMatrix matrix, Point p)
+        {
+            return IsPath(matrix, p.Y, p.X);
+        }
+
+        public static bool IsPath(this BoolMatrix matrix, int row, int col)
+        {
+            return !IsWall(matrix, col, row);
+        }
+
         public static bool IsWall(this BoolMatrix matrix, Point p)
         {
             return IsWall(matrix, p.X, p.Y);
         }
 
-        public static bool IsWall(this BoolMatrix matrix, int x, int y)
+        public static bool IsWall(this BoolMatrix matrix, int col, int row)
         {
-            if (x < 0 || x >= matrix.Cols || y < 0 || y >= matrix.Rows)
+            if (col < 0 || col >= matrix.Cols || row < 0 || row >= matrix.Rows)
                 return true;
 
             //True is white color, so no wall
-            return !matrix.Data[y, x];
+            return !matrix.Data[row, col];
         }
 
         public static void AddIfNotIn<T>(this List<T> enumerable, T item)

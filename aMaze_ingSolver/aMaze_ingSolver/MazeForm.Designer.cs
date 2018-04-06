@@ -33,17 +33,24 @@
             this.miLoadMaze = new System.Windows.Forms.ToolStripButton();
             this.imgBox = new System.Windows.Forms.PictureBox();
             this.settingsPanel = new System.Windows.Forms.Panel();
+            this.lbInfo = new System.Windows.Forms.Label();
+            this.chbShowStartEnd = new System.Windows.Forms.CheckBox();
+            this.chbShowVertices = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.scaleUp = new System.Windows.Forms.Button();
+            this.scaleDown = new System.Windows.Forms.Button();
             this.scaleFactor = new System.Windows.Forms.TrackBar();
             this.lbScaleFactor = new System.Windows.Forms.Label();
-            this.chbShowVertices = new System.Windows.Forms.CheckBox();
+            this.chbInvoke = new System.Windows.Forms.CheckBox();
             this.splitter1 = new System.Windows.Forms.Splitter();
-            this.infoText = new System.Windows.Forms.Label();
+            this.imgPanel = new System.Windows.Forms.Panel();
+            this.lbMatrixInfo = new System.Windows.Forms.Label();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imgBox)).BeginInit();
             this.settingsPanel.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.scaleFactor)).BeginInit();
+            this.imgPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -72,45 +79,106 @@
             this.imgBox.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.imgBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.imgBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.imgBox.Location = new System.Drawing.Point(258, 27);
+            this.imgBox.Location = new System.Drawing.Point(10, 10);
             this.imgBox.Name = "imgBox";
-            this.imgBox.Size = new System.Drawing.Size(617, 545);
+            this.imgBox.Size = new System.Drawing.Size(597, 525);
             this.imgBox.TabIndex = 1;
             this.imgBox.TabStop = false;
             // 
             // settingsPanel
             // 
-            this.settingsPanel.Controls.Add(this.infoText);
-            this.settingsPanel.Controls.Add(this.groupBox1);
+            this.settingsPanel.Controls.Add(this.lbMatrixInfo);
+            this.settingsPanel.Controls.Add(this.lbInfo);
+            this.settingsPanel.Controls.Add(this.chbShowStartEnd);
             this.settingsPanel.Controls.Add(this.chbShowVertices);
+            this.settingsPanel.Controls.Add(this.groupBox1);
+            this.settingsPanel.Controls.Add(this.chbInvoke);
             this.settingsPanel.Dock = System.Windows.Forms.DockStyle.Left;
             this.settingsPanel.Location = new System.Drawing.Point(0, 27);
             this.settingsPanel.Name = "settingsPanel";
+            this.settingsPanel.Padding = new System.Windows.Forms.Padding(5);
             this.settingsPanel.Size = new System.Drawing.Size(258, 545);
             this.settingsPanel.TabIndex = 2;
             // 
+            // lbInfo
+            // 
+            this.lbInfo.AutoSize = true;
+            this.lbInfo.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.lbInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.lbInfo.Location = new System.Drawing.Point(5, 523);
+            this.lbInfo.Name = "lbInfo";
+            this.lbInfo.Size = new System.Drawing.Size(0, 17);
+            this.lbInfo.TabIndex = 2;
+            // 
+            // chbShowStartEnd
+            // 
+            this.chbShowStartEnd.AutoSize = true;
+            this.chbShowStartEnd.Dock = System.Windows.Forms.DockStyle.Top;
+            this.chbShowStartEnd.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.chbShowStartEnd.Location = new System.Drawing.Point(5, 204);
+            this.chbShowStartEnd.Name = "chbShowStartEnd";
+            this.chbShowStartEnd.Size = new System.Drawing.Size(248, 24);
+            this.chbShowStartEnd.TabIndex = 0;
+            this.chbShowStartEnd.Text = "Show start and end";
+            this.chbShowStartEnd.UseVisualStyleBackColor = true;
+            this.chbShowStartEnd.CheckedChanged += new System.EventHandler(this.ChbShowVertices_CheckedChanged);
+            // 
+            // chbShowVertices
+            // 
+            this.chbShowVertices.AutoSize = true;
+            this.chbShowVertices.Dock = System.Windows.Forms.DockStyle.Top;
+            this.chbShowVertices.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.chbShowVertices.Location = new System.Drawing.Point(5, 180);
+            this.chbShowVertices.Name = "chbShowVertices";
+            this.chbShowVertices.Size = new System.Drawing.Size(248, 24);
+            this.chbShowVertices.TabIndex = 0;
+            this.chbShowVertices.Text = "Show vertices";
+            this.chbShowVertices.UseVisualStyleBackColor = true;
+            this.chbShowVertices.CheckedChanged += new System.EventHandler(this.ChbShowVertices_CheckedChanged);
+            // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.scaleUp);
+            this.groupBox1.Controls.Add(this.scaleDown);
             this.groupBox1.Controls.Add(this.scaleFactor);
             this.groupBox1.Controls.Add(this.lbScaleFactor);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.groupBox1.Location = new System.Drawing.Point(0, 0);
+            this.groupBox1.Location = new System.Drawing.Point(5, 29);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(258, 115);
+            this.groupBox1.Size = new System.Drawing.Size(248, 151);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Image";
             // 
+            // scaleUp
+            // 
+            this.scaleUp.Location = new System.Drawing.Point(189, 63);
+            this.scaleUp.Name = "scaleUp";
+            this.scaleUp.Size = new System.Drawing.Size(53, 23);
+            this.scaleUp.TabIndex = 2;
+            this.scaleUp.Text = "+";
+            this.scaleUp.UseVisualStyleBackColor = true;
+            this.scaleUp.Click += new System.EventHandler(this.scaleUp_Click);
+            // 
+            // scaleDown
+            // 
+            this.scaleDown.Location = new System.Drawing.Point(17, 63);
+            this.scaleDown.Name = "scaleDown";
+            this.scaleDown.Size = new System.Drawing.Size(50, 23);
+            this.scaleDown.TabIndex = 2;
+            this.scaleDown.Text = "-";
+            this.scaleDown.UseVisualStyleBackColor = true;
+            this.scaleDown.Click += new System.EventHandler(this.scaleDown_Click);
+            // 
             // scaleFactor
             // 
             this.scaleFactor.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.scaleFactor.Location = new System.Drawing.Point(3, 56);
+            this.scaleFactor.Location = new System.Drawing.Point(3, 92);
             this.scaleFactor.Maximum = 100;
             this.scaleFactor.Minimum = 1;
             this.scaleFactor.Name = "scaleFactor";
-            this.scaleFactor.Size = new System.Drawing.Size(252, 56);
-            this.scaleFactor.SmallChange = 10;
+            this.scaleFactor.Size = new System.Drawing.Size(242, 56);
             this.scaleFactor.TabIndex = 1;
             this.scaleFactor.Value = 1;
             this.scaleFactor.ValueChanged += new System.EventHandler(this.ScaleFactor_ValueChanged);
@@ -124,17 +192,18 @@
             this.lbScaleFactor.TabIndex = 0;
             this.lbScaleFactor.Text = "Scale factor";
             // 
-            // chbShowVertices
+            // chbInvoke
             // 
-            this.chbShowVertices.AutoSize = true;
-            this.chbShowVertices.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.chbShowVertices.Location = new System.Drawing.Point(12, 157);
-            this.chbShowVertices.Name = "chbShowVertices";
-            this.chbShowVertices.Size = new System.Drawing.Size(136, 24);
-            this.chbShowVertices.TabIndex = 0;
-            this.chbShowVertices.Text = "Show vertices";
-            this.chbShowVertices.UseVisualStyleBackColor = true;
-            this.chbShowVertices.CheckedChanged += new System.EventHandler(this.ChbShowVertices_CheckedChanged);
+            this.chbInvoke.AutoSize = true;
+            this.chbInvoke.Dock = System.Windows.Forms.DockStyle.Top;
+            this.chbInvoke.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.chbInvoke.Location = new System.Drawing.Point(5, 5);
+            this.chbInvoke.Name = "chbInvoke";
+            this.chbInvoke.Size = new System.Drawing.Size(248, 24);
+            this.chbInvoke.TabIndex = 0;
+            this.chbInvoke.Text = "Invoke info print";
+            this.chbInvoke.UseVisualStyleBackColor = true;
+            this.chbInvoke.CheckedChanged += new System.EventHandler(this.chbInvoke_CheckedChanged);
             // 
             // splitter1
             // 
@@ -147,15 +216,27 @@
             this.splitter1.TabIndex = 3;
             this.splitter1.TabStop = false;
             // 
-            // infoText
+            // imgPanel
             // 
-            this.infoText.AutoSize = true;
-            this.infoText.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.infoText.Location = new System.Drawing.Point(13, 122);
-            this.infoText.Name = "infoText";
-            this.infoText.Size = new System.Drawing.Size(53, 20);
-            this.infoText.TabIndex = 2;
-            this.infoText.Text = "label1";
+            this.imgPanel.AutoScroll = true;
+            this.imgPanel.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.imgPanel.Controls.Add(this.imgBox);
+            this.imgPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.imgPanel.Location = new System.Drawing.Point(258, 27);
+            this.imgPanel.Name = "imgPanel";
+            this.imgPanel.Padding = new System.Windows.Forms.Padding(10);
+            this.imgPanel.Size = new System.Drawing.Size(617, 545);
+            this.imgPanel.TabIndex = 4;
+            // 
+            // lbMatrixInfo
+            // 
+            this.lbMatrixInfo.AutoSize = true;
+            this.lbMatrixInfo.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.lbMatrixInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.lbMatrixInfo.Location = new System.Drawing.Point(5, 506);
+            this.lbMatrixInfo.Name = "lbMatrixInfo";
+            this.lbMatrixInfo.Size = new System.Drawing.Size(0, 17);
+            this.lbMatrixInfo.TabIndex = 3;
             // 
             // MazeForm
             // 
@@ -163,11 +244,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(875, 572);
             this.Controls.Add(this.splitter1);
-            this.Controls.Add(this.imgBox);
+            this.Controls.Add(this.imgPanel);
             this.Controls.Add(this.settingsPanel);
             this.Controls.Add(this.toolStrip1);
             this.Name = "MazeForm";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.MazeForm_Load);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imgBox)).EndInit();
@@ -176,6 +258,7 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.scaleFactor)).EndInit();
+            this.imgPanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -192,7 +275,13 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label lbScaleFactor;
         private System.Windows.Forms.TrackBar scaleFactor;
-        private System.Windows.Forms.Label infoText;
+        private System.Windows.Forms.Button scaleUp;
+        private System.Windows.Forms.Button scaleDown;
+        private System.Windows.Forms.Label lbInfo;
+        private System.Windows.Forms.Panel imgPanel;
+        private System.Windows.Forms.CheckBox chbShowStartEnd;
+        private System.Windows.Forms.CheckBox chbInvoke;
+        private System.Windows.Forms.Label lbMatrixInfo;
     }
 }
 

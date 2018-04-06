@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace aMaze_ingSolver.Tree
+namespace aMaze_ingSolver.GraphUtils
 {
     class OrientedEdge
     {

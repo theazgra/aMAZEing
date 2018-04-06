@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace aMaze_ingSolver.Tree
+namespace aMaze_ingSolver.GraphUtils
 {
     class Utils
     {
