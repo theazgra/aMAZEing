@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using aMaze_ingSolver.Algorithms;
 
 namespace aMaze_ingSolver
 {
@@ -20,6 +21,7 @@ namespace aMaze_ingSolver
         private Image _image;
         private Bitmap _drawBmp;
         private Maze _maze;
+        Queue<Vertex> _resultPath;
         private static bool _invoke = false;
 
         public MazeForm()
@@ -54,6 +56,7 @@ namespace aMaze_ingSolver
 
             //infoText.Text = "Loading maze...";
             _maze.BuildTree();
+
             DrawImage();
         }
 
@@ -123,13 +126,38 @@ namespace aMaze_ingSolver
 
         private void DrawImage()
         {
+            
             ClearImage();
             if (chbShowVertices.Checked)
             {
-                foreach (Vertex vertex in _maze.Graph.Vertices)
+                _resultPath = RightTurn.SolveMaze(_maze.Graph);
+                Vertex previous = _resultPath.Dequeue();
+                if(_resultPath != null)
                 {
-                    _drawBmp.SetPixel(vertex.X, vertex.Y, Color.Red);
+                    while (_resultPath.Count != 0)
+                    {
+                        Vertex current = _resultPath.Dequeue();
+
+                        Direction direction = Utils.GetDirection(previous.Location, current.Location);
+                        while (!previous.Equals(current))
+                        {
+                           
+                            _drawBmp.SetPixel(previous.X, previous.Y, Color.Blue);
+                            previous = new Vertex(previous.Location.MoveInDirection(direction));
+                        }
+                        _drawBmp.SetPixel(current.X, current.Y, Color.Blue);
+
+                        previous = current;
+                    }
                 }
+                
+
+                /*foreach (Vertex vertex in _maze.Graph.Vertices)
+                {
+                    
+                    _drawBmp.SetPixel(vertex.X, vertex.Y, Color.Red);
+                    
+                }*/
             }
 
             if (chbShowStartEnd.Checked)
@@ -137,6 +165,10 @@ namespace aMaze_ingSolver
                 _drawBmp.SetPixel(_maze.Graph.Start.X, _maze.Graph.Start.Y, Color.Blue);
                 _drawBmp.SetPixel(_maze.Graph.End.X, _maze.Graph.End.Y, Color.Blue);
             }
+
+           
+
+
 
             imgBox.Image = _drawBmp.ResizeImage(_drawBmp.Width * scaleFactor.Value, _drawBmp.Height * scaleFactor.Value);
         }
