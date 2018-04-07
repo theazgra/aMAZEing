@@ -9,17 +9,25 @@ namespace aMaze_ingSolver.GraphUtils
 {
     class Vertex : IEquatable<Vertex>
     {
-        public bool IsRoot { get; private set; } = false;
-
+        /// <summary>
+        /// Location of vertex.
+        /// </summary>
         public Point Location { get; }
+
+        /// <summary>
+        /// X component of location.
+        /// </summary>
         public int X => Location.X;
+        /// <summary>
+        /// Y component of location.
+        /// </summary>
         public int Y => Location.Y;
 
-        //public Vertex Parent { get; private set; }
-        //public OrientedEdge EdgeToParent { get; private set; }
-        //public List<Vertex> Neighbours { get; set; }
         private Dictionary<Direction, Vertex> _neighbours;
 
+        /// <summary>
+        /// Get all neighbours.
+        /// </summary>
         public IEnumerable<Vertex> Neighbours
         {
             get
@@ -39,33 +47,35 @@ namespace aMaze_ingSolver.GraphUtils
             }
         }
 
-
+        /// <summary>
+        /// Creates vertex at given location.
+        /// </summary>
+        /// <param name="col">Column in image or X component of location.</param>
+        /// <param name="row">Row in image or Y component of location.</param>
         public Vertex(int col, int row) : this(new Point(col, row))
         { }
 
         public Vertex(Point location)
         {
-            
-
             Location = location;
             _neighbours = new Dictionary<Direction, Vertex>();
-
-
-            //if (parent == null)
-            //{
-            //    IsRoot = true;
-            //}
-            //else
-            //{
-            //    EdgeToParent = new OrientedEdge(parent, this);
-            //}
         }
 
+        /// <summary>
+        /// Add neighbour in direction.
+        /// </summary>
+        /// <param name="direction">Direction in which neighbour is connected.</param>
+        /// <param name="vertex">Neighbour vertex.</param>
         public void AddNeighbour(Direction direction, Vertex vertex)
         {
             _neighbours.Add(direction, vertex);
         }
 
+        /// <summary>
+        /// Get neighbour vertex in direction.
+        /// </summary>
+        /// <param name="direction">Direction of connection to vertex.</param>
+        /// <returns>Connected neighbour or null.</returns>
         public Vertex GetNeighbour(Direction direction)
         {
             if (!_neighbours.ContainsKey(direction))
@@ -74,40 +84,43 @@ namespace aMaze_ingSolver.GraphUtils
             return _neighbours[direction];
         }
 
-
-
         public string Print()
         {
             throw new NotImplementedException();
         }
 
-
-        public bool IsMyLocation(int x, int y)
-        {
-            return (X == x && Y == y);
-        }
-
-        public bool IsMyLocation(Point location)
-        {
-            return IsMyLocation(location.X, location.Y);
-        }
-
         public bool Equals(Vertex other)
         {
-            if(other == null)
+            if (other == null)
             {
                 return false;
             }
             return (this.X == other.X && this.Y == other.Y);
         }
 
-        public bool HasNeighbour(Direction direction)
+        public override bool Equals(object obj)
         {
-            return this.GetNeighbour(direction) == null;
+            if (obj is Vertex v)
+                return this.Equals(v);
+
+            return base.Equals(obj);
         }
 
+        /// <summary>
+        /// Check if neighbour is connected in direction.
+        /// </summary>
+        /// <param name="direction">Direction of connection to neighbour.</param>
+        /// <returns>True if neighbour is connected.</returns>
+        public bool HasNeighbour(Direction direction)
+        {
+            //return this.GetNeighbour(direction) == null;
+            return _neighbours.ContainsKey(direction);
+        }
 
-
+        /// <summary>
+        /// Collect connected neighbours and self.
+        /// </summary>
+        /// <returns>Connected neighbours and self.</returns>
         public IEnumerable<Vertex> CollectVertices()
         {
             List<Vertex> allVertices = new List<Vertex>();
@@ -117,11 +130,6 @@ namespace aMaze_ingSolver.GraphUtils
             }
             allVertices.Add(this);
             return allVertices;
-        }
-
-        public IEnumerable<OrientedEdge> CollectEdges()
-        {
-            throw new NotImplementedException();
         }
 
         public override string ToString()

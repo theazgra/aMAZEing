@@ -50,6 +50,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Algorithms\IMazeSolver.cs" />
+    <Compile Include="Algorithms\ISteppable.cs" />
     <Compile Include="Algorithms\RightTurn.cs" />
     <Compile Include="BitmapPlus.cs" />
     <Compile Include="Direction.cs" />

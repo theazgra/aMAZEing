@@ -12,19 +12,27 @@ namespace aMaze_ingSolver.GraphUtils
 {
     class Graph
     {
+        #region Events
         public delegate void BuildProgress(string msg);
-        public event BuildProgress OnBuildProgress;
-
         public delegate void BuildCompleted(TimeSpan time);
+        public event BuildProgress OnBuildProgress;
         public event BuildCompleted OnBuildCompleted;
+        #endregion
+
+        private BoolMatrix _matrix;
+        private bool invoke = false;
 
         public List<Vertex> Vertices { get; private set; }
-
+        /// <summary>
+        /// Entry point of maze.
+        /// </summary>
         public Vertex Start { get; private set; }
+        /// <summary>
+        /// Exit point of maze.
+        /// </summary>
         public Vertex End { get; private set; }
-        BoolMatrix _matrix;
 
-        bool invoke = false;
+
 
         public Graph(BoolMatrix maze)
         {
@@ -32,8 +40,9 @@ namespace aMaze_ingSolver.GraphUtils
             _matrix = maze;
         }
 
-
-
+        /// <summary>
+        /// Build the graph from maze asynchronously.
+        /// </summary>
         public async void BuildAsync()
         {
             invoke = MazeForm.InvokeDelegates();
@@ -48,6 +57,9 @@ namespace aMaze_ingSolver.GraphUtils
             OnBuildCompleted?.Invoke(stopwatch.Elapsed);
         }
 
+        /// <summary>
+        /// Convert bool matrix to Graph.
+        /// </summary>
         private void VerticalBuildScan()
         {
             long vertexCount = 0;
@@ -186,134 +198,5 @@ namespace aMaze_ingSolver.GraphUtils
                 }
             }
         }
-
-        //private void FindNeighbourVertices(Vertex parent)
-        //{
-
-        //    //OnBuildProgress?.Invoke(string.Format("Call: {0}", ++callCount));
-        //    //_bmp.SetPixel(parent.X, parent.Y, Color.Red);
-
-        //    if (FindVertex(Direction.Left, parent) is Vertex leftVertex)
-        //    {
-        //        parent.AddNeighbour(Direction.Left, leftVertex);
-        //        visited.Add(leftVertex);
-
-        //    }
-        //    if (FindVertex(Direction.Right, parent) is Vertex rightVertex)
-        //    {
-        //        parent.AddNeighbour(Direction.Right, rightVertex);
-        //        visited.Add(rightVertex);
-        //    }
-        //    if (FindVertex(Direction.Up, parent) is Vertex upVertex)
-        //    {
-        //        parent.AddNeighbour(Direction.Up, upVertex);
-        //        visited.Add(upVertex);
-        //    }
-        //    if (FindVertex(Direction.Down, parent) is Vertex downVertex)
-        //    {
-        //        parent.AddNeighbour(Direction.Down, downVertex);
-        //        visited.Add(downVertex);
-        //    }
-
-
-        //    if (parent.GetNeighbour(Direction.Left) is Vertex l)
-        //        FindNeighbourVertices(l);
-        //    if (parent.GetNeighbour(Direction.Right) is Vertex r)
-        //        FindNeighbourVertices(r);
-        //    if (parent.GetNeighbour(Direction.Up) is Vertex u)
-        //        FindNeighbourVertices(u);
-        //    if (parent.GetNeighbour(Direction.Down) is Vertex d)
-        //        FindNeighbourVertices(d);
-
-        //}
-
-        //private Vertex FindVertex(Direction direction, Vertex parent)
-        //{
-        //    Point nextLocation = parent.Location.MoveInDirection(direction);//  MoveInDirection(parent.Location, direction);
-
-        //    //while (!_bmp.IsWall(nextLocation))
-        //    while (!_matrix.IsWall(nextLocation))
-        //    {
-        //        if (IsNewVertex(nextLocation, direction))
-        //        {
-        //            return new Vertex(nextLocation);
-        //        }
-        //        nextLocation = nextLocation.MoveInDirection(direction);// MoveInDirection(nextLocation, direction);
-        //    }
-
-        //    return null;
-        //}
-
-        //private bool IsNewVertex(Point location, Direction edgeDirection)
-        //{
-        //    if (_matrix.IsWall(location))
-        //        return false;
-
-
-        //    if (visited.ContainsLocation(location))
-        //        return false;
-
-        //    Point down = location.Down();
-        //    bool wallDown = _matrix.IsWall(down);
-        //    Point up = location.Up();
-        //    bool wallUp = _matrix.IsWall(up);
-        //    Point left = location.Left();
-        //    bool wallLeft = _matrix.IsWall(left);
-        //    Point right = location.Right();
-        //    bool wallRight = _matrix.IsWall(right);
-
-        //    switch (edgeDirection)
-        //    {
-        //        case Direction.Up:
-        //            {
-        //                if (wallUp)
-        //                    return true;
-
-        //                if (!wallLeft || !wallRight)
-        //                    return true;
-
-        //                return false;
-        //            }
-        //        case Direction.Down:
-        //            {
-        //                //Down is wall
-        //                if (wallDown)
-        //                    return true;
-
-        //                if (!wallLeft || !wallRight)
-        //                    return true;
-
-        //                return false;
-        //            }
-        //        case Direction.Left:
-        //            {
-        //                if (wallLeft)
-        //                    return true;
-
-        //                if (!wallUp || !wallDown)
-        //                    return true;
-
-        //                return false;
-        //            }
-        //        case Direction.Right:
-        //            {
-        //                if (wallRight)
-        //                    return true;
-
-        //                if (!wallUp || !wallDown)
-        //                    return true;
-
-        //                return false;
-        //            }
-        //        default:
-        //            return false;
-        //    }
-        //}
-
-        //private bool IsNewVertex(int x, int y, Direction edgeDirection)
-        //{
-        //    return IsNewVertex(new Point(x, y), edgeDirection);
-        //}
-
     }
 }

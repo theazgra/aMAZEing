@@ -36,7 +36,7 @@ namespace aMaze_ingSolver.Algorithms
                 }
 
 
-                if(!current.HasNeighbour((Direction)(Utils.Modulo((int)currentHeading - (int)turn, 4))))
+                if(current.HasNeighbour((Direction)(Utils.Modulo((int)currentHeading - (int)turn, 4))))
                 {
 
                    int temp = ((int)currentHeading - (int)turn) % 4;
@@ -45,20 +45,20 @@ namespace aMaze_ingSolver.Algorithms
                     continue;
                 }
 
-                if (!current.HasNeighbour(currentHeading))
+                if (current.HasNeighbour(currentHeading))
                 {
                     current = current.GetNeighbour(currentHeading);
                     continue;
                 }
 
-                if (!current.HasNeighbour((Direction)(((int)currentHeading + (int)turn) % 4)))
+                if (current.HasNeighbour((Direction)(((int)currentHeading + (int)turn) % 4)))
                 {
                     currentHeading = (Direction)(((int)currentHeading + (int)turn) % 4);
                     current = current.GetNeighbour(currentHeading);
                     continue;
                 }
 
-                if (!current.HasNeighbour((Direction)(((int)currentHeading + 2) % 4)))
+                if (current.HasNeighbour((Direction)(((int)currentHeading + 2) % 4)))
                 {
                     currentHeading = (Direction)(((int)currentHeading + 2) % 4);
                     current = current.GetNeighbour(currentHeading);
