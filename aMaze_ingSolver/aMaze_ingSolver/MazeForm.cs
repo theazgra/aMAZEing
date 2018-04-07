@@ -1,4 +1,5 @@
-﻿using aMaze_ingSolver.GraphUtils;
+﻿using aMaze_ingSolver.Algorithms;
+using aMaze_ingSolver.GraphUtils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,6 +15,7 @@ namespace aMaze_ingSolver
 {
     public partial class MazeForm : Form
     {
+        delegate void SetEmptyInfo();
         delegate void SetInfo(string msg);
 
         private string _mazeFile = "../maze/tiny.png";
@@ -21,10 +23,23 @@ namespace aMaze_ingSolver
         private Bitmap _drawBmp;
         private Maze _maze;
         private static bool _invoke = false;
+        private List<IMazeSolver> _solvers;
+        private IMazeSolver _selectedSolver;
 
         public MazeForm()
         {
             InitializeComponent();
+            _solvers = new List<IMazeSolver> { new LeftTurn() };
+        }
+
+        private void MazeForm_Load(object sender, EventArgs e)
+        {
+            foreach (IMazeSolver solver in _solvers)
+            {
+                solverSelection.Items.Add(solver);
+            }
+
+            LoadImage();
         }
 
         public static bool InvokeDelegates()
@@ -32,8 +47,20 @@ namespace aMaze_ingSolver
             return _invoke;
         }
 
+        private void SetAllUnsolved()
+        {
+            foreach (IMazeSolver solver in _solvers)
+            {
+                solver.Solved = false;
+            }
+
+            btnSolve.Text = "Solve";
+        }
+
         private void LoadImage()
         {
+            SetAllUnsolved();
+
             lbMatrixInfo.Text = string.Empty;
             scaleFactor.Value = 1;
             lbMatrixInfo.Text = "Loading image...";
@@ -45,7 +72,7 @@ namespace aMaze_ingSolver
             _maze = new Maze(_image);
 
             lbMatrixInfo.Text = string.Format("Matrix build time: {0} ms.", _maze.MatrixBuildTime.ToString("mm':'ss':'fff"));
-            
+
             _maze.Graph.OnBuildProgress += Tree_OnBuildProgress;
             _maze.Graph.OnBuildCompleted += Graph_OnBuildCompleted;
 
@@ -108,6 +135,8 @@ namespace aMaze_ingSolver
             {
                 chbShowStartEnd.Checked = false;
                 chbShowVertices.Checked = false;
+                chbShowResult.Checked = false;
+
                 if (File.Exists(ofd.FileName))
                 {
                     _mazeFile = ofd.FileName;
@@ -120,19 +149,51 @@ namespace aMaze_ingSolver
         private void DrawImage()
         {
             ClearImage();
-            if (chbShowVertices.Checked)
-            { 
-                foreach (Vertex vertex in _maze.Graph.Vertices)
+            if (chbShowResult.Checked && _selectedSolver != null)
+            {
+                //foreach (Vertex vertex in _selectedSolver.GetResultVertices())
+                //{
+                //    _drawBmp.SetPixel(vertex.X, vertex.Y, Color.Purple);
+                //}
+                Queue<Vertex> _resultPath = new Queue<Vertex>(_selectedSolver.GetResultVertices());
+
+                Vertex previous = _resultPath.Dequeue();
+                if (_resultPath != null)
                 {
-                    _drawBmp.SetPixel(vertex.X, vertex.Y, Color.Red);
+                    while (_resultPath.Count != 0)
+                    {
+                        Vertex current = _resultPath.Dequeue();
+
+                        Direction direction = Utils.GetDirection(previous.Location, current.Location);
+                        while (!previous.Equals(current))
+                        {
+
+                            _drawBmp.SetPixel(previous.X, previous.Y, Color.Blue);
+                            previous = new Vertex(previous.Location.MoveInDirection(direction));
+                        }
+                        _drawBmp.SetPixel(current.X, current.Y, Color.Blue);
+
+                        previous = current;
+                    }
+                }
+            }
+            else
+            {
+                if (chbShowVertices.Checked)
+                {
+                    foreach (Vertex vertex in _maze.Graph.Vertices)
+                    {
+                        _drawBmp.SetPixel(vertex.X, vertex.Y, Color.Red);
+                    }
+                }
+
+                if (chbShowStartEnd.Checked)
+                {
+                    _drawBmp.SetPixel(_maze.Graph.Start.X, _maze.Graph.Start.Y, Color.Blue);
+                    _drawBmp.SetPixel(_maze.Graph.End.X, _maze.Graph.End.Y, Color.Blue);
                 }
             }
 
-            if (chbShowStartEnd.Checked)
-            {
-                _drawBmp.SetPixel(_maze.Graph.Start.X, _maze.Graph.Start.Y, Color.Blue);
-                _drawBmp.SetPixel(_maze.Graph.End.X, _maze.Graph.End.Y, Color.Blue);
-            }
 
             imgBox.Image = _drawBmp.ResizeImage(_drawBmp.Width * scaleFactor.Value, _drawBmp.Height * scaleFactor.Value);
         }
@@ -164,14 +225,57 @@ namespace aMaze_ingSolver
                 scaleFactor.Value -= 1;
         }
 
-        private void MazeForm_Load(object sender, EventArgs e)
-        {
-            LoadImage();
-        }
-
         private void chbInvoke_CheckedChanged(object sender, EventArgs e)
         {
             _invoke = (sender as CheckBox).Checked;
+        }
+
+        private void SolverSelected(object sender, EventArgs e)
+        {
+            if ((sender as CheckedListBox).SelectedItem is IMazeSolver solver)
+            {
+                _selectedSolver = solver;
+                btnSolve.Text = "Solve";
+            }
+            else
+            {
+                _selectedSolver = null;
+                //throw new ArgumentException("Wrong solvert in checked list box.");
+            }
+        }
+
+        private void SolveUsingSolver(object sender, EventArgs e)
+        {
+            if (_selectedSolver != null && !_selectedSolver.Solved)
+            {
+                _selectedSolver.OnSolved += MazeSolved;
+                _selectedSolver.SolveMaze(_maze.Graph);
+            }
+        }
+
+        private void MazeSolved()
+        {
+            if (_selectedSolver != null)
+            {
+                btnSolve.Text = "Solved";
+                _selectedSolver.Solved = true;
+
+                if (lbSolveTime.InvokeRequired)
+                {
+                    SetEmptyInfo setInfo = new SetEmptyInfo(MazeSolved);
+                    this.Invoke(setInfo);
+                }
+                else
+                {
+                    //lbSolveTime.Text = string.Format("Completed after: {0} ms", time.ToString("mm':'ss':'fff"));
+                    lbSolveTime.Text = "Solve time: " + _selectedSolver.GetSolveTime().ToString("mm':'ss':'fff");
+                }
+            }
+        }
+
+        private void ShowResult(object sender, EventArgs e)
+        {
+            DrawImage();
         }
     }
 }

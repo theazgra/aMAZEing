@@ -45,12 +45,18 @@
             this.chbInvoke = new System.Windows.Forms.CheckBox();
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.imgPanel = new System.Windows.Forms.Panel();
+            this.solverSelection = new System.Windows.Forms.CheckedListBox();
+            this.gbSolvers = new System.Windows.Forms.GroupBox();
+            this.btnSolve = new System.Windows.Forms.Button();
+            this.chbShowResult = new System.Windows.Forms.CheckBox();
+            this.lbSolveTime = new System.Windows.Forms.Label();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imgBox)).BeginInit();
             this.settingsPanel.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.scaleFactor)).BeginInit();
             this.imgPanel.SuspendLayout();
+            this.gbSolvers.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -87,6 +93,8 @@
             // 
             // settingsPanel
             // 
+            this.settingsPanel.Controls.Add(this.lbSolveTime);
+            this.settingsPanel.Controls.Add(this.gbSolvers);
             this.settingsPanel.Controls.Add(this.lbMatrixInfo);
             this.settingsPanel.Controls.Add(this.lbInfo);
             this.settingsPanel.Controls.Add(this.chbShowStartEnd);
@@ -238,6 +246,62 @@
             this.imgPanel.Size = new System.Drawing.Size(617, 545);
             this.imgPanel.TabIndex = 4;
             // 
+            // solverSelection
+            // 
+            this.solverSelection.Dock = System.Windows.Forms.DockStyle.Top;
+            this.solverSelection.FormattingEnabled = true;
+            this.solverSelection.Location = new System.Drawing.Point(3, 18);
+            this.solverSelection.Name = "solverSelection";
+            this.solverSelection.Size = new System.Drawing.Size(242, 89);
+            this.solverSelection.TabIndex = 4;
+            this.solverSelection.SelectedIndexChanged += new System.EventHandler(this.SolverSelected);
+            // 
+            // gbSolvers
+            // 
+            this.gbSolvers.Controls.Add(this.chbShowResult);
+            this.gbSolvers.Controls.Add(this.btnSolve);
+            this.gbSolvers.Controls.Add(this.solverSelection);
+            this.gbSolvers.Dock = System.Windows.Forms.DockStyle.Top;
+            this.gbSolvers.Location = new System.Drawing.Point(5, 228);
+            this.gbSolvers.Name = "gbSolvers";
+            this.gbSolvers.Size = new System.Drawing.Size(248, 198);
+            this.gbSolvers.TabIndex = 5;
+            this.gbSolvers.TabStop = false;
+            this.gbSolvers.Text = "Solvers";
+            // 
+            // btnSolve
+            // 
+            this.btnSolve.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnSolve.Location = new System.Drawing.Point(3, 107);
+            this.btnSolve.Name = "btnSolve";
+            this.btnSolve.Size = new System.Drawing.Size(242, 31);
+            this.btnSolve.TabIndex = 5;
+            this.btnSolve.Text = "Solve";
+            this.btnSolve.UseVisualStyleBackColor = true;
+            this.btnSolve.Click += new System.EventHandler(this.SolveUsingSolver);
+            // 
+            // chbShowResult
+            // 
+            this.chbShowResult.AutoSize = true;
+            this.chbShowResult.Dock = System.Windows.Forms.DockStyle.Top;
+            this.chbShowResult.Location = new System.Drawing.Point(3, 138);
+            this.chbShowResult.Name = "chbShowResult";
+            this.chbShowResult.Size = new System.Drawing.Size(242, 21);
+            this.chbShowResult.TabIndex = 6;
+            this.chbShowResult.Text = "Show result";
+            this.chbShowResult.UseVisualStyleBackColor = true;
+            this.chbShowResult.Click += new System.EventHandler(this.ShowResult);
+            // 
+            // lbSolveTime
+            // 
+            this.lbSolveTime.AutoSize = true;
+            this.lbSolveTime.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.lbSolveTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.lbSolveTime.Location = new System.Drawing.Point(5, 489);
+            this.lbSolveTime.Name = "lbSolveTime";
+            this.lbSolveTime.Size = new System.Drawing.Size(0, 17);
+            this.lbSolveTime.TabIndex = 6;
+            // 
             // MazeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -259,6 +323,8 @@
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.scaleFactor)).EndInit();
             this.imgPanel.ResumeLayout(false);
+            this.gbSolvers.ResumeLayout(false);
+            this.gbSolvers.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -282,6 +348,11 @@
         private System.Windows.Forms.CheckBox chbShowStartEnd;
         private System.Windows.Forms.CheckBox chbInvoke;
         private System.Windows.Forms.Label lbMatrixInfo;
+        private System.Windows.Forms.GroupBox gbSolvers;
+        private System.Windows.Forms.CheckedListBox solverSelection;
+        private System.Windows.Forms.Button btnSolve;
+        private System.Windows.Forms.CheckBox chbShowResult;
+        private System.Windows.Forms.Label lbSolveTime;
     }
 }
 

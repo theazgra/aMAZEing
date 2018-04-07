@@ -1,24 +1,36 @@
-﻿using aMaze_ingSolver.GraphUtils;
-using System;
+﻿using System;
+using aMaze_ingSolver.GraphUtils;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace aMaze_ingSolver.Algorithms
 {
+    delegate void solved();
     interface IMazeSolver
     {
+        /// <summary>
+        /// Event invoked when maze is solved.
+        /// </summary>
+        event solved OnSolved;
+
         /// <summary>
         /// Determine in solver is paralellized.
         /// </summary>
         bool Parallel { get; set; }
 
         /// <summary>
+        /// If current graph was solved.
+        /// </summary>
+        bool Solved { get; set; }
+
+        /// <summary>
+        /// Name of solver.
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
         /// Solve maze by finding path.
         /// </summary>
-        /// <param name="start">Entry point of maze.</param>
-        void SaveMaze(Vertex start);
+        void SolveMaze(Graph graph);
 
         /// <summary>
         /// Get vertices creating path from start to finish.
