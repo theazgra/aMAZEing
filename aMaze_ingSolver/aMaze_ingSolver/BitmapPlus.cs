@@ -14,18 +14,20 @@ namespace aMaze_ingSolver
         public Bitmap Source { get; private set; }
         public BitmapData Data { get; private set; }
         int _pixelCount;
-        IntPtr Iptr = IntPtr.Zero;
+        IntPtr imagePointer = IntPtr.Zero;
 
         public byte[] Pixels { get; set; }
         private int _depth;
         private int _colorStep;
+        private ImageLockMode _imgLockMode;
 
 
 
-        public BitmapPlus(Bitmap bitmap)
+        public BitmapPlus(Bitmap bitmap, ImageLockMode lockMode)
         {
             Source = bitmap;
             _pixelCount = Source.Width * Source.Height;
+            _imgLockMode = lockMode;
 
             Rectangle lockRectangle = new Rectangle(0, 0, Source.Width, Source.Height);
 
@@ -36,14 +38,14 @@ namespace aMaze_ingSolver
                 throw new ArgumentException("Only 8, 24 and 32 bpp images are supported.");
             }
 
-            Data = Source.LockBits(lockRectangle, ImageLockMode.ReadOnly, Source.PixelFormat);
+            Data = Source.LockBits(lockRectangle, _imgLockMode, Source.PixelFormat);
 
             _colorStep = _depth / 8;
             Pixels = new byte[_pixelCount * _colorStep];
-            Iptr = Data.Scan0;
+            imagePointer = Data.Scan0;
 
             // Copy data from pointer to array
-            Marshal.Copy(Iptr, Pixels, 0, Pixels.Length);
+            Marshal.Copy(imagePointer, Pixels, 0, Pixels.Length);
         }
 
         public Color GetPixel(int x, int y)
@@ -106,6 +108,7 @@ namespace aMaze_ingSolver
         {
             try
             {
+                Marshal.Copy(Pixels, 0, imagePointer, Pixels.Length);
                 Source.UnlockBits(Data);
             }
             catch (Exception ex)

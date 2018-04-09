@@ -37,7 +37,7 @@ namespace aMaze_ingSolver
 
             Data = new bool[bmp.Height, bmp.Width];
 
-            using (BitmapPlus bmpP = new BitmapPlus(bmp))
+            using (BitmapPlus bmpP = new BitmapPlus(bmp, System.Drawing.Imaging.ImageLockMode.ReadOnly))
             {
                 for (int row = 0; row < bmp.Height; ++row)
                 {

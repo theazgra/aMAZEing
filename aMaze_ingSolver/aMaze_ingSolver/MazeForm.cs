@@ -149,48 +149,48 @@ namespace aMaze_ingSolver
         private void DrawImage()
         {
             ClearImage();
-            if (chbShowResult.Checked && _selectedSolver != null)
+            using (BitmapPlus bmpPlus = new BitmapPlus(_drawBmp, System.Drawing.Imaging.ImageLockMode.WriteOnly))
             {
-                //foreach (Vertex vertex in _selectedSolver.GetResultVertices())
-                //{
-                //    _drawBmp.SetPixel(vertex.X, vertex.Y, Color.Purple);
-                //}
-                Queue<Vertex> _resultPath = new Queue<Vertex>(_selectedSolver.GetResultVertices());
-
-                Vertex previous = _resultPath.Dequeue();
-                if (_resultPath != null)
+                if (chbShowResult.Checked && _selectedSolver != null)
                 {
-                    while (_resultPath.Count != 0)
-                    {
-                        Vertex current = _resultPath.Dequeue();
+                    Queue<Vertex> _resultPath = new Queue<Vertex>(_selectedSolver.GetResultVertices());
 
-                        Direction direction = Utils.GetDirection(previous.Location, current.Location);
-                        while (!previous.Equals(current))
+                    Vertex previous = _resultPath.Dequeue();
+                    if (_resultPath != null)
+                    {
+                        while (_resultPath.Count != 0)
                         {
+                            Vertex current = _resultPath.Dequeue();
 
-                            _drawBmp.SetPixel(previous.X, previous.Y, Color.Blue);
-                            previous = new Vertex(previous.Location.MoveInDirection(direction));
+                            Direction direction = Utils.GetDirection(previous.Location, current.Location);
+                            while (!previous.Equals(current))
+                            {
+
+                                bmpPlus.SetPixel(previous.X, previous.Y, Color.Blue);
+                                previous = new Vertex(previous.Location.MoveInDirection(direction));
+                            }
+                            bmpPlus.SetPixel(current.X, current.Y, Color.Blue);
+
+                            previous = current;
                         }
-                        _drawBmp.SetPixel(current.X, current.Y, Color.Blue);
-
-                        previous = current;
                     }
                 }
-            }
-            else
-            {
-                if (chbShowVertices.Checked)
+                else
                 {
-                    foreach (Vertex vertex in _maze.Graph.Vertices)
+
+                    if (chbShowVertices.Checked)
                     {
-                        _drawBmp.SetPixel(vertex.X, vertex.Y, Color.Red);
+                        foreach (Vertex vertex in _maze.Graph.Vertices)
+                        {
+                            bmpPlus.SetPixel(vertex.X, vertex.Y, Color.Red);
+                        }
                     }
-                }
 
-                if (chbShowStartEnd.Checked)
-                {
-                    _drawBmp.SetPixel(_maze.Graph.Start.X, _maze.Graph.Start.Y, Color.Blue);
-                    _drawBmp.SetPixel(_maze.Graph.End.X, _maze.Graph.End.Y, Color.Blue);
+                    if (chbShowStartEnd.Checked)
+                    {
+                        bmpPlus.SetPixel(_maze.Graph.Start.X, _maze.Graph.Start.Y, Color.Blue);
+                        bmpPlus.SetPixel(_maze.Graph.End.X, _maze.Graph.End.Y, Color.Blue);
+                    }
                 }
             }
 
