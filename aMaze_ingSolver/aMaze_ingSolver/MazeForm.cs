@@ -76,7 +76,7 @@ namespace aMaze_ingSolver
 
             _maze = new Maze(_image);
 
-            lbMatrixInfo.Text = string.Format("Matrix build time: {0} ms.", _maze.MatrixBuildTime.ToString("mm':'ss':'fff"));
+            lbMatrixInfo.Text = string.Format("Matrix build time: {0} ms.", _maze.MatrixBuildTime.TotalMilliseconds);
 
             _maze.Graph.OnBuildProgress += Tree_OnBuildProgress;
             _maze.Graph.OnBuildCompleted += Graph_OnBuildCompleted;
@@ -95,7 +95,7 @@ namespace aMaze_ingSolver
             }
             else
             {
-                lbInfo.Text = string.Format("Completed after: {0} ms", time.ToString("mm':'ss':'fff"));
+                lbInfo.Text = string.Format("Graph completed after: {0} ms", time.TotalMilliseconds);
 
                 Task.Run(() => PaintAndSave());
 
@@ -280,7 +280,8 @@ namespace aMaze_ingSolver
                 else
                 {
                     //lbSolveTime.Text = string.Format("Completed after: {0} ms", time.ToString("mm':'ss':'fff"));
-                    lbSolveTime.Text = "Solve time: " + _selectedSolver.GetSolveTime().ToString("mm':'ss':'fff");
+                    lbSolveTime.Text = string.Format("Solve time: {0} ms", _selectedSolver.GetSolveTime().TotalMilliseconds);
+                    lbPathSize.Text = string.Format("Path length: {0}", _selectedSolver.GetPathLength());
                 }
             }
         }

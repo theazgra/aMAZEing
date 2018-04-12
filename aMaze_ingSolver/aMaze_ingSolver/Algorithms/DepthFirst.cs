@@ -1,45 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using aMaze_ingSolver.GraphUtils;
 
 namespace aMaze_ingSolver.Algorithms
 {
-    class DepthFirst : IMazeSolver
+    class DepthFirst : MazeSolver
     {
-        public event solved OnSolved;
-
-        public bool Parallel { get; set; } = false;
-        public bool Solved { get; set; } = false;
-        public string Name => "Depth first";
-
-        private Queue<Vertex> _resultPath;
-        private Stopwatch _stopwatch;
-
+        
         private Dictionary<Vertex, Vertex> _visited;
-        //private List<Guid> _visited;
 
+        public override string Name => "Depth first";
+        public override event solved OnSolved;
 
         public DepthFirst()
         {
-            _resultPath = new Queue<Vertex>();
-            _stopwatch = new Stopwatch();
-            //_visited = new List<Guid>();
             _visited = new Dictionary<Vertex, Vertex>();
         }
 
         private bool Visited(Vertex vertex)
         {
-            //return _visited.Contains(vertex.UniqueId);
             return _visited.ContainsKey(vertex);
         }
 
         private void AddVisited(Vertex vertex, Vertex previous)
         {
-            //_visited.Add(vertex.UniqueId);
             _visited.Add(vertex, previous);
         }
 
@@ -51,23 +35,12 @@ namespace aMaze_ingSolver.Algorithms
             return _visited[vertex];
         }
 
-        public Queue<Vertex> GetResultVertices()
-        {
-            //Return copy so our queue is left intact.
-            return new Queue<Vertex>(_resultPath);
-        }
-
-        public TimeSpan GetSolveTime()
-        {
-            return _stopwatch.Elapsed;
-        }
-
-        public void SolveMaze(Graph graph)
+        public override void SolveMaze(Graph graph)
         {
 
             List<Vertex> previous = new List<Vertex>();
             Queue<Vertex> queue = new Queue<Vertex>();
-            _stopwatch.Start();
+            _timer.Start();
 
             queue.Enqueue(graph.Start);
             AddVisited(graph.Start, null);
@@ -104,7 +77,7 @@ namespace aMaze_ingSolver.Algorithms
                 current = _visited[current];
             }
 
-            _stopwatch.Stop();
+            _timer.Stop();
             OnSolved?.Invoke();
         }
 

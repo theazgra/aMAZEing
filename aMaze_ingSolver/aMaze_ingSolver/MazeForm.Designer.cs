@@ -35,6 +35,8 @@
             this.settingsPanel = new System.Windows.Forms.Panel();
             this.lbSolveTime = new System.Windows.Forms.Label();
             this.gbSolvers = new System.Windows.Forms.GroupBox();
+            this.btnSave = new System.Windows.Forms.Button();
+            this.lbPathSize = new System.Windows.Forms.Label();
             this.chbShowResult = new System.Windows.Forms.CheckBox();
             this.btnSolve = new System.Windows.Forms.Button();
             this.solverSelection = new System.Windows.Forms.CheckedListBox();
@@ -43,14 +45,13 @@
             this.chbShowStartEnd = new System.Windows.Forms.CheckBox();
             this.chbShowVertices = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lbScale = new System.Windows.Forms.Label();
             this.scaleUp = new System.Windows.Forms.Button();
             this.scaleDown = new System.Windows.Forms.Button();
             this.lbScaleFactor = new System.Windows.Forms.Label();
             this.chbInvoke = new System.Windows.Forms.CheckBox();
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.imgPanel = new System.Windows.Forms.Panel();
-            this.lbScale = new System.Windows.Forms.Label();
-            this.btnSave = new System.Windows.Forms.Button();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imgBox)).BeginInit();
             this.settingsPanel.SuspendLayout();
@@ -121,16 +122,38 @@
             // gbSolvers
             // 
             this.gbSolvers.Controls.Add(this.btnSave);
+            this.gbSolvers.Controls.Add(this.lbPathSize);
             this.gbSolvers.Controls.Add(this.chbShowResult);
             this.gbSolvers.Controls.Add(this.btnSolve);
             this.gbSolvers.Controls.Add(this.solverSelection);
             this.gbSolvers.Dock = System.Windows.Forms.DockStyle.Top;
             this.gbSolvers.Location = new System.Drawing.Point(5, 228);
             this.gbSolvers.Name = "gbSolvers";
-            this.gbSolvers.Size = new System.Drawing.Size(248, 198);
+            this.gbSolvers.Size = new System.Drawing.Size(248, 214);
             this.gbSolvers.TabIndex = 5;
             this.gbSolvers.TabStop = false;
             this.gbSolvers.Text = "Solvers";
+            // 
+            // btnSave
+            // 
+            this.btnSave.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnSave.Location = new System.Drawing.Point(3, 176);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(242, 31);
+            this.btnSave.TabIndex = 7;
+            this.btnSave.Text = "Save result";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
+            // lbPathSize
+            // 
+            this.lbPathSize.AutoSize = true;
+            this.lbPathSize.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lbPathSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.lbPathSize.Location = new System.Drawing.Point(3, 159);
+            this.lbPathSize.Name = "lbPathSize";
+            this.lbPathSize.Size = new System.Drawing.Size(0, 17);
+            this.lbPathSize.TabIndex = 8;
             // 
             // chbShowResult
             // 
@@ -227,6 +250,15 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Image";
             // 
+            // lbScale
+            // 
+            this.lbScale.AutoSize = true;
+            this.lbScale.Location = new System.Drawing.Point(115, 31);
+            this.lbScale.Name = "lbScale";
+            this.lbScale.Size = new System.Drawing.Size(28, 18);
+            this.lbScale.TabIndex = 3;
+            this.lbScale.Text = "1.0";
+            // 
             // scaleUp
             // 
             this.scaleUp.Location = new System.Drawing.Point(189, 63);
@@ -292,26 +324,6 @@
             this.imgPanel.Size = new System.Drawing.Size(617, 545);
             this.imgPanel.TabIndex = 4;
             // 
-            // lbScale
-            // 
-            this.lbScale.AutoSize = true;
-            this.lbScale.Location = new System.Drawing.Point(115, 31);
-            this.lbScale.Name = "lbScale";
-            this.lbScale.Size = new System.Drawing.Size(28, 18);
-            this.lbScale.TabIndex = 3;
-            this.lbScale.Text = "1.0";
-            // 
-            // btnSave
-            // 
-            this.btnSave.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnSave.Location = new System.Drawing.Point(3, 159);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(242, 31);
-            this.btnSave.TabIndex = 7;
-            this.btnSave.Text = "Save result";
-            this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-            // 
             // MazeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -322,7 +334,7 @@
             this.Controls.Add(this.settingsPanel);
             this.Controls.Add(this.toolStrip1);
             this.Name = "MazeForm";
-            this.Text = "Form1";
+            this.Text = "aMAZEing";
             this.Load += new System.EventHandler(this.MazeForm_Load);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
@@ -363,6 +375,7 @@
         private System.Windows.Forms.Label lbSolveTime;
         private System.Windows.Forms.Label lbScale;
         private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.Label lbPathSize;
     }
 }
 

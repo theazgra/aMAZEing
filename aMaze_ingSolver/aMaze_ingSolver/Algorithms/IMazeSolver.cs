@@ -39,6 +39,18 @@ namespace aMaze_ingSolver.Algorithms
         Queue<Vertex> GetResultVertices();
 
         /// <summary>
+        /// Get the lenght of the result path.
+        /// </summary>
+        /// <returns>Length.</returns>
+        int GetPathLength();
+        
+        /// <summary>
+        /// Get number of vertices in result path.
+        /// </summary>
+        /// <returns>Number of vertices in result path.</returns>
+        int GetResultVertexCount();
+
+        /// <summary>
         /// Get time needed for path finding.
         /// </summary>
         /// <returns>Time span.</returns>
