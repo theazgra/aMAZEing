@@ -2,12 +2,8 @@
 using aMaze_ingSolver.GraphUtils;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -26,10 +22,19 @@ namespace aMaze_ingSolver
         private List<IMazeSolver> _solvers;
         private IMazeSolver _selectedSolver;
 
+        private float _scale = 1.0f;
+        private const float _scaleMin = 0.01f;
+        private const float _scaleMax = 20.0f;
+        private const float _smallStepFrom = 1.0f;
+
         public MazeForm()
         {
             InitializeComponent();
-            _solvers = new List<IMazeSolver> { new LeftTurn() };
+            _solvers = new List<IMazeSolver>
+            {
+                new LeftTurn(),
+                new DepthFirst()
+            };
         }
 
         private void MazeForm_Load(object sender, EventArgs e)
@@ -62,7 +67,7 @@ namespace aMaze_ingSolver
             SetAllUnsolved();
 
             lbMatrixInfo.Text = string.Empty;
-            scaleFactor.Value = 1;
+            _scale = 1.0f;
             lbMatrixInfo.Text = "Loading image...";
             _image = Image.FromFile(_mazeFile);
             lbMatrixInfo.Text = "Creating bitmap...";
@@ -77,7 +82,8 @@ namespace aMaze_ingSolver
             _maze.Graph.OnBuildCompleted += Graph_OnBuildCompleted;
 
             _maze.BuildTree();
-            DrawImage();
+
+            UpdateScale();
         }
 
         private void Graph_OnBuildCompleted(TimeSpan time)
@@ -153,27 +159,7 @@ namespace aMaze_ingSolver
             {
                 if (chbShowResult.Checked && _selectedSolver != null)
                 {
-                    Queue<Vertex> _resultPath = new Queue<Vertex>(_selectedSolver.GetResultVertices());
-
-                    Vertex previous = _resultPath.Dequeue();
-                    if (_resultPath != null)
-                    {
-                        while (_resultPath.Count != 0)
-                        {
-                            Vertex current = _resultPath.Dequeue();
-
-                            Direction direction = Utils.GetDirection(previous.Location, current.Location);
-                            while (!previous.Equals(current))
-                            {
-
-                                bmpPlus.SetPixel(previous.X, previous.Y, Color.Blue);
-                                previous = new Vertex(previous.Location.MoveInDirection(direction));
-                            }
-                            bmpPlus.SetPixel(current.X, current.Y, Color.Blue);
-
-                            previous = current;
-                        }
-                    }
+                    DrawResultPath(bmpPlus);
                 }
                 else
                 {
@@ -195,7 +181,32 @@ namespace aMaze_ingSolver
             }
 
 
-            imgBox.Image = _drawBmp.ResizeImage(_drawBmp.Width * scaleFactor.Value, _drawBmp.Height * scaleFactor.Value);
+            imgBox.Image = _drawBmp.ResizeImage((int)((float)_drawBmp.Width * _scale), (int)((float)_drawBmp.Height * _scale));
+        }
+
+        private void DrawResultPath(BitmapPlus bmpPlus)
+        {
+            Queue<Vertex> _resultPath = new Queue<Vertex>(_selectedSolver.GetResultVertices());
+
+            Vertex previous = _resultPath.Dequeue();
+            if (_resultPath != null)
+            {
+                while (_resultPath.Count != 0)
+                {
+                    Vertex current = _resultPath.Dequeue();
+
+                    Direction direction = Utils.GetDirection(previous.Location, current.Location);
+                    while (!previous.Equals(current))
+                    {
+
+                        bmpPlus.SetPixel(previous.X, previous.Y, Color.Blue);
+                        previous = new Vertex(previous.Location.MoveInDirection(direction));
+                    }
+                    bmpPlus.SetPixel(current.X, current.Y, Color.Blue);
+
+                    previous = current;
+                }
+            }
         }
 
         private void ClearImage()
@@ -215,33 +226,34 @@ namespace aMaze_ingSolver
 
         private void scaleUp_Click(object sender, EventArgs e)
         {
-            if (scaleFactor.Value < scaleFactor.Maximum)
-                scaleFactor.Value += 1;
+            float step = _scale <= _smallStepFrom ? 0.1f : 1.0f;
+
+            if (_scale < _scaleMax)
+                _scale += step;
+
+            UpdateScale();
+        }
+
+        private void UpdateScale()
+        {
+            lbScale.Text = _scale.ToString("0.00");
+            DrawImage();
         }
 
         private void scaleDown_Click(object sender, EventArgs e)
         {
-            if (scaleFactor.Value > scaleFactor.Minimum)
-                scaleFactor.Value -= 1;
+            float step = _scale <= _smallStepFrom ? 0.1f : 1.0f;
+
+            if (_scale > _scaleMin)
+                _scale -= step;
+
+            UpdateScale();
+
         }
 
         private void chbInvoke_CheckedChanged(object sender, EventArgs e)
         {
             _invoke = (sender as CheckBox).Checked;
-        }
-
-        private void SolverSelected(object sender, EventArgs e)
-        {
-            if ((sender as CheckedListBox).SelectedItem is IMazeSolver solver)
-            {
-                _selectedSolver = solver;
-                btnSolve.Text = "Solve";
-            }
-            else
-            {
-                _selectedSolver = null;
-                //throw new ArgumentException("Wrong solvert in checked list box.");
-            }
         }
 
         private void SolveUsingSolver(object sender, EventArgs e)
@@ -276,6 +288,63 @@ namespace aMaze_ingSolver
         private void ShowResult(object sender, EventArgs e)
         {
             DrawImage();
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            if (_selectedSolver != null && _selectedSolver.Solved)
+            {
+                if (!chbShowResult.Checked)
+                {
+                    using (BitmapPlus bmpp = new BitmapPlus(_drawBmp, System.Drawing.Imaging.ImageLockMode.WriteOnly))
+                    {
+                        DrawResultPath(bmpp);
+                    }
+                }
+
+                SaveFileDialog saveFileDialog = new SaveFileDialog
+                {
+                    AddExtension = true,
+                    DefaultExt = ".png",
+                    FileName = "maze.png",
+                    Title = "Save solved maze as image."
+                };
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    _drawBmp.Save(saveFileDialog.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                }
+
+            }
+            else
+            {
+                MessageBox.Show("Not solved.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void solverSelection_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            if (e.NewValue != CheckState.Checked)
+                return;
+
+            (sender as CheckedListBox).ItemCheck -= solverSelection_ItemCheck;
+
+            for (int i = 0; i < (sender as CheckedListBox).Items.Count; i++)
+            {
+                (sender as CheckedListBox).SetItemChecked(i, i == e.Index);
+            }
+
+            if ((sender as CheckedListBox).SelectedItem is IMazeSolver solver)
+            {
+                _selectedSolver = solver;
+                btnSolve.Text = "Solve";
+            }
+            else
+            {
+                _selectedSolver = null;
+                //throw new ArgumentException("Wrong solvert in checked list box.");
+            }
+            (sender as CheckedListBox).ItemCheck += solverSelection_ItemCheck;
         }
     }
 }

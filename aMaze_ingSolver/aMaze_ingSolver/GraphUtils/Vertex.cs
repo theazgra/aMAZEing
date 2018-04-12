@@ -26,6 +26,20 @@ namespace aMaze_ingSolver.GraphUtils
         private Dictionary<Direction, Vertex> _neighbours;
 
         /// <summary>
+        /// Creates vertex at given location.
+        /// </summary>
+        /// <param name="col">Column in image or X component of location.</param>
+        /// <param name="row">Row in image or Y component of location.</param>
+        public Vertex(int col, int row) : this(new Point(col, row))
+        { }
+
+        public Vertex(Point location)
+        {
+            Location = location;
+            _neighbours = new Dictionary<Direction, Vertex>();
+        }
+
+        /// <summary>
         /// Get all neighbours.
         /// </summary>
         public IEnumerable<Vertex> Neighbours
@@ -45,20 +59,6 @@ namespace aMaze_ingSolver.GraphUtils
 
                 return neighbours;
             }
-        }
-
-        /// <summary>
-        /// Creates vertex at given location.
-        /// </summary>
-        /// <param name="col">Column in image or X component of location.</param>
-        /// <param name="row">Row in image or Y component of location.</param>
-        public Vertex(int col, int row) : this(new Point(col, row))
-        { }
-
-        public Vertex(Point location)
-        {
-            Location = location;
-            _neighbours = new Dictionary<Direction, Vertex>();
         }
 
         /// <summary>
@@ -135,6 +135,30 @@ namespace aMaze_ingSolver.GraphUtils
         public override string ToString()
         {
             return Location.ToString();
+        }
+
+        /// <summary>
+        /// Neighbours ordered like up, left, down, right.
+        /// </summary>
+        /// <returns></returns>
+        public Queue<Vertex> GetOrderedNeighbours()
+        {
+            Queue<Vertex> vertices = new Queue<Vertex>();
+
+            if (_neighbours.ContainsKey(Direction.Up))
+                vertices.Enqueue(_neighbours[Direction.Up]);
+
+            if (_neighbours.ContainsKey(Direction.Left))
+                vertices.Enqueue(_neighbours[Direction.Left]);
+
+            if (_neighbours.ContainsKey(Direction.Down))
+                vertices.Enqueue(_neighbours[Direction.Down]);
+
+            if (_neighbours.ContainsKey(Direction.Right))
+                vertices.Enqueue(_neighbours[Direction.Right]);
+
+
+            return vertices;
         }
     }
 }

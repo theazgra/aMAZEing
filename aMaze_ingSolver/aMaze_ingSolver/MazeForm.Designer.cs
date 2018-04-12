@@ -45,17 +45,17 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.scaleUp = new System.Windows.Forms.Button();
             this.scaleDown = new System.Windows.Forms.Button();
-            this.scaleFactor = new System.Windows.Forms.TrackBar();
             this.lbScaleFactor = new System.Windows.Forms.Label();
             this.chbInvoke = new System.Windows.Forms.CheckBox();
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.imgPanel = new System.Windows.Forms.Panel();
+            this.lbScale = new System.Windows.Forms.Label();
+            this.btnSave = new System.Windows.Forms.Button();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imgBox)).BeginInit();
             this.settingsPanel.SuspendLayout();
             this.gbSolvers.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.scaleFactor)).BeginInit();
             this.imgPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -120,6 +120,7 @@
             // 
             // gbSolvers
             // 
+            this.gbSolvers.Controls.Add(this.btnSave);
             this.gbSolvers.Controls.Add(this.chbShowResult);
             this.gbSolvers.Controls.Add(this.btnSolve);
             this.gbSolvers.Controls.Add(this.solverSelection);
@@ -156,13 +157,14 @@
             // 
             // solverSelection
             // 
+            this.solverSelection.CheckOnClick = true;
             this.solverSelection.Dock = System.Windows.Forms.DockStyle.Top;
             this.solverSelection.FormattingEnabled = true;
             this.solverSelection.Location = new System.Drawing.Point(3, 18);
             this.solverSelection.Name = "solverSelection";
             this.solverSelection.Size = new System.Drawing.Size(242, 89);
             this.solverSelection.TabIndex = 4;
-            this.solverSelection.SelectedIndexChanged += new System.EventHandler(this.SolverSelected);
+            this.solverSelection.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.solverSelection_ItemCheck);
             // 
             // lbMatrixInfo
             // 
@@ -212,9 +214,9 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.lbScale);
             this.groupBox1.Controls.Add(this.scaleUp);
             this.groupBox1.Controls.Add(this.scaleDown);
-            this.groupBox1.Controls.Add(this.scaleFactor);
             this.groupBox1.Controls.Add(this.lbScaleFactor);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
@@ -244,18 +246,6 @@
             this.scaleDown.Text = "-";
             this.scaleDown.UseVisualStyleBackColor = true;
             this.scaleDown.Click += new System.EventHandler(this.scaleDown_Click);
-            // 
-            // scaleFactor
-            // 
-            this.scaleFactor.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.scaleFactor.Location = new System.Drawing.Point(3, 92);
-            this.scaleFactor.Maximum = 100;
-            this.scaleFactor.Minimum = 1;
-            this.scaleFactor.Name = "scaleFactor";
-            this.scaleFactor.Size = new System.Drawing.Size(242, 56);
-            this.scaleFactor.TabIndex = 1;
-            this.scaleFactor.Value = 1;
-            this.scaleFactor.ValueChanged += new System.EventHandler(this.ScaleFactor_ValueChanged);
             // 
             // lbScaleFactor
             // 
@@ -302,6 +292,26 @@
             this.imgPanel.Size = new System.Drawing.Size(617, 545);
             this.imgPanel.TabIndex = 4;
             // 
+            // lbScale
+            // 
+            this.lbScale.AutoSize = true;
+            this.lbScale.Location = new System.Drawing.Point(115, 31);
+            this.lbScale.Name = "lbScale";
+            this.lbScale.Size = new System.Drawing.Size(28, 18);
+            this.lbScale.TabIndex = 3;
+            this.lbScale.Text = "1.0";
+            // 
+            // btnSave
+            // 
+            this.btnSave.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnSave.Location = new System.Drawing.Point(3, 159);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(242, 31);
+            this.btnSave.TabIndex = 7;
+            this.btnSave.Text = "Save result";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
             // MazeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -323,7 +333,6 @@
             this.gbSolvers.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.scaleFactor)).EndInit();
             this.imgPanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -340,7 +349,6 @@
         private System.Windows.Forms.CheckBox chbShowVertices;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label lbScaleFactor;
-        private System.Windows.Forms.TrackBar scaleFactor;
         private System.Windows.Forms.Button scaleUp;
         private System.Windows.Forms.Button scaleDown;
         private System.Windows.Forms.Label lbInfo;
@@ -353,6 +361,8 @@
         private System.Windows.Forms.Button btnSolve;
         private System.Windows.Forms.CheckBox chbShowResult;
         private System.Windows.Forms.Label lbSolveTime;
+        private System.Windows.Forms.Label lbScale;
+        private System.Windows.Forms.Button btnSave;
     }
 }
 
