@@ -76,7 +76,7 @@ namespace aMaze_ingSolver
 
             _maze = new Maze(_image);
 
-            lbMatrixInfo.Text = string.Format("Matrix build time: {0} ms.", _maze.MatrixBuildTime.TotalMilliseconds);
+            lbMatrixInfo.Text = string.Format("Matrix build time: {0} ms.", _maze.MatrixBuildTime.TotalMilliseconds.ToString("### ### ###"));
 
             _maze.Graph.OnBuildProgress += Tree_OnBuildProgress;
             _maze.Graph.OnBuildCompleted += Graph_OnBuildCompleted;
@@ -95,7 +95,7 @@ namespace aMaze_ingSolver
             }
             else
             {
-                lbInfo.Text = string.Format("Graph completed after: {0} ms", time.TotalMilliseconds);
+                lbInfo.Text = string.Format("Graph completed after: {0} ms", time.TotalMilliseconds.ToString("### ### ###"));
 
                 Task.Run(() => PaintAndSave());
 
@@ -152,7 +152,7 @@ namespace aMaze_ingSolver
         }
 
 
-        private void DrawImage()
+        private void InvalidateMaze()
         {
             ClearImage();
             using (BitmapPlus bmpPlus = new BitmapPlus(_drawBmp, System.Drawing.Imaging.ImageLockMode.WriteOnly))
@@ -188,6 +188,12 @@ namespace aMaze_ingSolver
         {
             Queue<Vertex> _resultPath = new Queue<Vertex>(_selectedSolver.GetResultVertices());
 
+            if (_resultPath.Count <= 0)
+            {
+                MessageBox.Show("Empty queue");
+                return;
+            }
+
             Vertex previous = _resultPath.Dequeue();
             if (_resultPath != null)
             {
@@ -216,12 +222,12 @@ namespace aMaze_ingSolver
 
         private void ChbShowVertices_CheckedChanged(object sender, EventArgs e)
         {
-            DrawImage();
+            InvalidateMaze();
         }
 
         private void ScaleFactor_ValueChanged(object sender, EventArgs e)
         {
-            DrawImage();
+            InvalidateMaze();
         }
 
         private void scaleUp_Click(object sender, EventArgs e)
@@ -237,7 +243,7 @@ namespace aMaze_ingSolver
         private void UpdateScale()
         {
             lbScale.Text = _scale.ToString("0.00");
-            DrawImage();
+            InvalidateMaze();
         }
 
         private void scaleDown_Click(object sender, EventArgs e)
@@ -251,6 +257,18 @@ namespace aMaze_ingSolver
 
         }
 
+        private void  ResetClick(object sender, EventArgs e)
+        {
+            chbShowResult.Checked = false;
+            chbShowResult.Enabled = false;
+
+            if (_selectedSolver != null)
+                _selectedSolver.Reset();
+
+            btnSolve.Text = "Solve";
+            InvalidateMaze();
+        }
+
         private void chbInvoke_CheckedChanged(object sender, EventArgs e)
         {
             _invoke = (sender as CheckBox).Checked;
@@ -260,6 +278,14 @@ namespace aMaze_ingSolver
         {
             if (_selectedSolver != null && !_selectedSolver.Solved)
             {
+                _selectedSolver.Parallel = chbParallel.Checked;
+                if (_selectedSolver.Parallel)
+                {
+                    if (int.TryParse(tbThreadCount.Text, out int threadCount))
+                        _selectedSolver.ThreadCount = threadCount;
+                    else
+                        MessageBox.Show("Wrong input");
+                }
                 _selectedSolver.OnSolved += MazeSolved;
                 _selectedSolver.SolveMaze(_maze.Graph);
             }
@@ -269,6 +295,7 @@ namespace aMaze_ingSolver
         {
             if (_selectedSolver != null)
             {
+                chbShowResult.Enabled = true;
                 btnSolve.Text = "Solved";
                 _selectedSolver.Solved = true;
 
@@ -279,16 +306,16 @@ namespace aMaze_ingSolver
                 }
                 else
                 {
-                    //lbSolveTime.Text = string.Format("Completed after: {0} ms", time.ToString("mm':'ss':'fff"));
-                    lbSolveTime.Text = string.Format("Solve time: {0} ms", _selectedSolver.GetSolveTime().TotalMilliseconds);
-                    lbPathSize.Text = string.Format("Path length: {0}", _selectedSolver.GetPathLength());
+                    //lbSolveTime.Text = string.Format("Solve time: {0} ms", _selectedSolver.GetSolveTime().TotalMilliseconds);
+                    lbSolveTime.Text = string.Format("# of ticks: {0}", _selectedSolver.GetTicks().ToString("### ### ###"));
+                    lbPathSize.Text = string.Format("Path length: {0}", _selectedSolver.GetPathLength().ToString("### ### ###"));
                 }
             }
         }
 
         private void ShowResult(object sender, EventArgs e)
         {
-            DrawImage();
+            InvalidateMaze();
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -346,6 +373,19 @@ namespace aMaze_ingSolver
                 //throw new ArgumentException("Wrong solvert in checked list box.");
             }
             (sender as CheckedListBox).ItemCheck += solverSelection_ItemCheck;
+        }
+
+        private void chbParallel_Click(object sender, EventArgs e)
+        {
+            gbThreadCount.Enabled = (sender as CheckBox).Checked;
+        }
+
+        private void tbThreadCount_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsNumber(e.KeyChar) && !char.IsControl(e.KeyChar))
+            {
+                e.Handled = true;
+            }
         }
     }
 }

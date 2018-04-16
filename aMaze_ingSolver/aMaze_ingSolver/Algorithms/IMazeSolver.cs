@@ -13,9 +13,14 @@ namespace aMaze_ingSolver.Algorithms
         event solved OnSolved;
 
         /// <summary>
-        /// Determine in solver is paralellized.
+        /// Determine if solver is paralellized.
         /// </summary>
         bool Parallel { get; set; }
+
+        /// <summary>
+        /// Number of threads avaible for solver if Parallel is true.
+        /// </summary>
+        int ThreadCount { get; set; }
 
         /// <summary>
         /// If current graph was solved.
@@ -55,5 +60,16 @@ namespace aMaze_ingSolver.Algorithms
         /// </summary>
         /// <returns>Time span.</returns>
         TimeSpan GetSolveTime();
+
+        /// <summary>
+        /// Get stopwatch ticks.
+        /// </summary>
+        /// <returns>Ticks of stopwatch</returns>
+        long GetTicks();
+
+        /// <summary>
+        /// Reset solver.
+        /// </summary>
+        void Reset();
     }
 }

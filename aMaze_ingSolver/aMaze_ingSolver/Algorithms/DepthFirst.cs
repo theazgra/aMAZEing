@@ -1,13 +1,36 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using aMaze_ingSolver.GraphUtils;
+using aMaze_ingSolver.Parallelism;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace aMaze_ingSolver.Algorithms
 {
+    struct VertexParam
+    {
+        public Vertex currentVertex;
+        public Vertex nextVertex;
+        public int threadToken;
+
+        public VertexParam(Vertex current, Vertex next, int token)
+        {
+            currentVertex = current;
+            nextVertex = next;
+            threadToken = token;
+        }
+    }
+
     class DepthFirst : MazeSolver
     {
-        
         private Dictionary<Vertex, Vertex> _visited;
+        private SimpleSemaphore _semaphore;
+        private object _lock = new object();
+        private object _taskLock = new object();
+
+        private Vertex _end;
+        private List<Task> _tasks;
+
 
         public override string Name => "Depth first";
         public override event solved OnSolved;
@@ -15,32 +38,151 @@ namespace aMaze_ingSolver.Algorithms
         public DepthFirst()
         {
             _visited = new Dictionary<Vertex, Vertex>();
+            _tasks = new List<Task>();
         }
 
         private bool Visited(Vertex vertex)
         {
-            return _visited.ContainsKey(vertex);
+            lock (_lock)
+            {
+                return _visited.ContainsKey(vertex);
+            }
         }
 
         private void AddVisited(Vertex vertex, Vertex previous)
         {
-            _visited.Add(vertex, previous);
-        }
-
-        private Vertex GetPrevious(Vertex vertex)
-        {
-            if (!_visited.ContainsKey(vertex))
-                return null;
-
-            return _visited[vertex];
+            lock (_lock)
+            {
+                if (!_visited.ContainsKey(vertex))
+                    _visited.Add(vertex, previous);
+            }
         }
 
         public override void SolveMaze(Graph graph)
         {
+            if (!Parallel)
+            {
+                NonParallelSolution(graph);
+            }
+            else
+            {
+                _semaphore = new SimpleSemaphore(ThreadCount);
+                _visited.Clear();
 
-            List<Vertex> previous = new List<Vertex>();
+                _end = graph.End;
+                ParallelSolution(graph);
+            }
+        }
+
+        private void ParallelSolution(Graph graph)
+        {
+            int token = _semaphore.GetToken();
+
+            VertexParam vp = new VertexParam(null, graph.Start, token);
+            _timer.Reset();
+            _timer.Start();
+            StartThread(vp);
+
+            bool wait = true;
+            while (wait)
+            {
+                List<Task> toRemove = new List<Task>();
+                lock (_taskLock)
+                {
+                    foreach (Task task in _tasks)
+                    {
+                        if (task.IsCompleted)
+                        {
+                            toRemove.Add(task);
+                        }
+                    }
+
+                    _tasks.RemoveAll(t => toRemove.Contains(t));
+
+                    System.Console.WriteLine("{0} running tasks.", _tasks.Count);
+                    wait = _tasks.Count > 0;
+                    //Thread.Sleep(10);
+                }
+            }
+
+            _resultPath.Clear();
+            Vertex current = graph.End;
+
+            while (current != null)
+            {
+                _resultPath.Enqueue(current);
+                current = _visited[current];
+            }
+
+            _timer.Stop();
+            OnSolved?.Invoke();
+            System.Console.WriteLine("Finished");
+        }
+
+        private void StartThread(VertexParam param)
+        {
+            //Thread worker = new Thread(ThreadWork);
+            //worker.Start(param);
+            lock (_taskLock)
+            {
+                _tasks.Add(Task.Factory.StartNew(() => ThreadWork(param)));
+            }
+        }
+
+        private void ThreadWork(object param)
+        {
+            if (param is VertexParam vertexParam)
+            {
+                Queue<Vertex> queue = new Queue<Vertex>();
+                queue.Enqueue(vertexParam.nextVertex);
+                AddVisited(vertexParam.nextVertex, vertexParam.currentVertex);
+
+                Vertex current = null;
+                while (true)
+                {
+                    if (queue.Count <= 0)
+                        break;
+
+                    current = queue.Dequeue();
+
+                    if (current.Equals(_end))
+                        break;
+
+                    foreach (Vertex neighbour in current.GetOrderedNeighbours())
+                    {
+                        if (!Visited(neighbour))
+                        {
+                            AddVisited(neighbour, current);
+
+                            if (_semaphore.HasFreeToken())
+                            {
+                                int token = _semaphore.GetToken();
+                                VertexParam vp = new VertexParam(current, neighbour, token);
+                                StartThread(vp);
+                            }
+                            else
+                            {
+                                queue.Enqueue(neighbour);
+                            }
+                        }
+                    }
+                }
+
+
+                _semaphore.ReturnToken(vertexParam.threadToken);
+
+            }
+            else
+            {
+                throw new System.Exception("Thread is expectiong Vertex object as a parameter.");
+            }
+        }
+
+        private void NonParallelSolution(Graph graph)
+        {
             Queue<Vertex> queue = new Queue<Vertex>();
             _timer.Start();
+            _visited.Clear();
 
             queue.Enqueue(graph.Start);
             AddVisited(graph.Start, null);

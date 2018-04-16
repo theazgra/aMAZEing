@@ -15,8 +15,10 @@ namespace aMaze_ingSolver.Algorithms
 
         public bool Parallel { get; set; }
         public bool Solved { get; set; }
+        public int ThreadCount { get; set; } = 1;
 
         public abstract string Name { get; }
+
         public abstract void SolveMaze(Graph graph);
 
 
@@ -46,7 +48,7 @@ namespace aMaze_ingSolver.Algorithms
 
         public int GetPathLength()
         {
-            if (_resultPath == null)
+            if (_resultPath == null || _resultPath.Count <= 0)
                 return 0;   
 
             Queue<Vertex> resultCopy = new Queue<Vertex>(_resultPath);
@@ -80,6 +82,21 @@ namespace aMaze_ingSolver.Algorithms
                 default:
                     return 0;
             }
+        }
+
+        public long GetTicks()
+        {
+            if (_timer == null)
+                return 0;
+
+            return _timer.ElapsedTicks;
+        }
+
+        public void Reset()
+        {
+            Solved = false;
+            _timer.Reset();
+            _resultPath.Clear();
         }
     }
 }

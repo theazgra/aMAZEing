@@ -52,12 +52,17 @@
             this.chbInvoke = new System.Windows.Forms.CheckBox();
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.imgPanel = new System.Windows.Forms.Panel();
+            this.btnClear = new System.Windows.Forms.Button();
+            this.chbParallel = new System.Windows.Forms.CheckBox();
+            this.tbThreadCount = new System.Windows.Forms.TextBox();
+            this.gbThreadCount = new System.Windows.Forms.GroupBox();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imgBox)).BeginInit();
             this.settingsPanel.SuspendLayout();
             this.gbSolvers.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.imgPanel.SuspendLayout();
+            this.gbThreadCount.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -67,7 +72,7 @@
             this.miLoadMaze});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(875, 27);
+            this.toolStrip1.Size = new System.Drawing.Size(1087, 27);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -88,7 +93,7 @@
             this.imgBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.imgBox.Location = new System.Drawing.Point(10, 10);
             this.imgBox.Name = "imgBox";
-            this.imgBox.Size = new System.Drawing.Size(597, 525);
+            this.imgBox.Size = new System.Drawing.Size(809, 610);
             this.imgBox.TabIndex = 1;
             this.imgBox.TabStop = false;
             // 
@@ -106,7 +111,7 @@
             this.settingsPanel.Location = new System.Drawing.Point(0, 27);
             this.settingsPanel.Name = "settingsPanel";
             this.settingsPanel.Padding = new System.Windows.Forms.Padding(5);
-            this.settingsPanel.Size = new System.Drawing.Size(258, 545);
+            this.settingsPanel.Size = new System.Drawing.Size(258, 630);
             this.settingsPanel.TabIndex = 2;
             // 
             // lbSolveTime
@@ -114,32 +119,35 @@
             this.lbSolveTime.AutoSize = true;
             this.lbSolveTime.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.lbSolveTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.lbSolveTime.Location = new System.Drawing.Point(5, 489);
+            this.lbSolveTime.Location = new System.Drawing.Point(5, 574);
             this.lbSolveTime.Name = "lbSolveTime";
             this.lbSolveTime.Size = new System.Drawing.Size(0, 17);
             this.lbSolveTime.TabIndex = 6;
             // 
             // gbSolvers
             // 
-            this.gbSolvers.Controls.Add(this.btnSave);
             this.gbSolvers.Controls.Add(this.lbPathSize);
+            this.gbSolvers.Controls.Add(this.btnClear);
+            this.gbSolvers.Controls.Add(this.btnSave);
             this.gbSolvers.Controls.Add(this.chbShowResult);
             this.gbSolvers.Controls.Add(this.btnSolve);
             this.gbSolvers.Controls.Add(this.solverSelection);
+            this.gbSolvers.Controls.Add(this.gbThreadCount);
+            this.gbSolvers.Controls.Add(this.chbParallel);
             this.gbSolvers.Dock = System.Windows.Forms.DockStyle.Top;
-            this.gbSolvers.Location = new System.Drawing.Point(5, 228);
+            this.gbSolvers.Location = new System.Drawing.Point(5, 175);
             this.gbSolvers.Name = "gbSolvers";
-            this.gbSolvers.Size = new System.Drawing.Size(248, 214);
+            this.gbSolvers.Size = new System.Drawing.Size(248, 304);
             this.gbSolvers.TabIndex = 5;
             this.gbSolvers.TabStop = false;
             this.gbSolvers.Text = "Solvers";
             // 
             // btnSave
             // 
-            this.btnSave.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnSave.Location = new System.Drawing.Point(3, 176);
+            this.btnSave.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnSave.Location = new System.Drawing.Point(3, 274);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(242, 31);
+            this.btnSave.Size = new System.Drawing.Size(242, 27);
             this.btnSave.TabIndex = 7;
             this.btnSave.Text = "Save result";
             this.btnSave.UseVisualStyleBackColor = true;
@@ -148,9 +156,9 @@
             // lbPathSize
             // 
             this.lbPathSize.AutoSize = true;
-            this.lbPathSize.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lbPathSize.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.lbPathSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.lbPathSize.Location = new System.Drawing.Point(3, 159);
+            this.lbPathSize.Location = new System.Drawing.Point(3, 230);
             this.lbPathSize.Name = "lbPathSize";
             this.lbPathSize.Size = new System.Drawing.Size(0, 17);
             this.lbPathSize.TabIndex = 8;
@@ -159,7 +167,8 @@
             // 
             this.chbShowResult.AutoSize = true;
             this.chbShowResult.Dock = System.Windows.Forms.DockStyle.Top;
-            this.chbShowResult.Location = new System.Drawing.Point(3, 138);
+            this.chbShowResult.Enabled = false;
+            this.chbShowResult.Location = new System.Drawing.Point(3, 206);
             this.chbShowResult.Name = "chbShowResult";
             this.chbShowResult.Size = new System.Drawing.Size(242, 21);
             this.chbShowResult.TabIndex = 6;
@@ -170,7 +179,7 @@
             // btnSolve
             // 
             this.btnSolve.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnSolve.Location = new System.Drawing.Point(3, 107);
+            this.btnSolve.Location = new System.Drawing.Point(3, 175);
             this.btnSolve.Name = "btnSolve";
             this.btnSolve.Size = new System.Drawing.Size(242, 31);
             this.btnSolve.TabIndex = 5;
@@ -183,7 +192,7 @@
             this.solverSelection.CheckOnClick = true;
             this.solverSelection.Dock = System.Windows.Forms.DockStyle.Top;
             this.solverSelection.FormattingEnabled = true;
-            this.solverSelection.Location = new System.Drawing.Point(3, 18);
+            this.solverSelection.Location = new System.Drawing.Point(3, 86);
             this.solverSelection.Name = "solverSelection";
             this.solverSelection.Size = new System.Drawing.Size(242, 89);
             this.solverSelection.TabIndex = 4;
@@ -194,7 +203,7 @@
             this.lbMatrixInfo.AutoSize = true;
             this.lbMatrixInfo.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.lbMatrixInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.lbMatrixInfo.Location = new System.Drawing.Point(5, 506);
+            this.lbMatrixInfo.Location = new System.Drawing.Point(5, 591);
             this.lbMatrixInfo.Name = "lbMatrixInfo";
             this.lbMatrixInfo.Size = new System.Drawing.Size(0, 17);
             this.lbMatrixInfo.TabIndex = 3;
@@ -204,7 +213,7 @@
             this.lbInfo.AutoSize = true;
             this.lbInfo.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.lbInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.lbInfo.Location = new System.Drawing.Point(5, 523);
+            this.lbInfo.Location = new System.Drawing.Point(5, 608);
             this.lbInfo.Name = "lbInfo";
             this.lbInfo.Size = new System.Drawing.Size(0, 17);
             this.lbInfo.TabIndex = 2;
@@ -214,7 +223,7 @@
             this.chbShowStartEnd.AutoSize = true;
             this.chbShowStartEnd.Dock = System.Windows.Forms.DockStyle.Top;
             this.chbShowStartEnd.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.chbShowStartEnd.Location = new System.Drawing.Point(5, 204);
+            this.chbShowStartEnd.Location = new System.Drawing.Point(5, 151);
             this.chbShowStartEnd.Name = "chbShowStartEnd";
             this.chbShowStartEnd.Size = new System.Drawing.Size(248, 24);
             this.chbShowStartEnd.TabIndex = 0;
@@ -227,7 +236,7 @@
             this.chbShowVertices.AutoSize = true;
             this.chbShowVertices.Dock = System.Windows.Forms.DockStyle.Top;
             this.chbShowVertices.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.chbShowVertices.Location = new System.Drawing.Point(5, 180);
+            this.chbShowVertices.Location = new System.Drawing.Point(5, 127);
             this.chbShowVertices.Name = "chbShowVertices";
             this.chbShowVertices.Size = new System.Drawing.Size(248, 24);
             this.chbShowVertices.TabIndex = 0;
@@ -245,7 +254,7 @@
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.groupBox1.Location = new System.Drawing.Point(5, 29);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(248, 151);
+            this.groupBox1.Size = new System.Drawing.Size(248, 98);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Image";
@@ -308,7 +317,7 @@
             this.splitter1.Location = new System.Drawing.Point(258, 27);
             this.splitter1.MinSize = 200;
             this.splitter1.Name = "splitter1";
-            this.splitter1.Size = new System.Drawing.Size(10, 545);
+            this.splitter1.Size = new System.Drawing.Size(10, 630);
             this.splitter1.TabIndex = 3;
             this.splitter1.TabStop = false;
             // 
@@ -321,14 +330,59 @@
             this.imgPanel.Location = new System.Drawing.Point(258, 27);
             this.imgPanel.Name = "imgPanel";
             this.imgPanel.Padding = new System.Windows.Forms.Padding(10);
-            this.imgPanel.Size = new System.Drawing.Size(617, 545);
+            this.imgPanel.Size = new System.Drawing.Size(829, 630);
             this.imgPanel.TabIndex = 4;
+            // 
+            // btnClear
+            // 
+            this.btnClear.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnClear.Location = new System.Drawing.Point(3, 247);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(242, 27);
+            this.btnClear.TabIndex = 2;
+            this.btnClear.Text = "Reset solver";
+            this.btnClear.UseVisualStyleBackColor = true;
+            this.btnClear.Click += new System.EventHandler(this.ResetClick);
+            // 
+            // chbParallel
+            // 
+            this.chbParallel.AutoSize = true;
+            this.chbParallel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.chbParallel.Location = new System.Drawing.Point(3, 18);
+            this.chbParallel.Name = "chbParallel";
+            this.chbParallel.Size = new System.Drawing.Size(242, 21);
+            this.chbParallel.TabIndex = 9;
+            this.chbParallel.Text = "Parallel";
+            this.chbParallel.UseVisualStyleBackColor = true;
+            this.chbParallel.Click += new System.EventHandler(this.chbParallel_Click);
+            // 
+            // tbThreadCount
+            // 
+            this.tbThreadCount.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbThreadCount.Location = new System.Drawing.Point(3, 18);
+            this.tbThreadCount.Name = "tbThreadCount";
+            this.tbThreadCount.Size = new System.Drawing.Size(236, 22);
+            this.tbThreadCount.TabIndex = 10;
+            this.tbThreadCount.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbThreadCount_KeyPress);
+            // 
+            // gbThreadCount
+            // 
+            this.gbThreadCount.Controls.Add(this.tbThreadCount);
+            this.gbThreadCount.Dock = System.Windows.Forms.DockStyle.Top;
+            this.gbThreadCount.Enabled = false;
+            this.gbThreadCount.ImeMode = System.Windows.Forms.ImeMode.Off;
+            this.gbThreadCount.Location = new System.Drawing.Point(3, 39);
+            this.gbThreadCount.Name = "gbThreadCount";
+            this.gbThreadCount.Size = new System.Drawing.Size(242, 47);
+            this.gbThreadCount.TabIndex = 11;
+            this.gbThreadCount.TabStop = false;
+            this.gbThreadCount.Text = "Thread count";
             // 
             // MazeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(875, 572);
+            this.ClientSize = new System.Drawing.Size(1087, 657);
             this.Controls.Add(this.splitter1);
             this.Controls.Add(this.imgPanel);
             this.Controls.Add(this.settingsPanel);
@@ -346,6 +400,8 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.imgPanel.ResumeLayout(false);
+            this.gbThreadCount.ResumeLayout(false);
+            this.gbThreadCount.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -376,6 +432,10 @@
         private System.Windows.Forms.Label lbScale;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Label lbPathSize;
+        private System.Windows.Forms.Button btnClear;
+        private System.Windows.Forms.CheckBox chbParallel;
+        private System.Windows.Forms.GroupBox gbThreadCount;
+        private System.Windows.Forms.TextBox tbThreadCount;
     }
 }
 
