@@ -21,7 +21,12 @@ namespace aMaze_ingSolver.GraphUtils
         /// <summary>
         /// Y component of location.
         /// </summary>
-        public int Y => Location.Y;
+        public int Y => Location.Y; 
+
+        /// <summary>
+        /// Vertex was visited by algorithm.
+        /// </summary>
+        public bool Visited { get; set; }
 
         private Dictionary<Direction, Vertex> _neighbours;
 

@@ -21,11 +21,11 @@ namespace aMaze_ingSolver
         public TimeSpan MatrixBuildTime { get; private set; }
         Stopwatch s = new Stopwatch();
 
-        public Maze(Image img)
+        public Maze(Image img, int threadCount)
         {
             _bmp = new Bitmap(img);
             s.Start();
-            _mazeMatrix = new BoolMatrix(_bmp);
+            _mazeMatrix = new BoolMatrix(_bmp, threadCount);
             s.Stop();
             MatrixBuildTime = s.Elapsed;
             Graph = new Graph(_mazeMatrix);

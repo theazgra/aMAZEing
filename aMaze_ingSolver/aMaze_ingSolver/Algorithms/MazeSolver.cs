@@ -7,6 +7,20 @@ using aMaze_ingSolver.GraphUtils;
 
 namespace aMaze_ingSolver.Algorithms
 {
+    struct VertexParam
+    {
+        public Vertex currentVertex;
+        public Vertex nextVertex;
+        public int threadToken;
+
+        public VertexParam(Vertex current, Vertex next, int token)
+        {
+            currentVertex = current;
+            nextVertex = next;
+            threadToken = token;
+        }
+    }
+
     abstract class MazeSolver : IMazeSolver
     {
         public abstract event solved OnSolved;
@@ -18,7 +32,17 @@ namespace aMaze_ingSolver.Algorithms
         public int ThreadCount { get; set; } = 1;
 
         public abstract string Name { get; }
+        private Color _mazeColor = Color.Empty;
+        public Color MazeColor
+        {
+            get
+            {
+                if (_mazeColor == Color.Empty)
+                    _mazeColor = RandomColor();
 
+                return _mazeColor;
+            }
+        }
         public abstract void SolveMaze(Graph graph);
 
 
@@ -48,7 +72,7 @@ namespace aMaze_ingSolver.Algorithms
 
         public int GetPathLength()
         {
-            if (_resultPath == null || _resultPath.Count <= 0)
+            if (!Solved || _resultPath == null || _resultPath.Count <= 0)
                 return 0;   
 
             Queue<Vertex> resultCopy = new Queue<Vertex>(_resultPath);
@@ -60,28 +84,11 @@ namespace aMaze_ingSolver.Algorithms
             while (resultCopy.Count > 0)
             {
                 next = resultCopy.Dequeue();
-                length += DistanceBetweenVertices(current, next);
+                length += current.DistanceTo(next);
                 current = next;
             }
 
             return length;
-        }
-
-        private int DistanceBetweenVertices(Vertex origin, Vertex destination)
-        {
-            switch (Utils.GetDirection(origin.Location, destination.Location))
-            {
-                case Direction.Up:
-                    return (origin.Location.Y - destination.Location.Y);
-                case Direction.Down:
-                    return -(origin.Location.Y - destination.Location.Y);
-                case Direction.Left:
-                    return (origin.Location.X - destination.Location.X);
-                case Direction.Right:
-                    return -(origin.Location.X - destination.Location.X);
-                default:
-                    return 0;
-            }
         }
 
         public long GetTicks()
@@ -97,6 +104,15 @@ namespace aMaze_ingSolver.Algorithms
             Solved = false;
             _timer.Reset();
             _resultPath.Clear();
+        }
+
+        private Color RandomColor()
+        {
+            Random random = new Random(new Random().Next());
+            int r = random.Next(50, 256);
+            int g = random.Next(50, 256);
+            int b = random.Next(50, 256);
+            return Color.FromArgb(r, g, b);
         }
     }
 }

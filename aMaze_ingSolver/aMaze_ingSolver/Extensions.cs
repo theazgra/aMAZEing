@@ -82,7 +82,8 @@ namespace aMaze_ingSolver
             return (color.R == 255) && (color.G == 255) && (color.B == 255);
         }
 
-        public static Bitmap ResizeImage(this Image image, int width, int height)
+        public static Bitmap ResizeImage
+            (this Image image, int width, int height, InterpolationMode interpolation = InterpolationMode.NearestNeighbor)
         {
             var destRect = new Rectangle(0, 0, width, height);
             var destImage = new Bitmap(width, height);
@@ -93,7 +94,9 @@ namespace aMaze_ingSolver
             {
                 graphics.CompositingMode = CompositingMode.SourceCopy;
                 graphics.CompositingQuality = CompositingQuality.HighQuality;
-                graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
+
+                graphics.InterpolationMode = interpolation;
+
                 graphics.SmoothingMode = SmoothingMode.HighQuality;
                 graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
@@ -105,6 +108,23 @@ namespace aMaze_ingSolver
             }
 
             return destImage;
+        }
+
+        public static int DistanceTo(this Vertex origin, Vertex destination)
+        {
+            switch (Utils.GetDirection(origin.Location, destination.Location))
+            {
+                case Direction.Up:
+                    return (origin.Location.Y - destination.Location.Y);
+                case Direction.Down:
+                    return -(origin.Location.Y - destination.Location.Y);
+                case Direction.Left:
+                    return (origin.Location.X - destination.Location.X);
+                case Direction.Right:
+                    return -(origin.Location.X - destination.Location.X);
+                default:
+                    return 0;
+            }
         }
     }
 }

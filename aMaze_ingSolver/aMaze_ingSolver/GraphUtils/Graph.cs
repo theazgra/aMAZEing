@@ -198,5 +198,13 @@ namespace aMaze_ingSolver.GraphUtils
                 }
             }
         }
+
+        public void ResetVisited()
+        {
+            foreach (Vertex v in Vertices)
+            {
+                v.Visited = false;
+            }
+        }
     }
 }

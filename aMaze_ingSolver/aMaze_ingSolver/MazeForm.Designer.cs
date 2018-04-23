@@ -35,11 +35,15 @@
             this.settingsPanel = new System.Windows.Forms.Panel();
             this.lbSolveTime = new System.Windows.Forms.Label();
             this.gbSolvers = new System.Windows.Forms.GroupBox();
-            this.btnSave = new System.Windows.Forms.Button();
             this.lbPathSize = new System.Windows.Forms.Label();
+            this.btnClear = new System.Windows.Forms.Button();
+            this.btnSave = new System.Windows.Forms.Button();
             this.chbShowResult = new System.Windows.Forms.CheckBox();
             this.btnSolve = new System.Windows.Forms.Button();
             this.solverSelection = new System.Windows.Forms.CheckedListBox();
+            this.gbThreadCount = new System.Windows.Forms.GroupBox();
+            this.tbThreadCount = new System.Windows.Forms.TextBox();
+            this.chbParallel = new System.Windows.Forms.CheckBox();
             this.lbMatrixInfo = new System.Windows.Forms.Label();
             this.lbInfo = new System.Windows.Forms.Label();
             this.chbShowStartEnd = new System.Windows.Forms.CheckBox();
@@ -52,17 +56,13 @@
             this.chbInvoke = new System.Windows.Forms.CheckBox();
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.imgPanel = new System.Windows.Forms.Panel();
-            this.btnClear = new System.Windows.Forms.Button();
-            this.chbParallel = new System.Windows.Forms.CheckBox();
-            this.tbThreadCount = new System.Windows.Forms.TextBox();
-            this.gbThreadCount = new System.Windows.Forms.GroupBox();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imgBox)).BeginInit();
             this.settingsPanel.SuspendLayout();
             this.gbSolvers.SuspendLayout();
+            this.gbThreadCount.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.imgPanel.SuspendLayout();
-            this.gbThreadCount.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -142,6 +142,27 @@
             this.gbSolvers.TabStop = false;
             this.gbSolvers.Text = "Solvers";
             // 
+            // lbPathSize
+            // 
+            this.lbPathSize.AutoSize = true;
+            this.lbPathSize.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.lbPathSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.lbPathSize.Location = new System.Drawing.Point(3, 230);
+            this.lbPathSize.Name = "lbPathSize";
+            this.lbPathSize.Size = new System.Drawing.Size(0, 17);
+            this.lbPathSize.TabIndex = 8;
+            // 
+            // btnClear
+            // 
+            this.btnClear.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnClear.Location = new System.Drawing.Point(3, 247);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(242, 27);
+            this.btnClear.TabIndex = 2;
+            this.btnClear.Text = "Reset solver";
+            this.btnClear.UseVisualStyleBackColor = true;
+            this.btnClear.Click += new System.EventHandler(this.ResetClick);
+            // 
             // btnSave
             // 
             this.btnSave.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -152,16 +173,6 @@
             this.btnSave.Text = "Save result";
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-            // 
-            // lbPathSize
-            // 
-            this.lbPathSize.AutoSize = true;
-            this.lbPathSize.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.lbPathSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.lbPathSize.Location = new System.Drawing.Point(3, 230);
-            this.lbPathSize.Name = "lbPathSize";
-            this.lbPathSize.Size = new System.Drawing.Size(0, 17);
-            this.lbPathSize.TabIndex = 8;
             // 
             // chbShowResult
             // 
@@ -197,6 +208,44 @@
             this.solverSelection.Size = new System.Drawing.Size(242, 89);
             this.solverSelection.TabIndex = 4;
             this.solverSelection.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.solverSelection_ItemCheck);
+            this.solverSelection.SelectedValueChanged += new System.EventHandler(this.SelectionChanged);
+            // 
+            // gbThreadCount
+            // 
+            this.gbThreadCount.Controls.Add(this.tbThreadCount);
+            this.gbThreadCount.Dock = System.Windows.Forms.DockStyle.Top;
+            this.gbThreadCount.ImeMode = System.Windows.Forms.ImeMode.Off;
+            this.gbThreadCount.Location = new System.Drawing.Point(3, 39);
+            this.gbThreadCount.Name = "gbThreadCount";
+            this.gbThreadCount.Size = new System.Drawing.Size(242, 47);
+            this.gbThreadCount.TabIndex = 11;
+            this.gbThreadCount.TabStop = false;
+            this.gbThreadCount.Text = "Thread count";
+            // 
+            // tbThreadCount
+            // 
+            this.tbThreadCount.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbThreadCount.Location = new System.Drawing.Point(3, 18);
+            this.tbThreadCount.Name = "tbThreadCount";
+            this.tbThreadCount.Size = new System.Drawing.Size(236, 22);
+            this.tbThreadCount.TabIndex = 10;
+            this.tbThreadCount.Text = "2";
+            this.tbThreadCount.TextChanged += new System.EventHandler(this.UpdateThreadCount);
+            this.tbThreadCount.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbThreadCount_KeyPress);
+            // 
+            // chbParallel
+            // 
+            this.chbParallel.AutoSize = true;
+            this.chbParallel.Checked = true;
+            this.chbParallel.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chbParallel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.chbParallel.Location = new System.Drawing.Point(3, 18);
+            this.chbParallel.Name = "chbParallel";
+            this.chbParallel.Size = new System.Drawing.Size(242, 21);
+            this.chbParallel.TabIndex = 9;
+            this.chbParallel.Text = "Parallel";
+            this.chbParallel.UseVisualStyleBackColor = true;
+            this.chbParallel.Click += new System.EventHandler(this.chbParallel_Click);
             // 
             // lbMatrixInfo
             // 
@@ -333,51 +382,6 @@
             this.imgPanel.Size = new System.Drawing.Size(829, 630);
             this.imgPanel.TabIndex = 4;
             // 
-            // btnClear
-            // 
-            this.btnClear.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.btnClear.Location = new System.Drawing.Point(3, 247);
-            this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(242, 27);
-            this.btnClear.TabIndex = 2;
-            this.btnClear.Text = "Reset solver";
-            this.btnClear.UseVisualStyleBackColor = true;
-            this.btnClear.Click += new System.EventHandler(this.ResetClick);
-            // 
-            // chbParallel
-            // 
-            this.chbParallel.AutoSize = true;
-            this.chbParallel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.chbParallel.Location = new System.Drawing.Point(3, 18);
-            this.chbParallel.Name = "chbParallel";
-            this.chbParallel.Size = new System.Drawing.Size(242, 21);
-            this.chbParallel.TabIndex = 9;
-            this.chbParallel.Text = "Parallel";
-            this.chbParallel.UseVisualStyleBackColor = true;
-            this.chbParallel.Click += new System.EventHandler(this.chbParallel_Click);
-            // 
-            // tbThreadCount
-            // 
-            this.tbThreadCount.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tbThreadCount.Location = new System.Drawing.Point(3, 18);
-            this.tbThreadCount.Name = "tbThreadCount";
-            this.tbThreadCount.Size = new System.Drawing.Size(236, 22);
-            this.tbThreadCount.TabIndex = 10;
-            this.tbThreadCount.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbThreadCount_KeyPress);
-            // 
-            // gbThreadCount
-            // 
-            this.gbThreadCount.Controls.Add(this.tbThreadCount);
-            this.gbThreadCount.Dock = System.Windows.Forms.DockStyle.Top;
-            this.gbThreadCount.Enabled = false;
-            this.gbThreadCount.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.gbThreadCount.Location = new System.Drawing.Point(3, 39);
-            this.gbThreadCount.Name = "gbThreadCount";
-            this.gbThreadCount.Size = new System.Drawing.Size(242, 47);
-            this.gbThreadCount.TabIndex = 11;
-            this.gbThreadCount.TabStop = false;
-            this.gbThreadCount.Text = "Thread count";
-            // 
             // MazeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -397,11 +401,11 @@
             this.settingsPanel.PerformLayout();
             this.gbSolvers.ResumeLayout(false);
             this.gbSolvers.PerformLayout();
+            this.gbThreadCount.ResumeLayout(false);
+            this.gbThreadCount.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.imgPanel.ResumeLayout(false);
-            this.gbThreadCount.ResumeLayout(false);
-            this.gbThreadCount.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 

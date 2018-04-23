@@ -1,15 +1,17 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using aMaze_ingSolver.GraphUtils;
+﻿using aMaze_ingSolver.GraphUtils;
 using aMaze_ingSolver.Parallelism;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq;
 
 namespace aMaze_ingSolver.Algorithms
 {
-    class BreadthFirst : MazeSolver
+    class DepthFirst : MazeSolver
     {
+
         private Dictionary<Vertex, Vertex> _visited;
         private SimpleSemaphore _semaphore;
         private object _lock = new object();
@@ -19,10 +21,10 @@ namespace aMaze_ingSolver.Algorithms
         private List<Task> _tasks;
 
 
-        public override string Name => "Breadth first";
+        public override string Name => "Depth first";
         public override event solved OnSolved;
 
-        public BreadthFirst()
+        public DepthFirst()
         {
             _visited = new Dictionary<Vertex, Vertex>();
             _tasks = new List<Task>();
@@ -40,11 +42,6 @@ namespace aMaze_ingSolver.Algorithms
         {
             lock (_lock)
             {
-                if (previous == null)
-                {
-                    _visited.Add(vertex, previous);
-                    return;
-                }
                 if (!_visited.ContainsKey(vertex))
                     _visited.Add(vertex, previous);
             }
@@ -70,7 +67,6 @@ namespace aMaze_ingSolver.Algorithms
 
             _semaphore = new SimpleSemaphore(ThreadCount);
             int token = _semaphore.GetToken();
-
 
             VertexParam vp = new VertexParam(null, graph.Start, token);
             _timer.Reset();
@@ -129,8 +125,8 @@ namespace aMaze_ingSolver.Algorithms
         {
             if (param is VertexParam vertexParam)
             {
-                Queue<Vertex> queue = new Queue<Vertex>();
-                queue.Enqueue(vertexParam.nextVertex);
+                Stack<Vertex> queue = new Stack<Vertex>();
+                queue.Push(vertexParam.nextVertex);
                 AddVisited(vertexParam.nextVertex, vertexParam.currentVertex);
 
                 Vertex current = null;
@@ -139,7 +135,7 @@ namespace aMaze_ingSolver.Algorithms
                     if (queue.Count <= 0)
                         break;
 
-                    current = queue.Dequeue();
+                    current = queue.Pop();
 
                     if (current.Equals(_end))
                         break;
@@ -158,7 +154,7 @@ namespace aMaze_ingSolver.Algorithms
                             }
                             else
                             {
-                                queue.Enqueue(neighbour);
+                                queue.Push(neighbour);
                             }
                         }
                     }
@@ -176,11 +172,11 @@ namespace aMaze_ingSolver.Algorithms
 
         private void NonParallelSolution(Graph graph)
         {
-            Queue<Vertex> queue = new Queue<Vertex>();
+            Stack<Vertex> queue = new Stack<Vertex>();
             _timer.Start();
             _visited.Clear();
 
-            queue.Enqueue(graph.Start);
+            queue.Push(graph.Start);
             AddVisited(graph.Start, null);
             int loopIteration = 0;
 
@@ -188,7 +184,7 @@ namespace aMaze_ingSolver.Algorithms
             while (true)
             {
                 ++loopIteration;
-                current = queue.Dequeue();
+                current = queue.Pop();
 
                 if (current.Equals(graph.End))
                 {
@@ -199,7 +195,7 @@ namespace aMaze_ingSolver.Algorithms
                 {
                     if (!Visited(neighbour))
                     {
-                        queue.Enqueue(neighbour);
+                        queue.Push(neighbour);
                         AddVisited(neighbour, current);
                     }
                 }
@@ -224,3 +220,4 @@ namespace aMaze_ingSolver.Algorithms
         }
     }
 }
+

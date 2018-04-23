@@ -1,0 +1,16 @@
+BMP  THR.COUNT DEBUG TOTAL MS         RELEASE TOTAL MS
+2k - 1 thread  1916,1887,1924 RELEASE 1133,1162
+2k - 2 threads 1356,1303,1297 RELEASE 760, 766
+2k - 4 threads 1032,994, 972  RELEASE 604, 700
+2k - 8 threads                RELEASE 671, 786
+
+
+4k - 1 threads                RELEASE 4633,4653
+4k - 2 threads                RELEASE 3239,3317
+4k - 4 threads                RELEASE 2581,2434
+4k - 8 threads                RELEASE 2835,3028
+
+6k - 1 threads                RELEASE 10910,10745
+6k - 2 threads                RELEASE 7298,7206
+6k - 4 threads                RELEASE 5640,5967
+6k - 8 threads                RELEASE 

@@ -1,6 +1,7 @@
 ﻿using System;
 using aMaze_ingSolver.GraphUtils;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace aMaze_ingSolver.Algorithms
 {
@@ -71,5 +72,10 @@ namespace aMaze_ingSolver.Algorithms
         /// Reset solver.
         /// </summary>
         void Reset();
+
+        /// <summary>
+        /// Get random maze color.
+        /// </summary>
+        Color MazeColor { get; }
     }
 }

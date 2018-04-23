@@ -26,6 +26,7 @@ namespace aMaze_ingSolver
         private const float _scaleMin = 0.01f;
         private const float _scaleMax = 20.0f;
         private const float _smallStepFrom = 1.0f;
+        private int _threadCount = 4;
 
         public MazeForm()
         {
@@ -33,8 +34,11 @@ namespace aMaze_ingSolver
             _solvers = new List<IMazeSolver>
             {
                 new LeftTurn(),
-                new BreadthFirst()
+                new BreadthFirst(),
+                new DepthFirst(),
+                new Dijkstra()
             };
+            tbThreadCount.Text = "4";
         }
 
         private void MazeForm_Load(object sender, EventArgs e)
@@ -74,7 +78,7 @@ namespace aMaze_ingSolver
             _drawBmp = new Bitmap(_image);
             lbMatrixInfo.Text = "Converting to matrix...";
 
-            _maze = new Maze(_image);
+            _maze = new Maze(_image, _threadCount);
 
             lbMatrixInfo.Text = string.Format("Matrix build time: {0} ms.", _maze.MatrixBuildTime.TotalMilliseconds.ToString("### ### ###"));
 
@@ -180,12 +184,18 @@ namespace aMaze_ingSolver
                 }
             }
 
-
-            imgBox.Image = _drawBmp.ResizeImage((int)((float)_drawBmp.Width * _scale), (int)((float)_drawBmp.Height * _scale));
+            if (_scale >= 1.0f)
+                imgBox.Image = _drawBmp.ResizeImage((int)((float)_drawBmp.Width * _scale), (int)((float)_drawBmp.Height * _scale));
+            else
+                imgBox.Image = _drawBmp.ResizeImage(
+                    (int)((float)_drawBmp.Width * _scale), 
+                    (int)((float)_drawBmp.Height * _scale), 
+                    System.Drawing.Drawing2D.InterpolationMode.Bicubic);
         }
 
         private void DrawResultPath(BitmapPlus bmpPlus)
         {
+            Color color = _selectedSolver.MazeColor;
             Queue<Vertex> _resultPath = new Queue<Vertex>(_selectedSolver.GetResultVertices());
 
             if (_resultPath.Count <= 0)
@@ -205,10 +215,10 @@ namespace aMaze_ingSolver
                     while (!previous.Equals(current))
                     {
 
-                        bmpPlus.SetPixel(previous.X, previous.Y, Color.Blue);
+                        bmpPlus.SetPixel(previous.X, previous.Y, color);
                         previous = new Vertex(previous.Location.MoveInDirection(direction));
                     }
-                    bmpPlus.SetPixel(current.X, current.Y, Color.Blue);
+                    bmpPlus.SetPixel(current.X, current.Y, color);
 
                     previous = current;
                 }
@@ -281,10 +291,7 @@ namespace aMaze_ingSolver
                 _selectedSolver.Parallel = chbParallel.Checked;
                 if (_selectedSolver.Parallel)
                 {
-                    if (int.TryParse(tbThreadCount.Text, out int threadCount))
-                        _selectedSolver.ThreadCount = threadCount;
-                    else
-                        MessageBox.Show("Wrong input");
+                    _selectedSolver.ThreadCount = _threadCount;
                 }
                 _selectedSolver.OnSolved += MazeSolved;
                 _selectedSolver.SolveMaze(_maze.Graph);
@@ -306,11 +313,18 @@ namespace aMaze_ingSolver
                 }
                 else
                 {
-                    //lbSolveTime.Text = string.Format("Solve time: {0} ms", _selectedSolver.GetSolveTime().TotalMilliseconds);
-                    lbSolveTime.Text = string.Format("# of ticks: {0}", _selectedSolver.GetTicks().ToString("### ### ###"));
-                    lbPathSize.Text = string.Format("Path length: {0}", _selectedSolver.GetPathLength().ToString("### ### ###"));
+                    
+                    lbSolveTime.Text = string.Format("Path found after: {0} ms", 
+                        _selectedSolver.GetSolveTime().TotalMilliseconds.ToString("### ### ###"));
+
+                    ShowPathLength(_selectedSolver.GetPathLength());
                 }
             }
+        }
+
+        private void ShowPathLength(int length)
+        {
+            lbPathSize.Text = string.Format("Path length: {0}", length.ToString("### ### ###"));
         }
 
         private void ShowResult(object sender, EventArgs e)
@@ -365,7 +379,9 @@ namespace aMaze_ingSolver
             if ((sender as CheckedListBox).SelectedItem is IMazeSolver solver)
             {
                 _selectedSolver = solver;
-                btnSolve.Text = "Solve";
+                InvalidateMaze();
+                ShowPathLength(_selectedSolver.GetPathLength());
+                btnSolve.Text = _selectedSolver.Solved ? "Solved" : "Solve";
             }
             else
             {
@@ -377,7 +393,18 @@ namespace aMaze_ingSolver
 
         private void chbParallel_Click(object sender, EventArgs e)
         {
-            gbThreadCount.Enabled = (sender as CheckBox).Checked;
+            bool check = (sender as CheckBox).Checked;
+            gbThreadCount.Enabled = check;
+            if (!check)
+            {
+                tbThreadCount.Text = "1";
+                _threadCount = 1;
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(tbThreadCount.Text))
+                    tbThreadCount.Text = "1";
+            }
         }
 
         private void tbThreadCount_KeyPress(object sender, KeyPressEventArgs e)
@@ -385,6 +412,34 @@ namespace aMaze_ingSolver
             if (!char.IsNumber(e.KeyChar) && !char.IsControl(e.KeyChar))
             {
                 e.Handled = true;
+            }
+        }
+
+        private void UpdateThreadCount(object sender, EventArgs e)
+        {
+            string txt = (sender as TextBox).Text;
+            if (string.IsNullOrWhiteSpace(txt))
+            {
+                _threadCount = 1;
+                return;
+            }
+
+            if (int.TryParse(txt, out int tc))
+            {
+                _threadCount = tc;
+            }
+            else
+            {
+                throw new Exception("Wrong thread count");
+            }
+        }
+
+        private void SelectionChanged(object sender, EventArgs e)
+        {
+            if (solverSelection.CheckedItems.Count == 0)
+            {
+                chbShowResult.Checked = false;
+                InvalidateMaze();
             }
         }
     }

@@ -52,6 +52,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Algorithms\BreadthFirst.cs" />
+    <Compile Include="Algorithms\DepthFirst.cs" />
+    <Compile Include="Algorithms\Dijkstra.cs" />
     <Compile Include="Algorithms\IMazeSolver.cs" />
     <Compile Include="Algorithms\ISteppable.cs" />
     <Compile Include="Algorithms\LeftTurn.cs" />
@@ -67,7 +69,7 @@
     <Compile Include="MazeForm.Designer.cs">
       <DependentUpon>MazeForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Parallelism\Semaphore.cs" />
+    <Compile Include="Parallelism\SimpleSemaphore.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GraphUtils\OrientedEdge.cs" />

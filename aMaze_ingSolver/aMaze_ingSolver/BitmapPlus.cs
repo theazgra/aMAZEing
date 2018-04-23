@@ -21,11 +21,17 @@ namespace aMaze_ingSolver
         private int _colorStep;
         private ImageLockMode _imgLockMode;
 
+        public int Cols { get; }
+        public int Rows { get; }
+
 
 
         public BitmapPlus(Bitmap bitmap, ImageLockMode lockMode)
         {
             Source = bitmap;
+            Cols = Source.Width;
+            Rows = Source.Height;
+
             _pixelCount = Source.Width * Source.Height;
             _imgLockMode = lockMode;
 
