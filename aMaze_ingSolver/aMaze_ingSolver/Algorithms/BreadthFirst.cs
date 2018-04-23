@@ -21,7 +21,7 @@ namespace aMaze_ingSolver.Algorithms
         }
     }
 
-    class DepthFirst : MazeSolver
+    class BreadthFirst : MazeSolver
     {
         private Dictionary<Vertex, Vertex> _visited;
         private SimpleSemaphore _semaphore;
@@ -32,10 +32,10 @@ namespace aMaze_ingSolver.Algorithms
         private List<Task> _tasks;
 
 
-        public override string Name => "Depth first";
+        public override string Name => "Breadth first";
         public override event solved OnSolved;
 
-        public DepthFirst()
+        public BreadthFirst()
         {
             _visited = new Dictionary<Vertex, Vertex>();
             _tasks = new List<Task>();

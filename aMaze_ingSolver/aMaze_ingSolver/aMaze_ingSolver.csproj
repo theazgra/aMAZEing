@@ -51,7 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Algorithms\DepthFirst.cs" />
+    <Compile Include="Algorithms\BreadthFirst.cs" />
     <Compile Include="Algorithms\IMazeSolver.cs" />
     <Compile Include="Algorithms\ISteppable.cs" />
     <Compile Include="Algorithms\LeftTurn.cs" />

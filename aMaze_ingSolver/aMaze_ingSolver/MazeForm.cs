@@ -33,7 +33,7 @@ namespace aMaze_ingSolver
             _solvers = new List<IMazeSolver>
             {
                 new LeftTurn(),
-                new DepthFirst()
+                new BreadthFirst()
             };
         }
 
