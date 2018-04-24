@@ -17,11 +17,6 @@ namespace aMaze_ingSolver.Algorithms
         private List<Vertex> _unvisited;
         private bool _invokeEvents = false;
 
-        private float GetBestDistance(Vertex v)
-        {
-            return v.BestPathDistance;
-        }
-
         private void AddNewBestDistance(Vertex previous, Vertex current, float distance)
         {
             current.Previous = previous;
@@ -47,7 +42,7 @@ namespace aMaze_ingSolver.Algorithms
             long loopIteration = 0;
             int vertCount = graph.Vertices.Count;
             int invokeStep = (int)Math.Ceiling((float)(vertCount / 2000));
-            graph.ResetVisited();
+            graph.Reset();
             _resultPath.Clear();
 
             _timer.Start();
@@ -56,7 +51,7 @@ namespace aMaze_ingSolver.Algorithms
             AddNewBestDistance(null, graph.Start, 0);
             Vertex current = null;
 
-            //Start by adding start neighbours
+            //Start by adding start' neighbours
             foreach (Vertex neighbours in graph.Start.Neighbours)
             {
                 AddNewBestDistance(graph.Start, neighbours, float.PositiveInfinity);
@@ -75,10 +70,10 @@ namespace aMaze_ingSolver.Algorithms
                         continue;
 
                     //distance to connected vertex using best distance to current vertex.
-                    float lenToVertex = GetBestDistance(current) + current.PathDistanceTo(neighbour);
-                    if (lenToVertex < GetBestDistance(neighbour))
+                    float distanceToVertex = current.BestPathDistance + current.PathDistanceTo(neighbour);
+                    if (distanceToVertex < neighbour.BestPathDistance)
                     {
-                        AddNewBestDistance(current, neighbour, lenToVertex);
+                        AddNewBestDistance(current, neighbour, distanceToVertex);
                     }
                 }
                 current.Visited = true;

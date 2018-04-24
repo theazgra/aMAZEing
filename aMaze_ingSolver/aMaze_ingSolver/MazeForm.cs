@@ -298,6 +298,7 @@ namespace aMaze_ingSolver
                 _selectedSolver.OnSolved += MazeSolved;
                 _selectedSolver.OnSolveProgress += SolveProgression;
 
+                _maze.Graph.Reset();
                 Task.Factory.StartNew(() => _selectedSolver.SolveMaze(_maze.Graph));
                 //_selectedSolver.SolveMaze(_maze.Graph);
             }
@@ -334,13 +335,18 @@ namespace aMaze_ingSolver
                     _selectedSolver.Solved = true;
 
                     pbSolve.Value = pbSolve.Maximum;
-                    lbSolveTime.Text = string.Format("Path found after: {0} ms", 
-                        _selectedSolver.GetSolveTime().TotalMilliseconds.ToString("### ### ###"));
 
+                    ShowSolveTime(_selectedSolver.GetSolveTime());
                     ShowPathLength(_selectedSolver.GetPathLength());
                     LogSolveTime(_selectedSolver);
                 }
             }
+        }
+
+        private void ShowSolveTime(TimeSpan ts)
+        {
+            lbSolveTime.Text = string.Format("Path found after: {0} ms",
+                                    ts.TotalMilliseconds.ToString("### ### ###"));
         }
 
         private void LogSolveTime(IMazeSolver selectedSolver)
@@ -416,6 +422,8 @@ namespace aMaze_ingSolver
 
                 InvalidateMaze();
                 ShowPathLength(_selectedSolver.GetPathLength());
+                ShowSolveTime(_selectedSolver.GetSolveTime());
+
                 btnSolve.Text = _selectedSolver.Solved ? "Solved" : "Solve";
             }
             else

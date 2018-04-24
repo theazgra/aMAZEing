@@ -202,13 +202,16 @@ namespace aMaze_ingSolver.GraphUtils
         }
 
         /// <summary>
-        /// Set each vertex unvisited.
+        /// Set each vertex unvisited, distances to infinite and previous vertex to null.
         /// </summary>
-        public void ResetVisited()
+        public void Reset()
         {
-            foreach (Vertex v in Vertices)
+            foreach (Vertex vertex in Vertices)
             {
-                v.Visited = false;
+                vertex.Visited = false;
+                vertex.BestPathDistance = float.PositiveInfinity;
+                vertex.EuclideanDistanceToEnd = float.PositiveInfinity;
+                vertex.Previous = null;
             }
         }
 
@@ -219,7 +222,7 @@ namespace aMaze_ingSolver.GraphUtils
         {
             foreach (Vertex v in this.Vertices)
             {
-                v.DistanceFromEnd = v.DistanceTo(this.End);
+                v.EuclideanDistanceToEnd = v.EuclideanDistanceTo(this.End);
             }
         }
     }

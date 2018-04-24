@@ -127,7 +127,13 @@ namespace aMaze_ingSolver
             }
         }
 
-        public static float DistanceTo(this Vertex origin, Vertex destination)
+        /// <summary>
+        /// Get euclidean distance between two vertices.
+        /// </summary>
+        /// <param name="origin">Origin vertex.</param>
+        /// <param name="destination">Destination vertex.</param>
+        /// <returns>Distance between those two vertices.</returns>
+        public static float EuclideanDistanceTo(this Vertex origin, Vertex destination)
         {
             Point o = origin.Location;
             Point d = destination.Location;

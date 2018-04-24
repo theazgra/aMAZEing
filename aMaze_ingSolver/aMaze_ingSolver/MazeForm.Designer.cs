@@ -101,7 +101,6 @@
             // settingsPanel
             // 
             this.settingsPanel.Controls.Add(this.pbSolve);
-            this.settingsPanel.Controls.Add(this.lbSolveTime);
             this.settingsPanel.Controls.Add(this.gbSolvers);
             this.settingsPanel.Controls.Add(this.lbMatrixInfo);
             this.settingsPanel.Controls.Add(this.lbInfo);
@@ -119,7 +118,7 @@
             // pbSolve
             // 
             this.pbSolve.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pbSolve.Location = new System.Drawing.Point(5, 551);
+            this.pbSolve.Location = new System.Drawing.Point(5, 568);
             this.pbSolve.Name = "pbSolve";
             this.pbSolve.Size = new System.Drawing.Size(248, 23);
             this.pbSolve.Step = 1;
@@ -128,9 +127,9 @@
             // lbSolveTime
             // 
             this.lbSolveTime.AutoSize = true;
-            this.lbSolveTime.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.lbSolveTime.Dock = System.Windows.Forms.DockStyle.Top;
             this.lbSolveTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.lbSolveTime.Location = new System.Drawing.Point(5, 574);
+            this.lbSolveTime.Location = new System.Drawing.Point(3, 227);
             this.lbSolveTime.Name = "lbSolveTime";
             this.lbSolveTime.Size = new System.Drawing.Size(0, 17);
             this.lbSolveTime.TabIndex = 6;
@@ -138,6 +137,7 @@
             // gbSolvers
             // 
             this.gbSolvers.Controls.Add(this.lbPathSize);
+            this.gbSolvers.Controls.Add(this.lbSolveTime);
             this.gbSolvers.Controls.Add(this.btnClear);
             this.gbSolvers.Controls.Add(this.btnSave);
             this.gbSolvers.Controls.Add(this.chbShowResult);
@@ -148,7 +148,7 @@
             this.gbSolvers.Dock = System.Windows.Forms.DockStyle.Top;
             this.gbSolvers.Location = new System.Drawing.Point(5, 175);
             this.gbSolvers.Name = "gbSolvers";
-            this.gbSolvers.Size = new System.Drawing.Size(248, 304);
+            this.gbSolvers.Size = new System.Drawing.Size(248, 328);
             this.gbSolvers.TabIndex = 5;
             this.gbSolvers.TabStop = false;
             this.gbSolvers.Text = "Solvers";
@@ -156,9 +156,9 @@
             // lbPathSize
             // 
             this.lbPathSize.AutoSize = true;
-            this.lbPathSize.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.lbPathSize.Dock = System.Windows.Forms.DockStyle.Top;
             this.lbPathSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.lbPathSize.Location = new System.Drawing.Point(3, 230);
+            this.lbPathSize.Location = new System.Drawing.Point(3, 244);
             this.lbPathSize.Name = "lbPathSize";
             this.lbPathSize.Size = new System.Drawing.Size(0, 17);
             this.lbPathSize.TabIndex = 8;
@@ -166,7 +166,7 @@
             // btnClear
             // 
             this.btnClear.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.btnClear.Location = new System.Drawing.Point(3, 247);
+            this.btnClear.Location = new System.Drawing.Point(3, 271);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(242, 27);
             this.btnClear.TabIndex = 2;
@@ -177,7 +177,7 @@
             // btnSave
             // 
             this.btnSave.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.btnSave.Location = new System.Drawing.Point(3, 274);
+            this.btnSave.Location = new System.Drawing.Point(3, 298);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(242, 27);
             this.btnSave.TabIndex = 7;

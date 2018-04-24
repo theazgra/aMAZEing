@@ -31,12 +31,23 @@ namespace aMaze_ingSolver.GraphUtils
         /// <summary>
         /// Distance from this vertex to End of the maze. Used in A*.
         /// </summary>
-        public float DistanceFromEnd { get; set; }
+        public float EuclideanDistanceToEnd { get; set; } = float.PositiveInfinity;
 
         /// <summary>
         /// Previous vertex from which we get to this vertex.
         /// </summary>
         public Vertex Previous { get; set; }
+
+        /// <summary>
+        /// Combined distance of BestPathDistance and euclidean distance from end.
+        /// </summary>
+        public float TotalPathDistance
+        {
+            get
+            {
+                return EuclideanDistanceToEnd + BestPathDistance;
+            }
+        }
 
         /// <summary>
         /// Best (shortest) distance to this vertex.
@@ -186,7 +197,7 @@ namespace aMaze_ingSolver.GraphUtils
             var hashCode = -1732179082;
             hashCode = hashCode * -1521134295 + EqualityComparer<Point>.Default.GetHashCode(Location);
             hashCode = hashCode * -1521134295 + Visited.GetHashCode();
-            hashCode = hashCode * -1521134295 + DistanceFromEnd.GetHashCode();
+            hashCode = hashCode * -1521134295 + EuclideanDistanceToEnd.GetHashCode();
             hashCode = hashCode * -1521134295 + EqualityComparer<Vertex>.Default.GetHashCode(Previous);
             return hashCode;
         }

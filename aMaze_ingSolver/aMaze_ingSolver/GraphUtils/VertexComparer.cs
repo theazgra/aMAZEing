@@ -40,7 +40,7 @@ namespace aMaze_ingSolver.GraphUtils
             var hashCode = -1732179082;
             hashCode = hashCode * -1521134295 + EqualityComparer<System.Drawing.Point>.Default.GetHashCode(obj.Location);
             hashCode = hashCode * -1521134295 + obj.Visited.GetHashCode();
-            hashCode = hashCode * -1521134295 + obj.DistanceFromEnd.GetHashCode();
+            hashCode = hashCode * -1521134295 + obj.EuclideanDistanceToEnd.GetHashCode();
             hashCode = hashCode * -1521134295 + EqualityComparer<Vertex>.Default.GetHashCode(obj.Previous);
             return hashCode;
         }
