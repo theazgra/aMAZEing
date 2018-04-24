@@ -20,7 +20,7 @@ namespace aMaze_ingSolver.Algorithms
 
 
         public override string Name => "Breadth first";
-        public override event solved OnSolved;
+        public override event Solved OnSolved;
 
         public BreadthFirst()
         {

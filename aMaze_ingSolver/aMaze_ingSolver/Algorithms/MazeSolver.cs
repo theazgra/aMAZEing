@@ -23,7 +23,9 @@ namespace aMaze_ingSolver.Algorithms
 
     abstract class MazeSolver : IMazeSolver
     {
-        public abstract event solved OnSolved;
+        public abstract event Solved OnSolved;
+        public virtual event SolveProgress OnSolveProgress;
+
         protected Queue<Vertex> _resultPath = new Queue<Vertex>();
         protected Stopwatch _timer = new Stopwatch();
 

@@ -5,13 +5,20 @@ using System.Drawing;
 
 namespace aMaze_ingSolver.Algorithms
 {
-    delegate void solved();
+    delegate void Solved();
+    delegate void SolveProgress(float percentDone);
+
     interface IMazeSolver
     {
         /// <summary>
         /// Event invoked when maze is solved.
         /// </summary>
-        event solved OnSolved;
+        event Solved OnSolved;
+
+        /// <summary>
+        /// Event informing about solving process.
+        /// </summary>
+        event SolveProgress OnSolveProgress;
 
         /// <summary>
         /// Determine if solver is paralellized.

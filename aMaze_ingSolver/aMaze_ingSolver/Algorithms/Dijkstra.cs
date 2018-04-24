@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,16 +11,23 @@ namespace aMaze_ingSolver.Algorithms
     class Dijkstra : MazeSolver
     {
         public override string Name => "Dijkstra";
-        public override event solved OnSolved;
+        public override event Solved OnSolved;
+        public override event SolveProgress OnSolveProgress;
 
         /// <summary>
         /// Path to vertex, tuple present previous vertex and best length
         /// </summary>
         private Dictionary<Vertex, Tuple<Vertex, float>> _pathToVertex;
 
+        private SortedDictionary<Vertex, Tuple<Vertex, float>> _sorted;
+        SortedList<float, Vertex> _sl;
+
+        
+
+        private bool _invokeEvents = false;
 
         private float GetBestDistance(Vertex v)
-        {
+        { 
             if (!_pathToVertex.ContainsKey(v))
                 return float.PositiveInfinity;
 
@@ -34,17 +42,71 @@ namespace aMaze_ingSolver.Algorithms
                 _pathToVertex.Add(destination, new Tuple<Vertex, float>(previous, distance));
         }
 
+        private Vertex GetTopUnvisitedVertex()
+        {
+            Vertex key = _pathToVertex.Keys.Where(v => !v.Visited).OrderBy(v => _pathToVertex[v].Item2).First();
+            return key;
+        }
 
 
         public override void SolveMaze(Graph graph)
         {
+            _invokeEvents = MazeForm.InvokeDelegates();
+            long visited = 0;
+            int vertCount = graph.Vertices.Count;
+            int invokeStep = (int)Math.Floor((float)(vertCount / 2000));
             graph.ResetVisited();
             _resultPath.Clear();
-            _timer.Start();
 
-            long visited = 0;
+            _sl = new SortedList<float, Vertex>();
+            
+
+            _timer.Start();
+            
             _pathToVertex = new Dictionary<Vertex, Tuple<Vertex, float>>();
             _pathToVertex.Add(graph.Start, new Tuple<Vertex, float>(null, 0));
+            Vertex current = null;
+
+            #region FixedImplementation
+            //Start by adding start neighbours
+            foreach (Vertex neighbours in graph.Start.Neighbours)
+            {
+                _pathToVertex.Add(neighbours, new Tuple<Vertex, float>(graph.Start, float.PositiveInfinity));
+            }
+
+            int iteration = 0;
+            //loop while end is not visited.
+            while (!graph.End.Visited)
+            {
+                ++iteration;
+                current = GetTopUnvisitedVertex();
+                foreach (Vertex neighbour in current.Neighbours)
+                {
+                    if (neighbour.Visited)
+                        continue;
+
+                    //distance to connected vertex using best distance to current vertex.
+                    float lenToVertex = GetBestDistance(current) + current.PathDistanceTo(neighbour);
+                    if (lenToVertex < GetBestDistance(neighbour))
+                    {
+                        AddNewBestDistance(current, neighbour, lenToVertex);
+                    }
+                }
+                current.Visited = true;
+                ++visited;
+                if (_invokeEvents && iteration >= invokeStep)
+                {
+                    iteration = 0;
+                    float perc = ((float)visited / (float)vertCount) * 100.0f;
+                    OnSolveProgress?.Invoke(perc);
+                }
+            }
+
+
+            #endregion
+
+#if false
+            
 
             Queue<Vertex> queue = new Queue<Vertex>();
             queue.Enqueue(graph.Start);
@@ -73,8 +135,9 @@ namespace aMaze_ingSolver.Algorithms
                 currentVertex.Visited = true;
                 ++visited;
             }
+#endif
 
-            Vertex current = null;
+            
             current = graph.End;
             _resultPath.Enqueue(current);
             while (current != graph.Start)

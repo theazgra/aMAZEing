@@ -33,6 +33,11 @@ namespace aMaze_ingSolver.GraphUtils
         /// </summary>
         public float DistanceFromEnd { get; set; }
 
+        /// <summary>
+        /// Previous vertex from which we get to this vertex.
+        /// </summary>
+        public Vertex Previous { get; set; }
+
         private Dictionary<Direction, Vertex> _neighbours;
 
         /// <summary>

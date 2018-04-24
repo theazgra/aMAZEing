@@ -13,6 +13,7 @@ namespace aMaze_ingSolver
     {
         delegate void SetEmptyInfo();
         delegate void SetInfo(string msg);
+        delegate void SetPercentInfo(float percent);
 
         private string _mazeFile = "../maze/tiny.png";
         private Image _image;
@@ -295,7 +296,23 @@ namespace aMaze_ingSolver
                     _selectedSolver.ThreadCount = _threadCount;
                 }
                 _selectedSolver.OnSolved += MazeSolved;
-                _selectedSolver.SolveMaze(_maze.Graph);
+                _selectedSolver.OnSolveProgress += SolveProgression;
+
+                Task.Factory.StartNew(() => _selectedSolver.SolveMaze(_maze.Graph));
+                //_selectedSolver.SolveMaze(_maze.Graph);
+            }
+        }
+
+        private void SolveProgression(float percentDone)
+        {
+            if (pbSolve.InvokeRequired)
+            {
+                SetPercentInfo setInfo = new SetPercentInfo(SolveProgression);
+                this.Invoke(setInfo, percentDone);
+            }
+            else
+            {
+                pbSolve.Value = (int)percentDone;
             }
         }
 
@@ -314,12 +331,23 @@ namespace aMaze_ingSolver
                 }
                 else
                 {
-                    
+                    pbSolve.Value = pbSolve.Maximum;
                     lbSolveTime.Text = string.Format("Path found after: {0} ms", 
                         _selectedSolver.GetSolveTime().TotalMilliseconds.ToString("### ### ###"));
 
                     ShowPathLength(_selectedSolver.GetPathLength());
+                    LogSolveTime(_selectedSolver);
                 }
+            }
+        }
+
+        private void LogSolveTime(IMazeSolver selectedSolver)
+        {
+            using (StreamWriter writer = new StreamWriter("SolverLog.txt",true, System.Text.Encoding.UTF8))
+            {
+                writer.WriteLine("{0};{1};{2}[ms];{3}_threads",
+                    new FileInfo(_mazeFile).Name, selectedSolver.Name, selectedSolver.GetSolveTime().TotalMilliseconds, 
+                    chbParallel.Checked ? _threadCount : 1);
             }
         }
 
@@ -380,6 +408,10 @@ namespace aMaze_ingSolver
             if ((sender as CheckedListBox).SelectedItem is IMazeSolver solver)
             {
                 _selectedSolver = solver;
+
+                if (!solver.Solved)
+                    chbShowResult.Checked = false;
+
                 InvalidateMaze();
                 ShowPathLength(_selectedSolver.GetPathLength());
                 btnSolve.Text = _selectedSolver.Solved ? "Solved" : "Solve";

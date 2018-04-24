@@ -56,6 +56,7 @@
             this.chbInvoke = new System.Windows.Forms.CheckBox();
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.imgPanel = new System.Windows.Forms.Panel();
+            this.pbSolve = new System.Windows.Forms.ProgressBar();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imgBox)).BeginInit();
             this.settingsPanel.SuspendLayout();
@@ -99,6 +100,7 @@
             // 
             // settingsPanel
             // 
+            this.settingsPanel.Controls.Add(this.pbSolve);
             this.settingsPanel.Controls.Add(this.lbSolveTime);
             this.settingsPanel.Controls.Add(this.gbSolvers);
             this.settingsPanel.Controls.Add(this.lbMatrixInfo);
@@ -382,6 +384,15 @@
             this.imgPanel.Size = new System.Drawing.Size(829, 630);
             this.imgPanel.TabIndex = 4;
             // 
+            // pbSolve
+            // 
+            this.pbSolve.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pbSolve.Location = new System.Drawing.Point(5, 551);
+            this.pbSolve.Name = "pbSolve";
+            this.pbSolve.Size = new System.Drawing.Size(248, 23);
+            this.pbSolve.Step = 1;
+            this.pbSolve.TabIndex = 7;
+            // 
             // MazeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -440,6 +451,7 @@
         private System.Windows.Forms.CheckBox chbParallel;
         private System.Windows.Forms.GroupBox gbThreadCount;
         private System.Windows.Forms.TextBox tbThreadCount;
+        private System.Windows.Forms.ProgressBar pbSolve;
     }
 }
 
