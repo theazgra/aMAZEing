@@ -110,7 +110,7 @@ namespace aMaze_ingSolver
             return destImage;
         }
 
-        public static int DistanceTo(this Vertex origin, Vertex destination)
+        public static int PathDistanceTo(this Vertex origin, Vertex destination)
         {
             switch (Utils.GetDirection(origin.Location, destination.Location))
             {
@@ -125,6 +125,17 @@ namespace aMaze_ingSolver
                 default:
                     return 0;
             }
+        }
+
+        public static float DistanceTo(this Vertex origin, Vertex destination)
+        {
+            Point o = origin.Location;
+            Point d = destination.Location;
+
+            double root = Math.Pow((o.X - d.X), 2) + Math.Pow((o.Y - d.Y), 2);
+
+            float distance = (float)(Math.Sqrt(root));
+            return distance;
         }
     }
 }

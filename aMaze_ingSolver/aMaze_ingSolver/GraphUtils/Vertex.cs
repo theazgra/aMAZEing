@@ -28,6 +28,11 @@ namespace aMaze_ingSolver.GraphUtils
         /// </summary>
         public bool Visited { get; set; }
 
+        /// <summary>
+        /// Distance from this vertex to End of the maze. Used in A*.
+        /// </summary>
+        public float DistanceFromEnd { get; set; }
+
         private Dictionary<Direction, Vertex> _neighbours;
 
         /// <summary>

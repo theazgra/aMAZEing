@@ -84,7 +84,7 @@ namespace aMaze_ingSolver.Algorithms
             while (resultCopy.Count > 0)
             {
                 next = resultCopy.Dequeue();
-                length += current.DistanceTo(next);
+                length += current.PathDistanceTo(next);
                 current = next;
             }
 

@@ -17,6 +17,8 @@ namespace aMaze_ingSolver.GraphUtils
         public delegate void BuildCompleted(TimeSpan time);
         public event BuildProgress OnBuildProgress;
         public event BuildCompleted OnBuildCompleted;
+
+
         #endregion
 
         private BoolMatrix _matrix;
@@ -90,7 +92,7 @@ namespace aMaze_ingSolver.GraphUtils
                 {
                     OnBuildProgress?.Invoke(string.Format("Processing... {0}% completed.", percent));
                 }
-                    
+
 
                 Vertex leftVertex = null;
 
@@ -199,11 +201,25 @@ namespace aMaze_ingSolver.GraphUtils
             }
         }
 
+        /// <summary>
+        /// Set each vertex unvisited.
+        /// </summary>
         public void ResetVisited()
         {
             foreach (Vertex v in Vertices)
             {
                 v.Visited = false;
+            }
+        }
+
+        /// <summary>
+        /// Calculate distance from vertex to end of the maze for all vertices.
+        /// </summary>
+        internal void CalculateDistancesFromVerticesToEnd()
+        {
+            foreach (Vertex v in this.Vertices)
+            {
+                v.DistanceFromEnd = v.DistanceTo(this.End);
             }
         }
     }

@@ -17,6 +17,7 @@ namespace aMaze_ingSolver.Algorithms
         /// </summary>
         private Dictionary<Vertex, Tuple<Vertex, float>> _pathToVertex;
 
+
         private float GetBestDistance(Vertex v)
         {
             if (!_pathToVertex.ContainsKey(v))
@@ -61,7 +62,7 @@ namespace aMaze_ingSolver.Algorithms
                 foreach (Vertex neighbour in currentVertex.Neighbours)
                 {
                     //distance to connected vertex using best distance to current vertex.
-                    float lenToVertex = GetBestDistance(currentVertex) + currentVertex.DistanceTo(neighbour);
+                    float lenToVertex = GetBestDistance(currentVertex) + currentVertex.PathDistanceTo(neighbour);
                     if (lenToVertex < GetBestDistance(neighbour))
                     {
                         AddNewBestDistance(currentVertex, neighbour, lenToVertex);

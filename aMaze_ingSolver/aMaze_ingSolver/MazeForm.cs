@@ -36,7 +36,8 @@ namespace aMaze_ingSolver
                 new LeftTurn(),
                 new BreadthFirst(),
                 new DepthFirst(),
-                new Dijkstra()
+                new Dijkstra(),
+                new AStar()
             };
             tbThreadCount.Text = "4";
         }
