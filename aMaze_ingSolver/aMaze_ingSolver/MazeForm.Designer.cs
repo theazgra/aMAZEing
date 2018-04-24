@@ -34,9 +34,9 @@
             this.imgBox = new System.Windows.Forms.PictureBox();
             this.settingsPanel = new System.Windows.Forms.Panel();
             this.pbSolve = new System.Windows.Forms.ProgressBar();
-            this.lbSolveTime = new System.Windows.Forms.Label();
             this.gbSolvers = new System.Windows.Forms.GroupBox();
             this.lbPathSize = new System.Windows.Forms.Label();
+            this.lbSolveTime = new System.Windows.Forms.Label();
             this.btnClear = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
             this.chbShowResult = new System.Windows.Forms.CheckBox();
@@ -124,16 +124,6 @@
             this.pbSolve.Step = 1;
             this.pbSolve.TabIndex = 7;
             // 
-            // lbSolveTime
-            // 
-            this.lbSolveTime.AutoSize = true;
-            this.lbSolveTime.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lbSolveTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.lbSolveTime.Location = new System.Drawing.Point(3, 227);
-            this.lbSolveTime.Name = "lbSolveTime";
-            this.lbSolveTime.Size = new System.Drawing.Size(0, 17);
-            this.lbSolveTime.TabIndex = 6;
-            // 
             // gbSolvers
             // 
             this.gbSolvers.Controls.Add(this.lbPathSize);
@@ -162,6 +152,16 @@
             this.lbPathSize.Name = "lbPathSize";
             this.lbPathSize.Size = new System.Drawing.Size(0, 17);
             this.lbPathSize.TabIndex = 8;
+            // 
+            // lbSolveTime
+            // 
+            this.lbSolveTime.AutoSize = true;
+            this.lbSolveTime.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lbSolveTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.lbSolveTime.Location = new System.Drawing.Point(3, 227);
+            this.lbSolveTime.Name = "lbSolveTime";
+            this.lbSolveTime.Size = new System.Drawing.Size(0, 17);
+            this.lbSolveTime.TabIndex = 6;
             // 
             // btnClear
             // 

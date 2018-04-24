@@ -47,7 +47,7 @@ namespace aMaze_ingSolver.Algorithms
 
             _timer.Start();
             //TODO: Parallelize this, it should be pretty simple.
-            graph.CalculateDistancesFromVerticesToEnd();
+            graph.CalculateDistancesFromVerticesToEnd(ThreadCount);
 
             _unvisited = new List<Vertex>();
             AddNewBestDistance(null, graph.Start, 0);

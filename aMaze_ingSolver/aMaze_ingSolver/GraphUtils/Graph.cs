@@ -218,12 +218,53 @@ namespace aMaze_ingSolver.GraphUtils
         /// <summary>
         /// Calculate distance from vertex to end of the maze for all vertices.
         /// </summary>
-        internal void CalculateDistancesFromVerticesToEnd()
+        internal void CalculateDistancesFromVerticesToEnd(int threadCount)
         {
-            foreach (Vertex v in this.Vertices)
+            void Work(IEnumerable<Vertex> vertices, Vertex end)
             {
-                v.EuclideanDistanceToEnd = v.EuclideanDistanceTo(this.End);
+                foreach (Vertex vertex in vertices)
+                {
+                    vertex.EuclideanDistanceToEnd = vertex.EuclideanDistanceTo(end);
+                }
             }
+
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            if (threadCount <= 1)
+            {
+                foreach (Vertex v in this.Vertices)
+                {
+                    v.EuclideanDistanceToEnd = v.EuclideanDistanceTo(this.End);
+                }
+            }
+            else
+            {
+                Parallel.ForEach(this.Vertices, (vertex) =>
+                {
+                    vertex.EuclideanDistanceToEnd = vertex.EuclideanDistanceTo(this.End);
+                });
+
+                //Task[] tasks = new Task[threadCount];
+
+                //int threadWorkSize = this.Vertices.Count / threadCount;
+                //for (int i = 0; i < threadCount; i++)
+                //{
+                //    IEnumerable<Vertex> ver;
+                //    if (i != threadCount - 1)
+                //    {
+                //        ver = Vertices.Skip(i * threadWorkSize).Take(threadWorkSize);
+                //        tasks[i] = Task.Factory.StartNew(() => Work(ver, End));
+                //    }
+                //    else
+                //    {
+                //        ver = Vertices.Skip(i * threadWorkSize);
+                //        tasks[i] = Task.Factory.StartNew(() => Work(ver, End));
+                //    }
+                //}
+                //Task.WaitAll(tasks);
+                //Console.WriteLine("done");
+            }
+            stopwatch.Stop();
         }
     }
 }

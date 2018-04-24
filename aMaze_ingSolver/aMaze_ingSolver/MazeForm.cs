@@ -295,6 +295,10 @@ namespace aMaze_ingSolver
                 {
                     _selectedSolver.ThreadCount = _threadCount;
                 }
+                else
+                {
+                    _selectedSolver.ThreadCount = 1;
+                }
                 _selectedSolver.OnSolved += MazeSolved;
                 _selectedSolver.OnSolveProgress += SolveProgression;
 
