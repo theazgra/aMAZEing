@@ -33,6 +33,7 @@
             this.miLoadMaze = new System.Windows.Forms.ToolStripButton();
             this.imgBox = new System.Windows.Forms.PictureBox();
             this.settingsPanel = new System.Windows.Forms.Panel();
+            this.pbSolve = new System.Windows.Forms.ProgressBar();
             this.lbSolveTime = new System.Windows.Forms.Label();
             this.gbSolvers = new System.Windows.Forms.GroupBox();
             this.lbPathSize = new System.Windows.Forms.Label();
@@ -56,7 +57,6 @@
             this.chbInvoke = new System.Windows.Forms.CheckBox();
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.imgPanel = new System.Windows.Forms.Panel();
-            this.pbSolve = new System.Windows.Forms.ProgressBar();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imgBox)).BeginInit();
             this.settingsPanel.SuspendLayout();
@@ -115,6 +115,15 @@
             this.settingsPanel.Padding = new System.Windows.Forms.Padding(5);
             this.settingsPanel.Size = new System.Drawing.Size(258, 630);
             this.settingsPanel.TabIndex = 2;
+            // 
+            // pbSolve
+            // 
+            this.pbSolve.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pbSolve.Location = new System.Drawing.Point(5, 551);
+            this.pbSolve.Name = "pbSolve";
+            this.pbSolve.Size = new System.Drawing.Size(248, 23);
+            this.pbSolve.Step = 1;
+            this.pbSolve.TabIndex = 7;
             // 
             // lbSolveTime
             // 
@@ -383,15 +392,6 @@
             this.imgPanel.Padding = new System.Windows.Forms.Padding(10);
             this.imgPanel.Size = new System.Drawing.Size(829, 630);
             this.imgPanel.TabIndex = 4;
-            // 
-            // pbSolve
-            // 
-            this.pbSolve.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pbSolve.Location = new System.Drawing.Point(5, 551);
-            this.pbSolve.Name = "pbSolve";
-            this.pbSolve.Size = new System.Drawing.Size(248, 23);
-            this.pbSolve.Step = 1;
-            this.pbSolve.TabIndex = 7;
             // 
             // MazeForm
             // 

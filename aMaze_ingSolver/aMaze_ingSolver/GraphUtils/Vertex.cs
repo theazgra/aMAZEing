@@ -38,6 +38,11 @@ namespace aMaze_ingSolver.GraphUtils
         /// </summary>
         public Vertex Previous { get; set; }
 
+        /// <summary>
+        /// Best (shortest) distance to this vertex.
+        /// </summary>
+        public float BestPathDistance { get; set; } = float.PositiveInfinity;
+
         private Dictionary<Direction, Vertex> _neighbours;
 
         /// <summary>
@@ -174,6 +179,16 @@ namespace aMaze_ingSolver.GraphUtils
 
 
             return vertices;
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = -1732179082;
+            hashCode = hashCode * -1521134295 + EqualityComparer<Point>.Default.GetHashCode(Location);
+            hashCode = hashCode * -1521134295 + Visited.GetHashCode();
+            hashCode = hashCode * -1521134295 + DistanceFromEnd.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<Vertex>.Default.GetHashCode(Previous);
+            return hashCode;
         }
     }
 }

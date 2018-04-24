@@ -63,6 +63,7 @@
     <Compile Include="Direction.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="BoolMatrix.cs" />
+    <Compile Include="GraphUtils\VertexComparer.cs" />
     <Compile Include="Maze.cs" />
     <Compile Include="MazeForm.cs">
       <SubType>Form</SubType>

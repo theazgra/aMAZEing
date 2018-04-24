@@ -320,9 +320,7 @@ namespace aMaze_ingSolver
         {
             if (_selectedSolver != null)
             {
-                chbShowResult.Enabled = true;
-                btnSolve.Text = "Solved";
-                _selectedSolver.Solved = true;
+               
 
                 if (lbSolveTime.InvokeRequired)
                 {
@@ -331,6 +329,10 @@ namespace aMaze_ingSolver
                 }
                 else
                 {
+                    chbShowResult.Enabled = true;
+                    btnSolve.Text = "Solved";
+                    _selectedSolver.Solved = true;
+
                     pbSolve.Value = pbSolve.Maximum;
                     lbSolveTime.Text = string.Format("Path found after: {0} ms", 
                         _selectedSolver.GetSolveTime().TotalMilliseconds.ToString("### ### ###"));
