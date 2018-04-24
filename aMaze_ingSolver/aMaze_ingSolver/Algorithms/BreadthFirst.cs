@@ -182,12 +182,10 @@ namespace aMaze_ingSolver.Algorithms
 
             queue.Enqueue(graph.Start);
             AddVisited(graph.Start, null);
-            int loopIteration = 0;
 
             Vertex current = null;
             while (true)
             {
-                ++loopIteration;
                 current = queue.Dequeue();
 
                 if (current.Equals(graph.End))
