@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using aMaze_ingSolver.GraphUtils;
 
 namespace aMaze_ingSolver.Algorithms
@@ -16,89 +13,131 @@ namespace aMaze_ingSolver.Algorithms
 
         private List<Vertex> _unvisited;
         private bool _invokeEvents = false;
+        
+        private object _unvisitedLock = new object();
+
 
         private void AddNewBestDistance(Vertex previous, Vertex current, float distance)
         {
             current.Previous = previous;
             current.BestPathDistance = distance;
 
-            if (!_unvisited.Contains(current))
+            lock (_unvisitedLock)
             {
-                _unvisited.Add(current);
+                if (!_unvisited.Contains(current))
+                {
+                    _unvisited.Add(current);
+                }
+                _unvisited = _unvisited.OrderBy(v => v.BestPathDistance).ToList();
             }
-
-            _unvisited = _unvisited.OrderBy(v => v.BestPathDistance).ToList();
         }
 
         private Vertex GetTopUnvisitedVertex()
         {
-            return _unvisited.First();
+            lock (_unvisitedLock)
+            {
+                if (_unvisited.Count > 0)
+                    return _unvisited.First();
+            }
+            return null;
         }
 
 
         public override void SolveMaze(Graph graph)
         {
-            _invokeEvents = MazeForm.InvokeDelegates();
-            long loopIteration = 0;
-            int vertCount = graph.Vertices.Count;
-            int invokeStep = (int)Math.Ceiling((float)(vertCount / 2000));
-            graph.Reset();
-            _resultPath.Clear();
-
-            _timer.Start();
-
-            _unvisited = new List<Vertex>();
-            AddNewBestDistance(null, graph.Start, 0);
-            Vertex current = null;
-
-            //Start by adding start' neighbours
-            foreach (Vertex neighbours in graph.Start.Neighbours)
+            if (Parallel)
             {
-                AddNewBestDistance(graph.Start, neighbours, float.PositiveInfinity);
+                ParallelSolution(graph);
             }
-
-            int iteration = 0;
-            //loop while end is not visited.
-            while (!graph.End.Visited)
+            else
             {
-                ++iteration;
-                current = GetTopUnvisitedVertex();
+                _invokeEvents = MazeForm.InvokeDelegates();
+                long loopIteration = 0;
+                int vertCount = graph.Vertices.Count;
+                int invokeStep = (int)Math.Ceiling((float)(vertCount / 2000));
+                graph.Reset();
+                _resultPath.Clear();
 
-                foreach (Vertex neighbour in current.Neighbours)
+                _timer.Start();
+
+                _unvisited = new List<Vertex>();
+                AddNewBestDistance(null, graph.Start, 0);
+                Vertex current = null;
+
+                //Start by adding start' neighbours
+                foreach (Vertex neighbours in graph.Start.Neighbours)
                 {
-                    if (neighbour.Visited)
-                        continue;
+                    AddNewBestDistance(graph.Start, neighbours, float.PositiveInfinity);
+                }
 
-                    //distance to connected vertex using best distance to current vertex.
-                    float distanceToVertex = current.BestPathDistance + current.PathDistanceTo(neighbour);
-                    if (distanceToVertex < neighbour.BestPathDistance)
+                int iteration = 0;
+                //loop while end is not visited.
+                while (!graph.End.Visited)
+                {
+                    ++iteration;
+                    current = GetTopUnvisitedVertex();
+
+#if false
+                //Slower.
+                System.Threading.Tasks.Parallel.ForEach(current.Neighbours, (neighbour) =>
+                {
+                    if (!neighbour.Visited)
                     {
-                        AddNewBestDistance(current, neighbour, distanceToVertex);
+
+                        //distance to connected vertex using best distance to current vertex.
+                        float distanceToVertex = current.BestPathDistance + current.PathDistanceTo(neighbour);
+                        if (distanceToVertex < neighbour.BestPathDistance)
+                        {
+                            AddNewBestDistance(current, neighbour, distanceToVertex);
+                        }
+                    }
+                });
+#endif
+                    foreach (Vertex neighbour in current.Neighbours)
+                    {
+                        if (neighbour.Visited)
+                            continue;
+
+                        //distance to connected vertex using best distance to current vertex.
+                        float distanceToVertex = current.BestPathDistance + current.PathDistanceTo(neighbour);
+                        if (distanceToVertex < neighbour.BestPathDistance)
+                        {
+                            AddNewBestDistance(current, neighbour, distanceToVertex);
+                        }
+                    }
+                    current.Visited = true;
+                    _unvisited.Remove(current);
+                    ///
+                    ++loopIteration;
+                    if (_invokeEvents && iteration >= invokeStep)
+                    {
+                        iteration = 0;
+                        float perc = ((float)loopIteration / (float)vertCount) * 100.0f;
+                        OnSolveProgress?.Invoke(perc);
                     }
                 }
-                current.Visited = true;
-                _unvisited.Remove(current);
 
-                ++loopIteration;
-                if (_invokeEvents && iteration >= invokeStep)
-                {
-                    iteration = 0;
-                    float perc = ((float)loopIteration / (float)vertCount) * 100.0f;
-                    OnSolveProgress?.Invoke(perc);
-                }
-            }
-
-            current = graph.End;
-            _resultPath.Enqueue(current);
-            while (current != graph.Start)
-            {
-                current = current.Previous;
-                //current = _pathToVertex[current].Item1;
+                current = graph.End;
                 _resultPath.Enqueue(current);
+                while (current != graph.Start)
+                {
+                    current = current.Previous;
+                    //current = _pathToVertex[current].Item1;
+                    _resultPath.Enqueue(current);
+                }
+                _timer.Stop();
+                OnSolved?.Invoke();
             }
-            _timer.Stop();
-            OnSolved?.Invoke();
         }
+
+        private void ParallelSolution(Graph graph)
+        {
+        }
+
+        private void TaskJob(object obj)
+        {
+        }
+
         public override string ToString()
         {
             return Name;

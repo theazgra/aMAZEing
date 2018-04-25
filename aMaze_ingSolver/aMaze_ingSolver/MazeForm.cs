@@ -38,7 +38,8 @@ namespace aMaze_ingSolver
                 new BreadthFirst(),
                 new DepthFirst(),
                 new Dijkstra(),
-                new AStar()
+                new AStar(),
+                //new ShortestPathACO()
             };
             tbThreadCount.Text = "4";
         }
@@ -103,23 +104,9 @@ namespace aMaze_ingSolver
             {
                 lbInfo.Text = string.Format("Graph completed after: {0} ms", time.TotalMilliseconds.ToString("### ### ###"));
 
-                Task.Run(() => PaintAndSave());
+
 
             }
-        }
-
-        private void PaintAndSave()
-        {
-            Bitmap bmp = new Bitmap(_image);
-            foreach (Vertex vertex in _maze.Graph.Vertices)
-            {
-                bmp.SetPixel(vertex.X, vertex.Y, Color.Red);
-            }
-
-            bmp.SetPixel(_maze.Graph.Start.X, _maze.Graph.Start.Y, Color.Blue);
-            bmp.SetPixel(_maze.Graph.End.X, _maze.Graph.End.Y, Color.Blue);
-
-            bmp.Save("Result.png", System.Drawing.Imaging.ImageFormat.Png);
         }
 
         private void Tree_OnBuildProgress(string msg)
@@ -190,8 +177,8 @@ namespace aMaze_ingSolver
                 imgBox.Image = _drawBmp.ResizeImage((int)((float)_drawBmp.Width * _scale), (int)((float)_drawBmp.Height * _scale));
             else
                 imgBox.Image = _drawBmp.ResizeImage(
-                    (int)((float)_drawBmp.Width * _scale), 
-                    (int)((float)_drawBmp.Height * _scale), 
+                    (int)((float)_drawBmp.Width * _scale),
+                    (int)((float)_drawBmp.Height * _scale),
                     System.Drawing.Drawing2D.InterpolationMode.Bicubic);
         }
 
@@ -269,7 +256,7 @@ namespace aMaze_ingSolver
 
         }
 
-        private void  ResetClick(object sender, EventArgs e)
+        private void ResetClick(object sender, EventArgs e)
         {
             chbShowResult.Checked = false;
             chbShowResult.Enabled = false;
@@ -325,7 +312,7 @@ namespace aMaze_ingSolver
         {
             if (_selectedSolver != null)
             {
-               
+
 
                 if (lbSolveTime.InvokeRequired)
                 {
@@ -355,10 +342,10 @@ namespace aMaze_ingSolver
 
         private void LogSolveTime(IMazeSolver selectedSolver)
         {
-            using (StreamWriter writer = new StreamWriter("SolverLog.txt",true, System.Text.Encoding.UTF8))
+            using (StreamWriter writer = new StreamWriter("SolverLog.txt", true, System.Text.Encoding.UTF8))
             {
                 writer.WriteLine("{0};{1};{2}[ms];{3}_threads",
-                    new FileInfo(_mazeFile).Name, selectedSolver.Name, selectedSolver.GetSolveTime().TotalMilliseconds, 
+                    new FileInfo(_mazeFile).Name, selectedSolver.Name, selectedSolver.GetSolveTime().TotalMilliseconds,
                     chbParallel.Checked ? _threadCount : 1);
             }
         }
@@ -402,6 +389,23 @@ namespace aMaze_ingSolver
             else
             {
                 MessageBox.Show("Not solved.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void BtnSaveGraph(object sender, EventArgs e)
+        {
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                AddExtension = true,
+                DefaultExt = ".png",
+                FileName = "graph.png",
+                Title = "Save graph as image."
+            };
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                _maze.Graph.SaveAsImage(_image.Size, saveFileDialog.FileName);
             }
         }
 

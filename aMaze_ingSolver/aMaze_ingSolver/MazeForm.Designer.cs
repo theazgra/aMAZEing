@@ -57,6 +57,7 @@
             this.chbInvoke = new System.Windows.Forms.CheckBox();
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.imgPanel = new System.Windows.Forms.Panel();
+            this.btnSaveGraph = new System.Windows.Forms.Button();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imgBox)).BeginInit();
             this.settingsPanel.SuspendLayout();
@@ -130,6 +131,7 @@
             this.gbSolvers.Controls.Add(this.lbSolveTime);
             this.gbSolvers.Controls.Add(this.btnClear);
             this.gbSolvers.Controls.Add(this.btnSave);
+            this.gbSolvers.Controls.Add(this.btnSaveGraph);
             this.gbSolvers.Controls.Add(this.chbShowResult);
             this.gbSolvers.Controls.Add(this.btnSolve);
             this.gbSolvers.Controls.Add(this.solverSelection);
@@ -138,7 +140,7 @@
             this.gbSolvers.Dock = System.Windows.Forms.DockStyle.Top;
             this.gbSolvers.Location = new System.Drawing.Point(5, 175);
             this.gbSolvers.Name = "gbSolvers";
-            this.gbSolvers.Size = new System.Drawing.Size(248, 328);
+            this.gbSolvers.Size = new System.Drawing.Size(248, 359);
             this.gbSolvers.TabIndex = 5;
             this.gbSolvers.TabStop = false;
             this.gbSolvers.Text = "Solvers";
@@ -148,7 +150,7 @@
             this.lbPathSize.AutoSize = true;
             this.lbPathSize.Dock = System.Windows.Forms.DockStyle.Top;
             this.lbPathSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.lbPathSize.Location = new System.Drawing.Point(3, 244);
+            this.lbPathSize.Location = new System.Drawing.Point(3, 261);
             this.lbPathSize.Name = "lbPathSize";
             this.lbPathSize.Size = new System.Drawing.Size(0, 17);
             this.lbPathSize.TabIndex = 8;
@@ -158,7 +160,7 @@
             this.lbSolveTime.AutoSize = true;
             this.lbSolveTime.Dock = System.Windows.Forms.DockStyle.Top;
             this.lbSolveTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.lbSolveTime.Location = new System.Drawing.Point(3, 227);
+            this.lbSolveTime.Location = new System.Drawing.Point(3, 244);
             this.lbSolveTime.Name = "lbSolveTime";
             this.lbSolveTime.Size = new System.Drawing.Size(0, 17);
             this.lbSolveTime.TabIndex = 6;
@@ -166,7 +168,7 @@
             // btnClear
             // 
             this.btnClear.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.btnClear.Location = new System.Drawing.Point(3, 271);
+            this.btnClear.Location = new System.Drawing.Point(3, 275);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(242, 27);
             this.btnClear.TabIndex = 2;
@@ -177,7 +179,7 @@
             // btnSave
             // 
             this.btnSave.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.btnSave.Location = new System.Drawing.Point(3, 298);
+            this.btnSave.Location = new System.Drawing.Point(3, 302);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(242, 27);
             this.btnSave.TabIndex = 7;
@@ -190,7 +192,7 @@
             this.chbShowResult.AutoSize = true;
             this.chbShowResult.Dock = System.Windows.Forms.DockStyle.Top;
             this.chbShowResult.Enabled = false;
-            this.chbShowResult.Location = new System.Drawing.Point(3, 206);
+            this.chbShowResult.Location = new System.Drawing.Point(3, 223);
             this.chbShowResult.Name = "chbShowResult";
             this.chbShowResult.Size = new System.Drawing.Size(242, 21);
             this.chbShowResult.TabIndex = 6;
@@ -201,7 +203,7 @@
             // btnSolve
             // 
             this.btnSolve.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnSolve.Location = new System.Drawing.Point(3, 175);
+            this.btnSolve.Location = new System.Drawing.Point(3, 192);
             this.btnSolve.Name = "btnSolve";
             this.btnSolve.Size = new System.Drawing.Size(242, 31);
             this.btnSolve.TabIndex = 5;
@@ -216,7 +218,7 @@
             this.solverSelection.FormattingEnabled = true;
             this.solverSelection.Location = new System.Drawing.Point(3, 86);
             this.solverSelection.Name = "solverSelection";
-            this.solverSelection.Size = new System.Drawing.Size(242, 89);
+            this.solverSelection.Size = new System.Drawing.Size(242, 106);
             this.solverSelection.TabIndex = 4;
             this.solverSelection.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.solverSelection_ItemCheck);
             this.solverSelection.SelectedValueChanged += new System.EventHandler(this.SelectionChanged);
@@ -393,6 +395,17 @@
             this.imgPanel.Size = new System.Drawing.Size(829, 630);
             this.imgPanel.TabIndex = 4;
             // 
+            // btnSaveGraph
+            // 
+            this.btnSaveGraph.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnSaveGraph.Location = new System.Drawing.Point(3, 329);
+            this.btnSaveGraph.Name = "btnSaveGraph";
+            this.btnSaveGraph.Size = new System.Drawing.Size(242, 27);
+            this.btnSaveGraph.TabIndex = 12;
+            this.btnSaveGraph.Text = "Save graph";
+            this.btnSaveGraph.UseVisualStyleBackColor = true;
+            this.btnSaveGraph.Click += new System.EventHandler(this.BtnSaveGraph);
+            // 
             // MazeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -452,6 +465,7 @@
         private System.Windows.Forms.GroupBox gbThreadCount;
         private System.Windows.Forms.TextBox tbThreadCount;
         private System.Windows.Forms.ProgressBar pbSolve;
+        private System.Windows.Forms.Button btnSaveGraph;
     }
 }
 

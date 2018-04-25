@@ -7,40 +7,45 @@ namespace aMaze_ingSolver.GraphUtils
 {
     class OrientedEdge
     {
-        public Vertex Origin { get; set; }
-        public Vertex Destination { get; set; }
-        public Direction Direction { get; set; }
-        public int Size { get; private set; }
+        public Vertex Origin { get; }
+        public Vertex Destination { get; }
+        public Direction Direction { get; }
+        public int Length { get; }
+        public bool Visited { get; set; } = false;
 
-        public OrientedEdge(Vertex origin, Vertex destination)
+        public float Pheromones { get; set; } = 0.0f;
+
+
+        public OrientedEdge(Vertex origin, Vertex destination, Direction direction)
         {
-            Origin = origin;
-            Destination = destination;
-            Direction = Utils.GetDirection(origin.Location, destination.Location);
-
-            if (Direction == Direction.Up || Direction == Direction.Down)
-            {
-                Size = Math.Abs(Destination.Y - Origin.Y);
-            }
-            else
-            {
-                Size = Math.Abs(Destination.X - Origin.X);
-            }
+            this.Origin = origin;
+            this.Destination = destination;
+            this.Length = origin.PathDistanceTo(destination);
+            this.Direction = direction;
         }
 
+        /// <summary>
+        /// Set visited to false.
+        /// </summary>
+        public  void Reset()
+        {
+            this.Visited = false;
+        }
+        
         public IEnumerable<Point> GetEdgePoints()
         {
             List<Point> points = new List<Point>();
 
-            Point point = Origin.Location;
-            do
+            Point point = Origin.Location.MoveInDirection(Direction);
+
+            while (point != Destination.Location)
             {
                 points.Add(point);
                 point = point.MoveInDirection(Direction);
-
-            } while (point != Destination.Location);
+            } 
 
             points.Add(point);
+            points.Remove(Destination.Location);
 
             return points;
         }

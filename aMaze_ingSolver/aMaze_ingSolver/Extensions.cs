@@ -143,5 +143,14 @@ namespace aMaze_ingSolver
             float distance = (float)(Math.Sqrt(root));
             return distance;
         }
+
+        public static Point Scale(this Point point, float scale)
+        {
+            if (scale == 1.0f)
+                return point;
+            int newX = (int)(point.X * scale);
+            int newY = (int)(point.Y * scale);
+            return new Point(newX, newY);
+        }
     }
 }

@@ -3,13 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace aMaze_ingSolver.GraphUtils
 {
+    [Serializable]
     class Graph
     {
         #region Events
@@ -208,10 +211,7 @@ namespace aMaze_ingSolver.GraphUtils
         {
             foreach (Vertex vertex in Vertices)
             {
-                vertex.Visited = false;
-                vertex.BestPathDistance = float.PositiveInfinity;
-                vertex.EuclideanDistanceToEnd = float.PositiveInfinity;
-                vertex.Previous = null;
+                vertex.Reset();
             }
         }
 
@@ -220,14 +220,6 @@ namespace aMaze_ingSolver.GraphUtils
         /// </summary>
         internal void CalculateDistancesFromVerticesToEnd(int threadCount)
         {
-            void Work(IEnumerable<Vertex> vertices, Vertex end)
-            {
-                foreach (Vertex vertex in vertices)
-                {
-                    vertex.EuclideanDistanceToEnd = vertex.EuclideanDistanceTo(end);
-                }
-            }
-
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             if (threadCount <= 1)
@@ -243,28 +235,50 @@ namespace aMaze_ingSolver.GraphUtils
                 {
                     vertex.EuclideanDistanceToEnd = vertex.EuclideanDistanceTo(this.End);
                 });
-
-                //Task[] tasks = new Task[threadCount];
-
-                //int threadWorkSize = this.Vertices.Count / threadCount;
-                //for (int i = 0; i < threadCount; i++)
-                //{
-                //    IEnumerable<Vertex> ver;
-                //    if (i != threadCount - 1)
-                //    {
-                //        ver = Vertices.Skip(i * threadWorkSize).Take(threadWorkSize);
-                //        tasks[i] = Task.Factory.StartNew(() => Work(ver, End));
-                //    }
-                //    else
-                //    {
-                //        ver = Vertices.Skip(i * threadWorkSize);
-                //        tasks[i] = Task.Factory.StartNew(() => Work(ver, End));
-                //    }
-                //}
-                //Task.WaitAll(tasks);
-                //Console.WriteLine("done");
             }
             stopwatch.Stop();
+        }
+
+        public void SaveAsImage(Size originalSize, string fileName)
+        {
+            float scale = 1.0f;
+            Color red = Color.Red;
+            Color blue = Color.LightBlue;
+
+            using (Bitmap bitmap = new Bitmap((int)(originalSize.Width * scale), (int)(originalSize.Height * scale)))
+            {
+                using (BitmapPlus bmp = new BitmapPlus(bitmap, System.Drawing.Imaging.ImageLockMode.ReadWrite))
+                {
+                    foreach (Vertex vertex in this.Vertices)
+                    {
+                        bmp.SetPixel(vertex.Location, red);
+                        foreach (OrientedEdge edge in vertex.Edges)
+                        {
+                            foreach (Point p in edge.GetEdgePoints())
+                            {
+                                bmp.SetPixel(p, blue);
+                            }
+                        }
+                    }
+                }
+                bitmap.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
+            }
+        }
+
+        /// <summary>
+        /// Clone this graph into another object.
+        /// </summary>
+        /// <returns>Same graph.</returns>
+        public Graph Clone()
+        {
+            using (MemoryStream memStream = new MemoryStream())
+            {
+                BinaryFormatter binaryFormatter = new BinaryFormatter();
+                binaryFormatter.Serialize(memStream, this);
+                memStream.Position = 0;
+                Graph clone = (Graph)binaryFormatter.Deserialize(memStream);
+                return clone;
+            }
         }
     }
 }

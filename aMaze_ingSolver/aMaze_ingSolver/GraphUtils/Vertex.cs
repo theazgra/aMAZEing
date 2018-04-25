@@ -21,7 +21,7 @@ namespace aMaze_ingSolver.GraphUtils
         /// <summary>
         /// Y component of location.
         /// </summary>
-        public int Y => Location.Y; 
+        public int Y => Location.Y;
 
         /// <summary>
         /// Vertex was visited by algorithm.
@@ -54,7 +54,7 @@ namespace aMaze_ingSolver.GraphUtils
         /// </summary>
         public float BestPathDistance { get; set; } = float.PositiveInfinity;
 
-        private Dictionary<Direction, Vertex> _neighbours;
+        private List<OrientedEdge> _neighbours;
 
         /// <summary>
         /// Creates vertex at given location.
@@ -67,7 +67,27 @@ namespace aMaze_ingSolver.GraphUtils
         public Vertex(Point location)
         {
             Location = location;
-            _neighbours = new Dictionary<Direction, Vertex>();
+            _neighbours = new List<OrientedEdge>();
+        }
+
+        public Vertex this[int i]
+        {
+            get
+            {
+                switch (i)
+                {
+                    case 0:
+                        return GetNeighbour(Direction.Down);
+                    case 1:
+                        return GetNeighbour(Direction.Left);
+                    case 2:
+                        return GetNeighbour(Direction.Right);
+                    case 3:
+                        return GetNeighbour(Direction.Up);
+                    default:
+                        return null;
+                }
+            }
         }
 
         /// <summary>
@@ -79,16 +99,22 @@ namespace aMaze_ingSolver.GraphUtils
             {
                 List<Vertex> neighbours = new List<Vertex>();
 
-                if (_neighbours.ContainsKey(Direction.Left))
-                    neighbours.Add(_neighbours[Direction.Left]);
-                if (_neighbours.ContainsKey(Direction.Right))
-                    neighbours.Add(_neighbours[Direction.Right]);
-                if (_neighbours.ContainsKey(Direction.Up))
-                    neighbours.Add(_neighbours[Direction.Up]);
-                if (_neighbours.ContainsKey(Direction.Down))
-                    neighbours.Add(_neighbours[Direction.Down]);
-
+                foreach (OrientedEdge edge in _neighbours)
+                {
+                    neighbours.Add(edge.Destination);
+                }
                 return neighbours;
+            }
+        }
+
+        /// <summary>
+        /// Get this vertex edges
+        /// </summary>
+        public IEnumerable<OrientedEdge> Edges
+        {
+            get
+            {
+                return _neighbours;
             }
         }
 
@@ -96,10 +122,10 @@ namespace aMaze_ingSolver.GraphUtils
         /// Add neighbour in direction.
         /// </summary>
         /// <param name="direction">Direction in which neighbour is connected.</param>
-        /// <param name="vertex">Neighbour vertex.</param>
-        public void AddNeighbour(Direction direction, Vertex vertex)
+        /// <param name="neighbour">Neighbour vertex.</param>
+        public void AddNeighbour(Direction direction, Vertex neighbour)
         {
-            _neighbours.Add(direction, vertex);
+            _neighbours.Add(new OrientedEdge(this, neighbour, direction));
         }
 
         /// <summary>
@@ -109,10 +135,13 @@ namespace aMaze_ingSolver.GraphUtils
         /// <returns>Connected neighbour or null.</returns>
         public Vertex GetNeighbour(Direction direction)
         {
-            if (!_neighbours.ContainsKey(direction))
-                return null;
+            foreach (OrientedEdge edge in _neighbours)
+            {
+                if (edge.Direction == direction)
+                    return edge.Destination;
+            }
 
-            return _neighbours[direction];
+            return null;
         }
 
         public string Print()
@@ -144,8 +173,8 @@ namespace aMaze_ingSolver.GraphUtils
         /// <returns>True if neighbour is connected.</returns>
         public bool HasNeighbour(Direction direction)
         {
-            //return this.GetNeighbour(direction) == null;
-            return _neighbours.ContainsKey(direction);
+            return _neighbours.Any(e => e.Direction == direction);
+            //return _neighbours.ContainsKey(direction);
         }
 
         /// <summary>
@@ -171,25 +200,42 @@ namespace aMaze_ingSolver.GraphUtils
         /// <summary>
         /// Neighbours ordered like up, left, down, right.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Neighbouring vertices.</returns>
         public Queue<Vertex> GetOrderedNeighbours()
         {
             Queue<Vertex> vertices = new Queue<Vertex>();
 
-            if (_neighbours.ContainsKey(Direction.Up))
-                vertices.Enqueue(_neighbours[Direction.Up]);
-
-            if (_neighbours.ContainsKey(Direction.Left))
-                vertices.Enqueue(_neighbours[Direction.Left]);
-
-            if (_neighbours.ContainsKey(Direction.Down))
-                vertices.Enqueue(_neighbours[Direction.Down]);
-
-            if (_neighbours.ContainsKey(Direction.Right))
-                vertices.Enqueue(_neighbours[Direction.Right]);
-
+            if (_neighbours.FirstOrDefault(e => e.Direction == Direction.Up) is OrientedEdge upEdge)
+                vertices.Enqueue(upEdge.Destination);
+            if (_neighbours.FirstOrDefault(e => e.Direction == Direction.Left) is OrientedEdge leftEdge)
+                vertices.Enqueue(leftEdge.Destination);
+            if (_neighbours.FirstOrDefault(e => e.Direction == Direction.Down) is OrientedEdge downEdge)
+                vertices.Enqueue(downEdge.Destination);
+            if (_neighbours.FirstOrDefault(e => e.Direction == Direction.Right) is OrientedEdge rightEdge)
+                vertices.Enqueue(rightEdge.Destination);
 
             return vertices;
+        }
+
+
+        /// <summary>
+        /// Edges ordered like up, left, down, right.
+        /// </summary>
+        /// <returns>Edges</returns>
+        public Queue<OrientedEdge> GetOrderedEdges()
+        {
+            Queue<OrientedEdge> edges = new Queue<OrientedEdge>();
+
+            if (_neighbours.FirstOrDefault(e => e.Direction == Direction.Up) is OrientedEdge upEdge)
+                edges.Enqueue(upEdge);
+            if (_neighbours.FirstOrDefault(e => e.Direction == Direction.Left) is OrientedEdge leftEdge)
+                edges.Enqueue(leftEdge);
+            if (_neighbours.FirstOrDefault(e => e.Direction == Direction.Down) is OrientedEdge downEdge)
+                edges.Enqueue(downEdge);
+            if (_neighbours.FirstOrDefault(e => e.Direction == Direction.Right) is OrientedEdge rightEdge)
+                edges.Enqueue(rightEdge);
+
+            return edges;
         }
 
         public override int GetHashCode()
@@ -200,6 +246,31 @@ namespace aMaze_ingSolver.GraphUtils
             hashCode = hashCode * -1521134295 + EuclideanDistanceToEnd.GetHashCode();
             hashCode = hashCode * -1521134295 + EqualityComparer<Vertex>.Default.GetHashCode(Previous);
             return hashCode;
+        }
+
+        public void InitializeEdge(float initialValue)
+        {
+            foreach (OrientedEdge edge in _neighbours)
+            {
+                edge.Pheromones = initialValue;
+                edge.Visited = false;
+            }
+        }
+
+        /// <summary>
+        /// Reset this vertex and connected edges.
+        /// </summary>
+        public void Reset()
+        {
+
+            this.Visited = false;
+            this.BestPathDistance = float.PositiveInfinity;
+            this.EuclideanDistanceToEnd = float.PositiveInfinity;
+            this.Previous = null;
+            foreach (OrientedEdge edge in _neighbours)
+            {
+                edge.Reset();
+            }
         }
     }
 }

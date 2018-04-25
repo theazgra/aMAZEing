@@ -86,6 +86,11 @@ namespace aMaze_ingSolver
             return clr;
         }
 
+        public void SetPixel(Point location, Color color)
+        {
+            SetPixel(location.X, location.Y, color);
+        }
+
         public void SetPixel(int x, int y, Color color)
         {
             // Get start index of the specified pixel
