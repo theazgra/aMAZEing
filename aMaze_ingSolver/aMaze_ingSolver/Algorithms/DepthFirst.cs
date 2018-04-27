@@ -11,7 +11,7 @@ namespace aMaze_ingSolver.Algorithms
 {
     class DepthFirst : MazeSolver
     {
-
+        public override bool SupportParallel => false;
         private Dictionary<Vertex, Vertex> _visited;
         private SimpleSemaphore _semaphore;
         private object _lock = new object();

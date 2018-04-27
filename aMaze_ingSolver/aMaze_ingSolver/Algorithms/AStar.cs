@@ -10,6 +10,8 @@ namespace aMaze_ingSolver.Algorithms
     class AStar : MazeSolver
     {
         public override string Name => "A*";
+        public override bool SupportParallel => false;
+
         public override event Solved OnSolved;
         public override event SolveProgress OnSolveProgress;
         private bool _invokeEvents = false;

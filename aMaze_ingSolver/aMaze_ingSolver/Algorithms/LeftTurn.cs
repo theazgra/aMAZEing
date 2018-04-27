@@ -5,6 +5,7 @@ namespace aMaze_ingSolver.Algorithms
 {
     class LeftTurn : MazeSolver
     {
+        public override bool SupportParallel => false;
         public override string Name => "Left turn";
 
         public override event Solved OnSolved;

@@ -423,16 +423,7 @@ namespace aMaze_ingSolver
 
             if ((sender as CheckedListBox).SelectedItem is IMazeSolver solver)
             {
-                _selectedSolver = solver;
-
-                if (!solver.Solved)
-                    chbShowResult.Checked = false;
-
-                InvalidateMaze();
-                ShowPathLength(_selectedSolver.GetPathLength());
-                ShowSolveTime(_selectedSolver.GetSolveTime());
-
-                btnSolve.Text = _selectedSolver.Solved ? "Solved" : "Solve";
+                SelectSolver(solver);
             }
             else
             {
@@ -440,6 +431,24 @@ namespace aMaze_ingSolver
                 //throw new ArgumentException("Wrong solvert in checked list box.");
             }
             (sender as CheckedListBox).ItemCheck += solverSelection_ItemCheck;
+        }
+
+        private void SelectSolver(IMazeSolver solver)
+        {
+            _selectedSolver = solver;
+
+            if (!solver.SupportParallel)
+                chbParallel.Checked = false;
+            chbParallel.Enabled = solver.SupportParallel;
+
+            if (!solver.Solved)
+                chbShowResult.Checked = false;
+
+            InvalidateMaze();
+            ShowPathLength(_selectedSolver.GetPathLength());
+            ShowSolveTime(_selectedSolver.GetSolveTime());
+
+            btnSolve.Text = _selectedSolver.Solved ? "Solved" : "Solve";
         }
 
         private void chbParallel_Click(object sender, EventArgs e)

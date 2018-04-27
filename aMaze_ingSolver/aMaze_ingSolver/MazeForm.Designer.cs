@@ -39,6 +39,7 @@
             this.lbSolveTime = new System.Windows.Forms.Label();
             this.btnClear = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
+            this.btnSaveGraph = new System.Windows.Forms.Button();
             this.chbShowResult = new System.Windows.Forms.CheckBox();
             this.btnSolve = new System.Windows.Forms.Button();
             this.solverSelection = new System.Windows.Forms.CheckedListBox();
@@ -57,7 +58,6 @@
             this.chbInvoke = new System.Windows.Forms.CheckBox();
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.imgPanel = new System.Windows.Forms.Panel();
-            this.btnSaveGraph = new System.Windows.Forms.Button();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imgBox)).BeginInit();
             this.settingsPanel.SuspendLayout();
@@ -186,6 +186,17 @@
             this.btnSave.Text = "Save result";
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
+            // btnSaveGraph
+            // 
+            this.btnSaveGraph.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnSaveGraph.Location = new System.Drawing.Point(3, 329);
+            this.btnSaveGraph.Name = "btnSaveGraph";
+            this.btnSaveGraph.Size = new System.Drawing.Size(242, 27);
+            this.btnSaveGraph.TabIndex = 12;
+            this.btnSaveGraph.Text = "Save graph";
+            this.btnSaveGraph.UseVisualStyleBackColor = true;
+            this.btnSaveGraph.Click += new System.EventHandler(this.BtnSaveGraph);
             // 
             // chbShowResult
             // 
@@ -394,17 +405,6 @@
             this.imgPanel.Padding = new System.Windows.Forms.Padding(10);
             this.imgPanel.Size = new System.Drawing.Size(829, 630);
             this.imgPanel.TabIndex = 4;
-            // 
-            // btnSaveGraph
-            // 
-            this.btnSaveGraph.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.btnSaveGraph.Location = new System.Drawing.Point(3, 329);
-            this.btnSaveGraph.Name = "btnSaveGraph";
-            this.btnSaveGraph.Size = new System.Drawing.Size(242, 27);
-            this.btnSaveGraph.TabIndex = 12;
-            this.btnSaveGraph.Text = "Save graph";
-            this.btnSaveGraph.UseVisualStyleBackColor = true;
-            this.btnSaveGraph.Click += new System.EventHandler(this.BtnSaveGraph);
             // 
             // MazeForm
             // 

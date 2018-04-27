@@ -10,6 +10,7 @@ namespace aMaze_ingSolver.Algorithms
 {
     class BreadthFirst : MazeSolver
     {
+        public override bool SupportParallel => true;
         private Dictionary<Vertex, Vertex> _visited;
         private SimpleSemaphore _semaphore;
         private object _lock = new object();
@@ -67,18 +68,15 @@ namespace aMaze_ingSolver.Algorithms
 
         private void ParallelSolution(Graph graph)
         {
-
             _semaphore = new SimpleSemaphore(ThreadCount);
             int token = _semaphore.GetToken();
-
-
             VertexParam vp = new VertexParam(null, graph.Start, token);
             _timer.Reset();
             _timer.Start();
             StartThread(vp);
 
-            bool wait = true;
-            while (wait)
+            
+            while (true)
             {
                 List<Task> toRemove = new List<Task>();
                 IEnumerable<Task> check;
@@ -97,7 +95,8 @@ namespace aMaze_ingSolver.Algorithms
                 lock (_taskLock)
                 {
                     _tasks.RemoveAll(t => toRemove.Contains(t));
-                    wait = _tasks.Count > 0;
+                    if (_tasks.Count <= 0)
+                        break;
                 }
             }
 
@@ -117,8 +116,6 @@ namespace aMaze_ingSolver.Algorithms
 
         private void StartThread(VertexParam param)
         {
-            //Thread worker = new Thread(ThreadWork);
-            //worker.Start(param);
             lock (_taskLock)
             {
                 _tasks.Add(Task.Factory.StartNew(() => ThreadWork(param)));

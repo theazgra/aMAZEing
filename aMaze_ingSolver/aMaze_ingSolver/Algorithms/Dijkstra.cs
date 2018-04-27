@@ -7,6 +7,7 @@ namespace aMaze_ingSolver.Algorithms
 {
     class Dijkstra : MazeSolver
     {
+        public override bool SupportParallel => false;
         public override string Name => "Dijkstra";
         public override event Solved OnSolved;
         public override event SolveProgress OnSolveProgress;

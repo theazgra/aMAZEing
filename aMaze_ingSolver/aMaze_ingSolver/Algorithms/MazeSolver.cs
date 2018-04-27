@@ -34,6 +34,7 @@ namespace aMaze_ingSolver.Algorithms
         public int ThreadCount { get; set; } = 1;
 
         public abstract string Name { get; }
+        public abstract bool SupportParallel { get; }
         private Color _mazeColor = Color.Empty;
         public Color MazeColor
         {
@@ -45,6 +46,8 @@ namespace aMaze_ingSolver.Algorithms
                 return _mazeColor;
             }
         }
+
+
         public abstract void SolveMaze(Graph graph);
 
 

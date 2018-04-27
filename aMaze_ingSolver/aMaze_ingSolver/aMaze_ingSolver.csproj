@@ -51,8 +51,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Algorithms\Ant.cs" />
-    <Compile Include="Algorithms\ShortestPathACO.cs" />
     <Compile Include="Algorithms\AStar.cs" />
     <Compile Include="Algorithms\BreadthFirst.cs" />
     <Compile Include="Algorithms\DepthFirst.cs" />
