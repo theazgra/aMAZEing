@@ -1,6 +1,7 @@
 ﻿using aMaze_ingSolver.GraphUtils;
 using aMaze_ingSolver.Parallelism;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,14 +12,13 @@ namespace aMaze_ingSolver.Algorithms
 {
     class DepthFirst : MazeSolver
     {
-        public override bool SupportParallel => false;
-        private Dictionary<Vertex, Vertex> _visited;
-        private SimpleSemaphore _semaphore;
-        private object _lock = new object();
-        private object _taskLock = new object();
-
-        private Vertex _end;
+        public override bool SupportParallel => true;
+        private Graph _graph;
         private List<Task> _tasks;
+        private BlockingStackJobInfo[] _blockingStacks;
+        CancellationToken _cancellationToken;
+        CancellationTokenSource _cancellationTokenSource;
+        private int _nextQId = 0;
 
 
         public override string Name => "Depth first";
@@ -26,26 +26,9 @@ namespace aMaze_ingSolver.Algorithms
 
         public DepthFirst()
         {
-            _visited = new Dictionary<Vertex, Vertex>();
             _tasks = new List<Task>();
         }
 
-        private bool Visited(Vertex vertex)
-        {
-            lock (_lock)
-            {
-                return _visited.ContainsKey(vertex);
-            }
-        }
-
-        private void AddVisited(Vertex vertex, Vertex previous)
-        {
-            lock (_lock)
-            {
-                if (!_visited.ContainsKey(vertex))
-                    _visited.Add(vertex, previous);
-            }
-        }
 
         public override void SolveMaze(Graph graph)
         {
@@ -55,129 +38,120 @@ namespace aMaze_ingSolver.Algorithms
             }
             else
             {
-                _visited.Clear();
-
-                _end = graph.End;
                 ParallelSolution(graph);
             }
         }
 
-        private void ParallelSolution(Graph graph)
+        private async void ParallelSolution(Graph graph)
         {
-
-            _semaphore = new SimpleSemaphore(ThreadCount);
-            int token = _semaphore.GetToken();
-
-            VertexParam vp = new VertexParam(null, graph.Start, token);
-            _timer.Reset();
+            _graph = graph;
+            graph.Reset();
             _timer.Start();
-            StartThread(vp);
 
-            bool wait = true;
-            while (wait)
+            _blockingStacks = new BlockingStackJobInfo[ThreadCount];
+            _cancellationTokenSource = new CancellationTokenSource();
+            _cancellationToken = _cancellationTokenSource.Token;
+
+
+            for (int i = 0; i < ThreadCount; i++)
             {
-                List<Task> toRemove = new List<Task>();
-                IEnumerable<Task> check;
-                lock (_taskLock)
-                {
-                    check = _tasks.ToArray();
-                }
-                foreach (Task task in check)
-                {
-                    if (task.IsCompleted)
-                    {
-                        toRemove.Add(task);
-                    }
-                }
-
-                lock (_taskLock)
-                {
-                    _tasks.RemoveAll(t => toRemove.Contains(t));
-                    wait = _tasks.Count > 0;
-                }
+                int index = i;
+                _blockingStacks[i] = new BlockingStackJobInfo(new ConcurrentStack<VertexPair>(), _cancellationToken);
+                _tasks.Add(Task.Factory.StartNew(() => ParallelJob(_blockingStacks[index])));
             }
 
-            _resultPath.Clear();
-            Vertex current = graph.End;
+            _blockingStacks[NextQueueId()].blockingCollection.Push(new VertexPair(null, graph.Start));
+            await Task.WhenAll(_tasks);
 
+            _resultPath.Clear();
+            Vertex current = _graph.End;
             while (current != null)
             {
                 _resultPath.Enqueue(current);
-                current = _visited[current];
+                current = current.Previous;
             }
 
             _timer.Stop();
             OnSolved?.Invoke();
-            System.Console.WriteLine("Finished");
         }
 
-        private void StartThread(VertexParam param)
+        private void ParallelJob(BlockingStackJobInfo jobInfo)
         {
-            //Thread worker = new Thread(ThreadWork);
-            //worker.Start(param);
-            lock (_taskLock)
+            VertexPair pair = null;
+            while (!jobInfo.cancelToken.IsCancellationRequested)
             {
-                _tasks.Add(Task.Factory.StartNew(() => ThreadWork(param)));
-            }
-        }
-
-        private void ThreadWork(object param)
-        {
-            if (param is VertexParam vertexParam)
-            {
-                Stack<Vertex> queue = new Stack<Vertex>();
-                queue.Push(vertexParam.nextVertex);
-                AddVisited(vertexParam.nextVertex, vertexParam.currentVertex);
-
-                Vertex current = null;
-                while (true)
+                try
                 {
-                    if (queue.Count <= 0)
-                        break;
+                    if (!jobInfo.blockingCollection.TryPop(out pair))
+                        continue;
 
-                    current = queue.Pop();
+                }
+                catch (OperationCanceledException)
+                {
+                    continue;
+                }
+                pair.Next.Previous = pair.Current;
+                pair.Next.Visited = true;
 
-                    if (current.Equals(_end))
-                        break;
-
-                    foreach (Vertex neighbour in current.GetOrderedNeighbours())
+                if (pair.Next.Equals(_graph.End))
+                {
+                    _cancellationTokenSource.Cancel();
+                }
+                else
+                {
+                    foreach (Vertex neighbour in pair.Next.GetOrderedNeighbours())
                     {
-                        if (!Visited(neighbour))
+                        //if (!IsVisited(neighbour))
+                        if (!neighbour.Visited)
                         {
-                            AddVisited(neighbour, current);
+                            neighbour.Visited = true;
+                            neighbour.Previous = pair.Current;
 
-                            if (_semaphore.HasFreeToken())
-                            {
-                                int token = _semaphore.GetToken();
-                                VertexParam vp = new VertexParam(current, neighbour, token);
-                                StartThread(vp);
-                            }
-                            else
-                            {
-                                queue.Push(neighbour);
-                            }
+                            _blockingStacks[NextQueueId()].blockingCollection.Push(new VertexPair(pair.Next, neighbour));
+
                         }
                     }
                 }
-
-
-                _semaphore.ReturnToken(vertexParam.threadToken);
-
             }
-            else
+
+            while (jobInfo.blockingCollection.Count > 0)
             {
-                throw new System.Exception("Thread is expectiong Vertex object as a parameter.");
+                if (!jobInfo.blockingCollection.TryPop(out pair))
+                    continue;
+                if (pair.Next.Equals(_graph.End))
+                {
+                    break;
+                }
+
+                foreach (Vertex neighbour in pair.Next.GetOrderedNeighbours())
+                {
+                    if (!neighbour.Visited)
+                    {
+                        neighbour.Visited = true;
+                        neighbour.Previous = pair.Current;
+                        jobInfo.blockingCollection.Push(new VertexPair(pair.Next, neighbour));
+                    }
+                }
             }
+        }
+
+        private int NextQueueId()
+        {
+            int val = _nextQId;
+            _nextQId = (_nextQId + 1) % ThreadCount;
+            return val;
         }
 
         private void NonParallelSolution(Graph graph)
         {
             Stack<Vertex> queue = new Stack<Vertex>();
             _timer.Start();
-            _visited.Clear();
 
             queue.Push(graph.Start);
-            AddVisited(graph.Start, null);
+
+            graph.Start.Visited = true;
+            graph.Start.Previous = null;
+
             int loopIteration = 0;
 
             Vertex current = null;
@@ -193,10 +167,11 @@ namespace aMaze_ingSolver.Algorithms
 
                 foreach (Vertex neighbour in current.GetOrderedNeighbours())
                 {
-                    if (!Visited(neighbour))
+                    if (!neighbour.Visited)
                     {
                         queue.Push(neighbour);
-                        AddVisited(neighbour, current);
+                        neighbour.Visited = true;
+                        neighbour.Previous = current;
                     }
                 }
             }
@@ -207,7 +182,7 @@ namespace aMaze_ingSolver.Algorithms
             while (current != null)
             {
                 _resultPath.Enqueue(current);
-                current = _visited[current];
+                current = current.Previous;
             }
 
             _timer.Stop();

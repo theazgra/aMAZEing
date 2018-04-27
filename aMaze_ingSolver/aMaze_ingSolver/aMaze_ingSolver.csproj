@@ -61,9 +61,16 @@
     <Compile Include="Algorithms\MazeSolver.cs" />
     <Compile Include="BitmapPlus.cs" />
     <Compile Include="Direction.cs" />
+    <Compile Include="ExportTypeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExportTypeForm.Designer.cs">
+      <DependentUpon>ExportTypeForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Extensions.cs" />
     <Compile Include="BoolMatrix.cs" />
     <Compile Include="GraphUtils\VertexComparer.cs" />
+    <Compile Include="GraphUtils\VertexPair.cs" />
     <Compile Include="Maze.cs" />
     <Compile Include="MazeForm.cs">
       <SubType>Form</SubType>
@@ -78,6 +85,9 @@
     <Compile Include="GraphUtils\Utils.cs" />
     <Compile Include="GraphUtils\Vertex.cs" />
     <Compile Include="GraphUtils\Graph.cs" />
+    <EmbeddedResource Include="ExportTypeForm.resx">
+      <DependentUpon>ExportTypeForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MazeForm.resx">
       <DependentUpon>MazeForm.cs</DependentUpon>
     </EmbeddedResource>

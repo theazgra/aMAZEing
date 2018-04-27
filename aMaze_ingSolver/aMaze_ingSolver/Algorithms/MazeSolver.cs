@@ -1,16 +1,47 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 using aMaze_ingSolver.GraphUtils;
 
 namespace aMaze_ingSolver.Algorithms
 {
+    struct BlockingQueueJobInfo
+    {
+        /// <summary>
+        /// (Current, next)
+        /// </summary>
+        public ConcurrentQueue<VertexPair> blockingCollection;
+        public CancellationToken cancelToken;
+        public BlockingQueueJobInfo(ConcurrentQueue<VertexPair> blockingCollection, CancellationToken cancellationToken)
+        {
+            this.blockingCollection = blockingCollection;
+            this.cancelToken = cancellationToken;
+        }
+    }
+
+    struct BlockingStackJobInfo
+    {
+        /// <summary>
+        /// (Current, next)
+        /// </summary>
+        public ConcurrentStack<VertexPair> blockingCollection;
+        public CancellationToken cancelToken;
+        public BlockingStackJobInfo(ConcurrentStack<VertexPair> blockingCollection, CancellationToken cancellationToken)
+        {
+            this.blockingCollection = blockingCollection;
+            this.cancelToken = cancellationToken;
+        }
+    }
+
     struct VertexParam
     {
         public Vertex currentVertex;
         public Vertex nextVertex;
+        //public CancellationToken cancelToken;
         public int threadToken;
 
         public VertexParam(Vertex current, Vertex next, int token)
@@ -41,7 +72,8 @@ namespace aMaze_ingSolver.Algorithms
             get
             {
                 if (_mazeColor == Color.Empty)
-                    _mazeColor = RandomColor();
+                    _mazeColor = Color.Blue;
+                    //_mazeColor = RandomColor();
 
                 return _mazeColor;
             }
@@ -58,6 +90,25 @@ namespace aMaze_ingSolver.Algorithms
 
             return new Queue<Vertex>(_resultPath);
         }
+
+        public Queue<Vertex> GetOrderedResultVertices()
+        {
+            if (_resultPath == null)
+                return new Queue<Vertex>();
+
+            IEnumerable<Vertex> path = _resultPath;
+
+            //path = path.OrderByDescending(v => v.Location, new FinalPathComparer());
+            //path = path.OrderBy(v => v.Location.Y);
+            path = path
+                .OrderBy(v => v.Location.Y)
+                .GroupBy(v => v.Location.Y)
+                .SelectMany(g => g.OrderBy(v => v.X));
+
+            return new Queue<Vertex>(path);
+        }
+
+
 
         public TimeSpan GetSolveTime()
         {
@@ -78,7 +129,7 @@ namespace aMaze_ingSolver.Algorithms
         public int GetPathLength()
         {
             if (!Solved || _resultPath == null || _resultPath.Count <= 0)
-                return 0;   
+                return 0;
 
             Queue<Vertex> resultCopy = new Queue<Vertex>(_resultPath);
             Vertex current = resultCopy.Dequeue();

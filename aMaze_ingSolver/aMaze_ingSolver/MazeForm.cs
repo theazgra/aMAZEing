@@ -103,9 +103,7 @@ namespace aMaze_ingSolver
             else
             {
                 lbInfo.Text = string.Format("Graph completed after: {0} ms", time.TotalMilliseconds.ToString("### ### ###"));
-
-
-
+                lbPathSize.Text = string.Format("{0} vertices", _maze.Graph.Vertices.Count);
             }
         }
 
@@ -182,10 +180,12 @@ namespace aMaze_ingSolver
                     System.Drawing.Drawing2D.InterpolationMode.Bicubic);
         }
 
+
+
         private void DrawResultPath(BitmapPlus bmpPlus)
         {
             Color color = _selectedSolver.MazeColor;
-            Queue<Vertex> _resultPath = new Queue<Vertex>(_selectedSolver.GetResultVertices());
+            Queue<Vertex> _resultPath = new Queue<Vertex>(_selectedSolver.GetOrderedResultVertices());
 
             if (_resultPath.Count <= 0)
             {
@@ -193,23 +193,32 @@ namespace aMaze_ingSolver
                 return;
             }
 
-            Vertex previous = _resultPath.Dequeue();
-            if (_resultPath != null)
+            Vertex current = null;
+            if (chbParallel.Checked || true)
             {
                 while (_resultPath.Count != 0)
                 {
-                    Vertex current = _resultPath.Dequeue();
-
-                    Direction direction = Utils.GetDirection(previous.Location, current.Location);
-                    while (!previous.Equals(current))
-                    {
-
-                        bmpPlus.SetPixel(previous.X, previous.Y, color);
-                        previous = new Vertex(previous.Location.MoveInDirection(direction));
-                    }
+                    current = _resultPath.Dequeue();
                     bmpPlus.SetPixel(current.X, current.Y, color);
+                }
+            }
+            else
+            {
+                Vertex previous = _resultPath.Dequeue();
+                if (_resultPath != null)
+                {
+                    while (_resultPath.Count != 0)
+                    {
+                        current = _resultPath.Dequeue();
+                        OrientedEdge edge = previous.CreateVirtualEdgeTo(current);// current.CreateVirtualEdgeTo(previous);
 
-                    previous = current;
+                        bmpPlus.SetPixel(current.X, current.Y, color);
+                        foreach (Point edgePoint in edge.GetEdgePoints())
+                        {
+                            bmpPlus.SetPixel(edgePoint, color);
+                        }
+                        previous = current;
+                    }
                 }
             }
         }
@@ -362,28 +371,68 @@ namespace aMaze_ingSolver
 
         private void btnSave_Click(object sender, EventArgs e)
         {
+
             if (_selectedSolver != null && _selectedSolver.Solved)
             {
-                if (!chbShowResult.Checked)
+                bool pathOnly = false;
+                using (ExportTypeForm exportType = new ExportTypeForm())
                 {
-                    using (BitmapPlus bmpp = new BitmapPlus(_drawBmp, System.Drawing.Imaging.ImageLockMode.WriteOnly))
+                    if (exportType.ShowDialog() == DialogResult.OK)
                     {
-                        DrawResultPath(bmpp);
+                        pathOnly = exportType.rbPathOnly.Checked;
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+                if (!pathOnly)
+                {
+                    if (!chbShowResult.Checked)
+                    {
+                        using (BitmapPlus bmpp = new BitmapPlus(_drawBmp, System.Drawing.Imaging.ImageLockMode.WriteOnly))
+                        {
+                            DrawResultPath(bmpp);
+                        }
+                    }
+
+                    SaveFileDialog saveFileDialog = new SaveFileDialog
+                    {
+                        AddExtension = true,
+                        DefaultExt = ".png",
+                        FileName = "maze.png",
+                        Title = "Save solved maze as image."
+                    };
+
+                    if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        _drawBmp.Save(saveFileDialog.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                    }
+                }
+                else
+                {
+                    using (Bitmap bitmap = new Bitmap(_drawBmp.Width, _drawBmp.Height))
+                    {
+                        using (BitmapPlus bmp = new BitmapPlus(bitmap, System.Drawing.Imaging.ImageLockMode.ReadWrite))
+                        {
+                            DrawResultPath(bmp);
+                        }
+
+                        SaveFileDialog saveFileDialog = new SaveFileDialog
+                        {
+                            AddExtension = true,
+                            DefaultExt = ".png",
+                            FileName = "path.png",
+                            Title = "Save solved maze as image."
+                        };
+
+                        if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                        {
+                            bitmap.Save(saveFileDialog.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                        }
                     }
                 }
 
-                SaveFileDialog saveFileDialog = new SaveFileDialog
-                {
-                    AddExtension = true,
-                    DefaultExt = ".png",
-                    FileName = "maze.png",
-                    Title = "Save solved maze as image."
-                };
-
-                if (saveFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    _drawBmp.Save(saveFileDialog.FileName, System.Drawing.Imaging.ImageFormat.Png);
-                }
 
             }
             else

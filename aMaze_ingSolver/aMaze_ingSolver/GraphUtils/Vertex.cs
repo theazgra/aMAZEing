@@ -90,6 +90,16 @@ namespace aMaze_ingSolver.GraphUtils
             }
         }
 
+        public OrientedEdge EdgeTo(Vertex destination)
+        {
+            foreach (OrientedEdge edge in _neighbours)
+            {
+                if (edge.Destination.Equals(destination))
+                    return edge;
+            }
+            return null;
+        }
+
         /// <summary>
         /// Get all neighbours.
         /// </summary>

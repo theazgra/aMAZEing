@@ -152,5 +152,11 @@ namespace aMaze_ingSolver
             int newY = (int)(point.Y * scale);
             return new Point(newX, newY);
         }
+
+        public static OrientedEdge CreateVirtualEdgeTo(this Vertex origin, Vertex destination)
+        {
+            OrientedEdge virtualEdge = new OrientedEdge(origin, destination, Utils.GetDirection(origin.Location, destination.Location));
+            return virtualEdge;
+        }
     }
 }

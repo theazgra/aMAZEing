@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +25,28 @@ namespace aMaze_ingSolver.GraphUtils
                     return -1;
 
                 return ((int)x.BestPathDistance - (int)y.BestPathDistance);
+            }
+        }
+    }
+
+    class FinalPathComparer : IComparer<Point>
+    {
+        public int Compare(Point x, Point y)
+        {
+            if (x.Equals(y))
+                return 0;
+
+            //First Y
+            if (x.Y < y.Y)
+                return -1;
+            else if (x.Y > y.Y)
+                return 1;
+            else
+            {
+                if (x.X < y.X)
+                    return -1;
+                else
+                    return 1;
             }
         }
     }

@@ -37,6 +37,8 @@ namespace aMaze_ingSolver.GraphUtils
             List<Point> points = new List<Point>();
 
             Point point = Origin.Location.MoveInDirection(Direction);
+            if (Direction == Direction.NoDirection)
+                return points;
 
             while (point != Destination.Location)
             {

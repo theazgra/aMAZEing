@@ -140,7 +140,7 @@
             this.gbSolvers.Dock = System.Windows.Forms.DockStyle.Top;
             this.gbSolvers.Location = new System.Drawing.Point(5, 175);
             this.gbSolvers.Name = "gbSolvers";
-            this.gbSolvers.Size = new System.Drawing.Size(248, 359);
+            this.gbSolvers.Size = new System.Drawing.Size(248, 387);
             this.gbSolvers.TabIndex = 5;
             this.gbSolvers.TabStop = false;
             this.gbSolvers.Text = "Solvers";
@@ -168,7 +168,7 @@
             // btnClear
             // 
             this.btnClear.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.btnClear.Location = new System.Drawing.Point(3, 275);
+            this.btnClear.Location = new System.Drawing.Point(3, 303);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(242, 27);
             this.btnClear.TabIndex = 2;
@@ -179,7 +179,7 @@
             // btnSave
             // 
             this.btnSave.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.btnSave.Location = new System.Drawing.Point(3, 302);
+            this.btnSave.Location = new System.Drawing.Point(3, 330);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(242, 27);
             this.btnSave.TabIndex = 7;
@@ -190,7 +190,7 @@
             // btnSaveGraph
             // 
             this.btnSaveGraph.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.btnSaveGraph.Location = new System.Drawing.Point(3, 329);
+            this.btnSaveGraph.Location = new System.Drawing.Point(3, 357);
             this.btnSaveGraph.Name = "btnSaveGraph";
             this.btnSaveGraph.Size = new System.Drawing.Size(242, 27);
             this.btnSaveGraph.TabIndex = 12;
