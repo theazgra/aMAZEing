@@ -208,18 +208,16 @@ namespace aMaze_ingSolver
                 if (_resultPath != null)
                 {
                     while (_resultPath.Count != 0)
+                    current = _resultPath.Dequeue();
+                    Direction direction = Utils.GetDirection(previous.Location, current.Location);
+                    while (!previous.Equals(current))
                     {
-                        current = _resultPath.Dequeue();
-                        OrientedEdge edge = previous.CreateVirtualEdgeTo(current);// current.CreateVirtualEdgeTo(previous);
-
-                        bmpPlus.SetPixel(current.X, current.Y, color);
-                        foreach (Point edgePoint in edge.GetEdgePoints())
-                        {
-                            bmpPlus.SetPixel(edgePoint, color);
-                        }
-                        previous = current;
+                        bmpPlus.SetPixel(previous.X, previous.Y, color);
+                        previous = new Vertex(previous.Location.MoveInDirection(direction));
                     }
+                    bmpPlus.SetPixel(current.X, current.Y, color);
                 }
+                previous = current;
             }
         }
 

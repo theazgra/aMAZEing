@@ -15,7 +15,7 @@ namespace aMaze_ingSolver.Algorithms
         private object _taskLock = new object();
 
         private List<Task> _tasks;
-        private BlockingQueueJobInfo[] _blockingQueus;
+        private BlockingQueueJobInfo[] _blockingQueues;
         CancellationToken _cancellationToken;
         CancellationTokenSource _cancellationTokenSource;
         private int _nextQId = 0;
@@ -57,7 +57,7 @@ namespace aMaze_ingSolver.Algorithms
 
             _timer.Start();
 
-            _blockingQueus = new BlockingQueueJobInfo[ThreadCount];
+            _blockingQueues = new BlockingQueueJobInfo[ThreadCount];
             _cancellationTokenSource = new CancellationTokenSource();
             _cancellationToken = _cancellationTokenSource.Token;
             
@@ -65,11 +65,12 @@ namespace aMaze_ingSolver.Algorithms
             for (int i = 0; i < ThreadCount; i++)
             {
                 int index = i;
-                _blockingQueus[i] = new BlockingQueueJobInfo(new ConcurrentQueue<VertexPair>(), _cancellationToken);
-                _tasks.Add(Task.Factory.StartNew(() => ParallelJob(_blockingQueus[index])));
+                _blockingQueues[i] = new BlockingQueueJobInfo(new BlockingQueue<VertexPair>(), _cancellationToken);
+                _tasks.Add(Task.Factory.StartNew(() => ParallelJob(_blockingQueues[index])));
             }
 
-            _blockingQueus[NextQueueId()].blockingCollection.Enqueue(new VertexPair(null, graph.Start));
+            _blockingQueues[NextQueueId()].blockingQueue.Enqueue(new VertexPair(null, graph.Start));
+
             await Task.WhenAll(_tasks);
 
             _resultPath.Clear();
@@ -92,9 +93,7 @@ namespace aMaze_ingSolver.Algorithms
             {
                 try
                 {
-                    if (!jobInfo.blockingCollection.TryDequeue(out pair))
-                        continue;
-                    
+                    pair = jobInfo.blockingQueue.Dequeue(jobInfo.cancelToken);
                 }
                 catch (OperationCanceledException)
                 {
@@ -111,23 +110,22 @@ namespace aMaze_ingSolver.Algorithms
                 {
                     foreach (Vertex neighbour in pair.Next.GetOrderedNeighbours())
                     {
-                        //if (!IsVisited(neighbour))
                         if (!neighbour.Visited)
                         {
                             neighbour.Visited = true;
                             neighbour.Previous = pair.Current;
-                            
-                            _blockingQueus[NextQueueId()].blockingCollection.Enqueue(new VertexPair(pair.Next, neighbour));
-                            
+
+                            _blockingQueues[NextQueueId()].blockingQueue.Enqueue(new VertexPair(pair.Next, neighbour));
+
                         }
                     }
                 }
             }
 
-            while (jobInfo.blockingCollection.Count > 0)
+            while (jobInfo.blockingQueue.Count > 0)
             {
-                if (!jobInfo.blockingCollection.TryDequeue(out pair))
-                    continue;
+                pair = jobInfo.blockingQueue.Dequeue();
+
                 if (pair.Next.Equals(_graph.End))
                 {
                     break;
@@ -139,7 +137,7 @@ namespace aMaze_ingSolver.Algorithms
                     {
                         neighbour.Visited = true;
                         neighbour.Previous = pair.Current;
-                        jobInfo.blockingCollection.Enqueue(new VertexPair(pair.Next, neighbour));
+                        jobInfo.blockingQueue.Enqueue(new VertexPair(pair.Next, neighbour));
                     }
                 }
             }

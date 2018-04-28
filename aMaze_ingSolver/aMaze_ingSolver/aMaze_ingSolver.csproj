@@ -78,6 +78,8 @@
     <Compile Include="MazeForm.Designer.cs">
       <DependentUpon>MazeForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Parallelism\BlockingQueue.cs" />
+    <Compile Include="Parallelism\BlockingStack.cs" />
     <Compile Include="Parallelism\SimpleSemaphore.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

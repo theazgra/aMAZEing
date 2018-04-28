@@ -6,33 +6,28 @@ using System.Drawing;
 using System.Linq;
 using System.Threading;
 using aMaze_ingSolver.GraphUtils;
+using aMaze_ingSolver.Parallelism;
 
 namespace aMaze_ingSolver.Algorithms
 {
     struct BlockingQueueJobInfo
     {
-        /// <summary>
-        /// (Current, next)
-        /// </summary>
-        public ConcurrentQueue<VertexPair> blockingCollection;
+        public BlockingQueue<VertexPair> blockingQueue;
         public CancellationToken cancelToken;
-        public BlockingQueueJobInfo(ConcurrentQueue<VertexPair> blockingCollection, CancellationToken cancellationToken)
+        public BlockingQueueJobInfo(BlockingQueue<VertexPair> blockingQueue, CancellationToken cancellationToken)
         {
-            this.blockingCollection = blockingCollection;
+            this.blockingQueue = blockingQueue;
             this.cancelToken = cancellationToken;
         }
     }
 
     struct BlockingStackJobInfo
     {
-        /// <summary>
-        /// (Current, next)
-        /// </summary>
-        public ConcurrentStack<VertexPair> blockingCollection;
+        public BlockingStack<VertexPair> blockingStack;
         public CancellationToken cancelToken;
-        public BlockingStackJobInfo(ConcurrentStack<VertexPair> blockingCollection, CancellationToken cancellationToken)
+        public BlockingStackJobInfo(BlockingStack<VertexPair> blockingStack, CancellationToken cancellationToken)
         {
-            this.blockingCollection = blockingCollection;
+            this.blockingStack = blockingStack;
             this.cancelToken = cancellationToken;
         }
     }
