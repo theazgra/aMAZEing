@@ -487,6 +487,7 @@ namespace aMaze_ingSolver
             if (!solver.SupportParallel)
                 chbParallel.Checked = false;
             chbParallel.Enabled = solver.SupportParallel;
+            tbThreadCount.Enabled = solver.SupportThreadCount;
 
             if (!solver.Solved)
                 chbShowResult.Checked = false;

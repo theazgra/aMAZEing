@@ -10,6 +10,28 @@ using aMaze_ingSolver.Parallelism;
 
 namespace aMaze_ingSolver.Algorithms
 {
+    class PossibleWayInfo
+    {
+        public Vertex origin;
+        public Vertex lastVertex;
+        public Direction direction;
+        public Queue<Vertex> pathFromOrigin;
+        public CancellationToken cancellationToken;
+        public bool cancelSource;
+        public bool deadEnd;
+
+        public PossibleWayInfo(Vertex origin, Direction direction, CancellationToken cancellationToken)
+        {
+            this.origin = origin;
+            this.direction = direction;
+            this.lastVertex = null;
+            pathFromOrigin = new Queue<Vertex>();
+            this.cancellationToken = cancellationToken;
+            cancelSource = false;
+            deadEnd = false;
+        }
+    }
+
     struct BlockingQueueJobInfo
     {
         public BlockingQueue<VertexPair> blockingQueue;
@@ -61,6 +83,9 @@ namespace aMaze_ingSolver.Algorithms
 
         public abstract string Name { get; }
         public abstract bool SupportParallel { get; }
+        public virtual bool SupportThreadCount => SupportParallel;
+
+
         private Color _mazeColor = Color.Empty;
         public Color MazeColor
         {

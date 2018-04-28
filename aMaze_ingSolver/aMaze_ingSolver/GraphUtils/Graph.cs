@@ -215,10 +215,15 @@ namespace aMaze_ingSolver.GraphUtils
         /// </summary>
         public void Reset()
         {
-            foreach (Vertex vertex in Vertices)
+            Parallel.ForEach(Vertices, (vertex) =>
             {
                 vertex.Reset();
-            }
+            });
+
+            //foreach (Vertex vertex in Vertices)
+            //{
+
+            //}
         }
 
         /// <summary>

@@ -101,6 +101,17 @@ namespace aMaze_ingSolver.GraphUtils
         }
 
         /// <summary>
+        /// Number of connected vertices.
+        /// </summary>
+        public int NeighbourCount
+        {
+            get
+            {
+                return _neighbours.Count;
+            }
+        }
+
+        /// <summary>
         /// Get all neighbours.
         /// </summary>
         public IEnumerable<Vertex> Neighbours
@@ -184,7 +195,6 @@ namespace aMaze_ingSolver.GraphUtils
         public bool HasNeighbour(Direction direction)
         {
             return _neighbours.Any(e => e.Direction == direction);
-            //return _neighbours.ContainsKey(direction);
         }
 
         /// <summary>

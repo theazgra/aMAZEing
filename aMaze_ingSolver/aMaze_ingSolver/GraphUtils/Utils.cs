@@ -21,6 +21,12 @@ namespace aMaze_ingSolver.GraphUtils
             return Direction.NoDirection;
         }
 
+        /// <summary>
+        /// Simple modulo python way.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="modulo"></param>
+        /// <returns></returns>
         public static int Modulo(int value, int modulo)
         {
             if (value < 0)

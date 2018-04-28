@@ -31,6 +31,11 @@ namespace aMaze_ingSolver.Algorithms
         bool SupportParallel { get; }
 
         /// <summary>
+        /// If algorithm supports thread count change.
+        /// </summary>
+        bool SupportThreadCount { get; }
+
+        /// <summary>
         /// Number of threads avaible for solver if Parallel is true.
         /// </summary>
         int ThreadCount { get; set; }
