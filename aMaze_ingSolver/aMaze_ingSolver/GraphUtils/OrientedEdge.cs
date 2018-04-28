@@ -32,7 +32,7 @@ namespace aMaze_ingSolver.GraphUtils
             this.Visited = false;
         }
         
-        public IEnumerable<Point> GetEdgePoints()
+        public IEnumerable<Point> GetEdgePoints(bool includeVertices = false)
         {
             List<Point> points = new List<Point>();
 
@@ -45,9 +45,12 @@ namespace aMaze_ingSolver.GraphUtils
                 points.Add(point);
                 point = point.MoveInDirection(Direction);
             } 
-
             points.Add(point);
-            points.Remove(Destination.Location);
+
+            if (!includeVertices)
+                points.Remove(Destination.Location);
+            else
+                points.Add(Origin.Location);
 
             return points;
         }

@@ -21,6 +21,17 @@ namespace aMaze_ingSolver
         public TimeSpan MatrixBuildTime { get; private set; }
         Stopwatch s = new Stopwatch();
 
+        /// <summary>
+        /// Matrix of the maze.
+        /// </summary>
+        public BoolMatrix Matrix
+        {
+            get
+            {
+                return _mazeMatrix;
+            }
+        }
+
         public Maze(Image img, int threadCount)
         {
             _bmp = new Bitmap(img);

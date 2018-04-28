@@ -62,12 +62,6 @@ namespace aMaze_ingSolver.Algorithms
         Queue<Vertex> GetResultVertices();
 
         /// <summary>
-        /// Get vertices creating path from start to finish in good order.
-        /// </summary>
-        /// <returns>Ordered vertices.</returns>
-        Queue<Vertex> GetOrderedResultVertices();
-
-        /// <summary>
         /// Get the lenght of the result path.
         /// </summary>
         /// <returns>Length.</returns>

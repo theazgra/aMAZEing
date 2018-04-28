@@ -11,6 +11,8 @@ namespace aMaze_ingSolver
 {
     unsafe class BitmapPlus : IDisposable
     {
+        private object _syncRoot = new object();
+        public object SyncRoot => _syncRoot;
         public Bitmap Source { get; private set; }
         public BitmapData Data { get; private set; }
         int _pixelCount;

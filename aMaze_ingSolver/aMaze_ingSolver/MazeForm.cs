@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -185,39 +186,87 @@ namespace aMaze_ingSolver
         private void DrawResultPath(BitmapPlus bmpPlus)
         {
             Color color = _selectedSolver.MazeColor;
-            Queue<Vertex> _resultPath = new Queue<Vertex>(_selectedSolver.GetOrderedResultVertices());
+            Queue<Vertex> resultPath = new Queue<Vertex>(_selectedSolver.GetResultVertices());
 
-            if (_resultPath.Count <= 0)
+            if (resultPath.Count <= 0)
             {
                 MessageBox.Show("Empty queue");
                 return;
             }
 
             Vertex current = null;
-            if (chbParallel.Checked || true)
+            if (false) //chbParallel.Checked || true
             {
-                while (_resultPath.Count != 0)
+                while (resultPath.Count != 0)
                 {
-                    current = _resultPath.Dequeue();
+                    current = resultPath.Dequeue();
                     bmpPlus.SetPixel(current.X, current.Y, color);
                 }
             }
             else
             {
-                Vertex previous = _resultPath.Dequeue();
-                if (_resultPath != null)
+
+                List<Vertex> pathVertices = new List<Vertex>(_selectedSolver.GetResultVertices());
+                //pre-sort
+                pathVertices = pathVertices
+                    .OrderBy(v => v.Location.Y)
+                    .GroupBy(v => v.Location.Y)
+                    .SelectMany(g => g.OrderBy(v => v.X))
+                    .ToList();
+
+                _maze.Graph.Reset();
+                bool currentSmaller = true;
+                
+                foreach (Vertex vertex in pathVertices)
                 {
-                    while (_resultPath.Count != 0)
-                    current = _resultPath.Dequeue();
-                    Direction direction = Utils.GetDirection(previous.Location, current.Location);
-                    while (!previous.Equals(current))
+                    //check on same row
+                    IEnumerable<Vertex> onRow =
+                        pathVertices.Where(v => (v.Y == vertex.Y) && !v.Visited && v.Location != vertex.Location);
+                    foreach (Vertex vertexOnRow in onRow)
                     {
-                        bmpPlus.SetPixel(previous.X, previous.Y, color);
-                        previous = new Vertex(previous.Location.MoveInDirection(direction));
+                        currentSmaller = (vertex.X < vertexOnRow.X);
+                        int from = (currentSmaller) ? vertex.X : vertexOnRow.X;
+                        int to = (currentSmaller) ? vertexOnRow.X : vertex.X;
+                        if (_maze.Matrix.FreeXPath(vertex.Y, from, to))
+                        {
+                            OrientedEdge virtualEdge = (currentSmaller)
+                                ? vertex.CreateVirtualEdgeTo(vertexOnRow) : vertexOnRow.CreateVirtualEdgeTo(vertex);
+                            foreach (Point p in virtualEdge.GetEdgePoints(true))
+                            {
+                                bmpPlus.SetPixel(p, color);
+                            }
+                        }
                     }
-                    bmpPlus.SetPixel(current.X, current.Y, color);
+
+                    vertex.Visited = true;
                 }
-                previous = current;
+
+                _maze.Graph.Reset();
+                foreach (Vertex vertex in pathVertices)
+                {
+                    //connect vertical
+                    IEnumerable<Vertex> onCol =
+                        pathVertices.Where(v => (v.X == vertex.X) && !v.Visited && v.Location != vertex.Location);
+
+                    foreach (Vertex vertexOnCol in onCol)
+                    {
+                        currentSmaller = vertex.Y < vertexOnCol.Y;
+                        int from = (currentSmaller) ? vertex.Y : vertexOnCol.Y;
+                        int to = (currentSmaller) ? vertexOnCol.Y : vertex.Y;
+                        if (_maze.Matrix.FreeYPath(vertex.X, from, to))
+                        {
+                            OrientedEdge virtualEdge = (currentSmaller)
+                                  ? vertex.CreateVirtualEdgeTo(vertexOnCol) : vertexOnCol.CreateVirtualEdgeTo(vertex);
+
+                            foreach (Point p in virtualEdge.GetEdgePoints(true))
+                            {
+                                bmpPlus.SetPixel(p, color);
+                            }
+                        }
+                    }
+
+                    vertex.Visited = true;
+                }
             }
         }
 
@@ -344,7 +393,7 @@ namespace aMaze_ingSolver
         private void ShowSolveTime(TimeSpan ts)
         {
             lbSolveTime.Text = string.Format("Path found after: {0} ms",
-                                    ts.TotalMilliseconds.ToString("### ### ###"));
+                                    ts.TotalMilliseconds.ToString("### ### ###.000"));
         }
 
         private void LogSolveTime(IMazeSolver selectedSolver)

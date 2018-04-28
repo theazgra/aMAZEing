@@ -33,14 +33,6 @@ namespace aMaze_ingSolver.Algorithms
 
         private async void ParallelSolution(Graph graph)
         {
-            void ClearWays(PossibleWayInfo[] ways)
-            {
-                for (int i = 0; i < ThreadCount; i++)
-                {
-                    ways[i] = null;
-                }
-            }
-
             ThreadCount = 3;
             _graph = graph;
 

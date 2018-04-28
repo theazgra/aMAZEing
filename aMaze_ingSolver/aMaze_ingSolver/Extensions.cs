@@ -47,6 +47,27 @@ namespace aMaze_ingSolver
             return string.Format("[R:{0};G:{1};B:{2}]", c.R, c.G, c.B);
         }
 
+        public static bool FreeXPath(this BoolMatrix matrix, int row, int colFrom, int colTo)
+        {
+            for (int col = colFrom; col < colTo; col++)
+            {
+                if (matrix.IsWall(col, row))
+                    return false;
+            }
+            return true;
+        }
+
+        public static bool FreeYPath(this BoolMatrix matrix, int col, int rowFrom, int rowTo)
+        {
+            for (int row = rowFrom; row < rowTo; row++)
+            {
+                if (matrix.IsWall(col, row))
+                    return false;
+            }
+            return true;
+        }
+
+
         public static bool IsPath(this BoolMatrix matrix, Point p)
         {
             return IsPath(matrix, p.Y, p.X);

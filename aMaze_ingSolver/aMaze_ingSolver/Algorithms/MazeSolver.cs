@@ -111,25 +111,6 @@ namespace aMaze_ingSolver.Algorithms
             return new Queue<Vertex>(_resultPath);
         }
 
-        public Queue<Vertex> GetOrderedResultVertices()
-        {
-            if (_resultPath == null)
-                return new Queue<Vertex>();
-
-            IEnumerable<Vertex> path = _resultPath;
-
-            //path = path.OrderByDescending(v => v.Location, new FinalPathComparer());
-            //path = path.OrderBy(v => v.Location.Y);
-            path = path
-                .OrderBy(v => v.Location.Y)
-                .GroupBy(v => v.Location.Y)
-                .SelectMany(g => g.OrderBy(v => v.X));
-
-            return new Queue<Vertex>(path);
-        }
-
-
-
         public TimeSpan GetSolveTime()
         {
             if (_timer == null)
