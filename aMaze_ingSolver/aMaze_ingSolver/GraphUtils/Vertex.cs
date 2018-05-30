@@ -90,6 +90,11 @@ namespace aMaze_ingSolver.GraphUtils
             }
         }
 
+        /// <summary>
+        /// Get edge to neighbour.
+        /// </summary>
+        /// <param name="destination">Neighbour.</param>
+        /// <returns>OrientedEdge.</returns>
         public OrientedEdge EdgeTo(Vertex destination)
         {
             foreach (OrientedEdge edge in _neighbours)

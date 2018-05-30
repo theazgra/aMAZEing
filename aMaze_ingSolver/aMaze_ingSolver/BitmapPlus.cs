@@ -9,24 +9,44 @@ using System.Threading.Tasks;
 
 namespace aMaze_ingSolver
 {
+    /// <summary>
+    /// Wrap Bitmap so we can use much faster pointer operations.
+    /// </summary>
     unsafe class BitmapPlus : IDisposable
     {
         private object _syncRoot = new object();
         public object SyncRoot => _syncRoot;
-        public Bitmap Source { get; private set; }
-        public BitmapData Data { get; private set; }
         int _pixelCount;
         IntPtr imagePointer = IntPtr.Zero;
 
-        public byte[] Pixels { get; set; }
         private int _depth;
         private int _colorStep;
         private ImageLockMode _imgLockMode;
 
+        /// <summary>
+        /// Source bitmap.
+        /// </summary>
+        public Bitmap Source { get; private set; }
+
+        /// <summary>
+        /// Source bitmap data.
+        /// </summary>
+        public BitmapData Data { get; private set; }
+
+        /// <summary>
+        /// Image data.
+        /// </summary>
+        public byte[] Pixels { get; set; }
+
+        /// <summary>
+        /// Number of columns in image.
+        /// </summary>
         public int Cols { get; }
+
+        /// <summary>
+        /// Number of rows in image.
+        /// </summary>
         public int Rows { get; }
-
-
 
         public BitmapPlus(Bitmap bitmap, ImageLockMode lockMode)
         {
@@ -56,6 +76,12 @@ namespace aMaze_ingSolver
             Marshal.Copy(imagePointer, Pixels, 0, Pixels.Length);
         }
 
+        /// <summary>
+        /// Get pixel color at coordinates.
+        /// </summary>
+        /// <param name="x">X or column.</param>
+        /// <param name="y">Y or row.</param>
+        /// <returns>Color of pixel.</returns>
         public Color GetPixel(int x, int y)
         {
             Color clr = Color.Empty;
@@ -88,11 +114,22 @@ namespace aMaze_ingSolver
             return clr;
         }
 
+        /// <summary>
+        /// Set pixel at given location.
+        /// </summary>
+        /// <param name="location">Where to set pixel.</param>
+        /// <param name="color">Color of pixel.</param>
         public void SetPixel(Point location, Color color)
         {
             SetPixel(location.X, location.Y, color);
         }
 
+        /// <summary>
+        /// Set pixel at given location.
+        /// </summary>
+        /// <param name="x">X or column.</param>
+        /// <param name="y">Y or row.</param>
+        /// <param name="color">Color of pixel.</param>
         public void SetPixel(int x, int y, Color color)
         {
             // Get start index of the specified pixel
@@ -117,6 +154,9 @@ namespace aMaze_ingSolver
             }
         }
 
+        /// <summary>
+        /// Release locked bits.
+        /// </summary>
         public void Dispose()
         {
             try

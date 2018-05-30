@@ -58,6 +58,11 @@ namespace aMaze_ingSolver.Parallelism
             return InternalDequeue(CancellationToken.None);
         }
 
+        /// <summary>
+        /// Internal dequeue, work with cancellation token.
+        /// </summary>
+        /// <param name="cancellationToken">Token on which to cancel.</param>
+        /// <returns>Dequeued item.</returns>
         private T InternalDequeue(CancellationToken cancellationToken)
         {
             if (cancellationToken != CancellationToken.None)

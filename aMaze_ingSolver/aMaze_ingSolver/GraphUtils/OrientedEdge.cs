@@ -7,12 +7,34 @@ namespace aMaze_ingSolver.GraphUtils
 {
     class OrientedEdge
     {
+        /// <summary>
+        /// Origin of edge.
+        /// </summary>
         public Vertex Origin { get; }
+
+        /// <summary>
+        /// End of edge.
+        /// </summary>
         public Vertex Destination { get; }
+
+        /// <summary>
+        /// Direction of edge.
+        /// </summary>
         public Direction Direction { get; }
+
+        /// <summary>
+        /// Length of the edge.
+        /// </summary>
         public int Length { get; }
+
+        /// <summary>
+        /// Is edge visited?
+        /// </summary>
         public bool Visited { get; set; } = false;
 
+        /// <summary>
+        /// Pheromones on the edge, for ACO.
+        /// </summary>
         public float Pheromones { get; set; } = 0.0f;
 
 
@@ -32,6 +54,11 @@ namespace aMaze_ingSolver.GraphUtils
             this.Visited = false;
         }
         
+        /// <summary>
+        /// Get points creating edge.
+        /// </summary>
+        /// <param name="includeVertices">Include edges?</param>
+        /// <returns>Points.</returns>
         public IEnumerable<Point> GetEdgePoints(bool includeVertices = false)
         {
             List<Point> points = new List<Point>();

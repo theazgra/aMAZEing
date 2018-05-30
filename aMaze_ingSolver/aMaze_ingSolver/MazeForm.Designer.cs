@@ -58,6 +58,9 @@
             this.chbInvoke = new System.Windows.Forms.CheckBox();
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.imgPanel = new System.Windows.Forms.Panel();
+            this.miPlay = new System.Windows.Forms.ToolStripButton();
+            this.miStep = new System.Windows.Forms.ToolStripButton();
+            this.miPause = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imgBox)).BeginInit();
             this.settingsPanel.SuspendLayout();
@@ -71,7 +74,10 @@
             // 
             this.toolStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miLoadMaze});
+            this.miLoadMaze,
+            this.miPlay,
+            this.miPause,
+            this.miStep});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(1087, 27);
@@ -406,6 +412,39 @@
             this.imgPanel.Size = new System.Drawing.Size(829, 630);
             this.imgPanel.TabIndex = 4;
             // 
+            // miPlay
+            // 
+            this.miPlay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.miPlay.Enabled = false;
+            this.miPlay.Image = ((System.Drawing.Image)(resources.GetObject("miPlay.Image")));
+            this.miPlay.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.miPlay.Name = "miPlay";
+            this.miPlay.Size = new System.Drawing.Size(45, 24);
+            this.miPlay.Text = "PLAY";
+            this.miPlay.Click += new System.EventHandler(this.miPlay_Click);
+            // 
+            // miStep
+            // 
+            this.miStep.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.miStep.Enabled = false;
+            this.miStep.Image = ((System.Drawing.Image)(resources.GetObject("miStep.Image")));
+            this.miStep.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.miStep.Name = "miStep";
+            this.miStep.Size = new System.Drawing.Size(45, 24);
+            this.miStep.Text = "STEP";
+            this.miStep.Click += new System.EventHandler(this.miStep_Click);
+            // 
+            // miPause
+            // 
+            this.miPause.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.miPause.Enabled = false;
+            this.miPause.Image = ((System.Drawing.Image)(resources.GetObject("miPause.Image")));
+            this.miPause.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.miPause.Name = "miPause";
+            this.miPause.Size = new System.Drawing.Size(56, 24);
+            this.miPause.Text = "PAUSE";
+            this.miPause.Click += new System.EventHandler(this.miPause_Click);
+            // 
             // MazeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -466,6 +505,9 @@
         private System.Windows.Forms.TextBox tbThreadCount;
         private System.Windows.Forms.ProgressBar pbSolve;
         private System.Windows.Forms.Button btnSaveGraph;
+        private System.Windows.Forms.ToolStripButton miPlay;
+        private System.Windows.Forms.ToolStripButton miPause;
+        private System.Windows.Forms.ToolStripButton miStep;
     }
 }
 

@@ -12,12 +12,6 @@ using System.Threading.Tasks;
 
 namespace aMaze_ingSolver.GraphUtils
 {
-
-    struct ScanParameter
-    {
-
-    }
-
     [Serializable]
     class Graph
     {

@@ -4,11 +4,10 @@ using aMaze_ingSolver.GraphUtils;
 using aMaze_ingSolver.Parallelism;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Collections.Concurrent;
 
 namespace aMaze_ingSolver.Algorithms
 {
-    class BreadthFirst : MazeSolver
+    class BreadthFirst : SteppableSolver
     {
         public override bool SupportParallel => true;
         private SimpleSemaphore _semaphore;
@@ -23,7 +22,11 @@ namespace aMaze_ingSolver.Algorithms
 
 
         public override string Name => "Breadth first";
+
+        public int Delay { get; set; }
+
         public override event Solved OnSolved;
+        public event AnimationProgress OnAnimationProgress;
 
         public BreadthFirst()
         {
@@ -60,8 +63,8 @@ namespace aMaze_ingSolver.Algorithms
             _blockingQueues = new BlockingQueueJobInfo[ThreadCount];
             _cancellationTokenSource = new CancellationTokenSource();
             _cancellationToken = _cancellationTokenSource.Token;
-            
-            
+
+
             for (int i = 0; i < ThreadCount; i++)
             {
                 int index = i;
@@ -85,7 +88,7 @@ namespace aMaze_ingSolver.Algorithms
             OnSolved?.Invoke();
         }
 
-       
+
         private void ParallelJob(BlockingQueueJobInfo jobInfo)
         {
             VertexPair pair = null;
@@ -101,9 +104,9 @@ namespace aMaze_ingSolver.Algorithms
                 }
                 pair.Next.Previous = pair.Current;
                 pair.Next.Visited = true;
-                
+
                 if (pair.Next.Equals(_graph.End))
-                { 
+                {
                     _cancellationTokenSource.Cancel();
                 }
                 else
@@ -275,7 +278,7 @@ namespace aMaze_ingSolver.Algorithms
 
             queue.Enqueue(graph.Start);
             graph.Start.Visited = true;
-            graph.Start.Previous= null;
+            graph.Start.Previous = null;
 
             Vertex current = null;
             while (true)
@@ -314,6 +317,85 @@ namespace aMaze_ingSolver.Algorithms
         public override string ToString()
         {
             return Name;
+        }
+
+
+        private Queue<Vertex> _animationQueue;
+        private Vertex _animationCurrent;
+
+        private bool _initAnimation = true;
+        private bool _mainAnimation = true;
+        private bool _endAnimation = false;
+
+
+
+        public override void ResetAnimation()
+        {
+            AnimationFinished = false;
+
+            if (_animationQueue != null)
+                _animationQueue.Clear();
+            _animationCurrent = null;
+
+            _initAnimation = true;
+            _mainAnimation = true;
+            _endAnimation = false;
+        }
+
+        public override Vertex PerformStep()
+        {
+            if (_initAnimation)
+            {
+                _animationGraph.Reset();
+                _animationQueue = new Queue<Vertex>();
+                _animationQueue.Enqueue(_animationGraph.Start);
+                _animationGraph.Start.Visited = true;
+                _animationGraph.Start.Previous = null;
+
+                _initAnimation = false;
+            }
+
+
+
+            if (_mainAnimation)
+            {
+                _animationCurrent = _animationQueue.Dequeue();
+
+                if (_animationCurrent.Equals(_animationGraph.End))
+                {
+                    _mainAnimation = false;
+                    _endAnimation = true;
+                    _animationCurrent = _animationGraph.End;
+                }
+
+                foreach (Vertex neighbour in _animationCurrent.GetOrderedNeighbours())
+                {
+                    if (!neighbour.Visited)
+                    {
+                        _animationQueue.Enqueue(neighbour);
+                        neighbour.Visited = true;
+                        neighbour.Previous = _animationCurrent;
+                    }
+                }
+
+                return _animationCurrent;
+            }
+            else if (_endAnimation)
+            {
+                if (_animationCurrent == null || _animationCurrent == _animationGraph.End)
+                {
+                    AnimationFinished = true;
+                    _endAnimation = false;
+                    System.Windows.Forms.MessageBox.Show("Animation finished");
+                }
+                else
+                {
+                    _animationCurrent = _animationCurrent.Previous;
+                    return _animationCurrent;
+                }
+            }
+
+            return null;
         }
     }
 }

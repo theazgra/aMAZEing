@@ -58,6 +58,11 @@ namespace aMaze_ingSolver.Parallelism
             return InternalPop(CancellationToken.None);
         }
 
+        /// <summary>
+        /// Internal pop, work with cancellation token.
+        /// </summary>
+        /// <param name="cancellationToken">Token on which to cancel.</param>
+        /// <returns>Poped item.</returns>
         private T InternalPop(CancellationToken cancellationToken)
         {
             if (cancellationToken != CancellationToken.None)

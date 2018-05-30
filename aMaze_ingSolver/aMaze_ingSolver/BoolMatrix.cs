@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace aMaze_ingSolver
 {
+    /// <summary>
+    /// Parameter of the thread work to load image into bool matrix.
+    /// </summary>
     struct Param
     {
         public Bitmap bmp;
@@ -24,13 +27,22 @@ namespace aMaze_ingSolver
 
     class BoolMatrix
     {
-
-        public int Rows { get; private set; }
-        public int Cols { get; private set; }
         private TimeSpan _loadTime;
-
-        public bool[,] Data { get; private set; }
         object _lock = new object();
+
+        /// <summary>
+        /// Number of rows.
+        /// </summary>
+        public int Rows { get; private set; }
+        /// <summary>
+        /// Number of columns.
+        /// </summary>
+        public int Cols { get; private set; }
+
+        /// <summary>
+        /// Bool matrix data.
+        /// </summary>
+        public bool[,] Data { get; private set; }
 
         public BoolMatrix(Bitmap bmp, int threadCount)
         {
@@ -63,13 +75,20 @@ namespace aMaze_ingSolver
             _loadTime = loadTime.Elapsed;
         }
 
+        /// <summary>
+        /// Get time needed to load this image into bitmap.
+        /// </summary>
+        /// <returns>Timespan of load.</returns>
         public TimeSpan GetLoadTime()
         {
             return _loadTime;
         }
-
-
-
+        
+        /// <summary>
+        /// Load image into bitmap in parallel.
+        /// </summary>
+        /// <param name="bmp">Bitmap from which to load.</param>
+        /// <param name="threadCount">Thread count.</param>
         private void LoadParallel(Bitmap bmp, int threadCount)
         {
             Task[] tasks = new Task[threadCount];
@@ -88,6 +107,10 @@ namespace aMaze_ingSolver
 
         }
 
+        /// <summary>
+        /// Thread work.
+        /// </summary>
+        /// <param name="param">Thread parameter.</param>
         private void Work(Param param)
         {
             using (BitmapPlus bmpP = new BitmapPlus(param.bmp, System.Drawing.Imaging.ImageLockMode.ReadOnly))

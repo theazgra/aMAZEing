@@ -19,16 +19,20 @@ namespace aMaze_ingSolver
         private string _mazeFile = "../maze/tiny.png";
         private Image _image;
         private Bitmap _drawBmp;
+        private Bitmap _animationBmp;
         private Maze _maze;
         private static bool _invoke = false;
         private List<IMazeSolver> _solvers;
         private IMazeSolver _selectedSolver;
+        private ISteppableSolver _steppableSolver;
 
         private float _scale = 1.0f;
         private const float _scaleMin = 0.01f;
         private const float _scaleMax = 20.0f;
         private const float _smallStepFrom = 1.0f;
         private int _threadCount = 4;
+
+        private bool _runningAnimation = false;
 
         public MazeForm()
         {
@@ -319,6 +323,23 @@ namespace aMaze_ingSolver
 
             if (_selectedSolver != null)
                 _selectedSolver.Reset();
+            if (_steppableSolver != null)
+            {
+                _steppableSolver.ResetAnimation();
+                if (_animationBmp != null)
+                {
+                    _animationBmp.Dispose();
+                    _animationBmp = new Bitmap(_image);
+
+                    if (_scale >= 1.0f)
+                        imgBox.Image = _animationBmp.ResizeImage((int)((float)_drawBmp.Width * _scale), (int)((float)_drawBmp.Height * _scale));
+                    else
+                        imgBox.Image = _animationBmp.ResizeImage(
+                            (int)((float)_drawBmp.Width * _scale),
+                            (int)((float)_drawBmp.Height * _scale),
+                            System.Drawing.Drawing2D.InterpolationMode.Bicubic);
+                }
+            }
 
             btnSolve.Text = "Solve";
             InvalidateMaze();
@@ -347,7 +368,6 @@ namespace aMaze_ingSolver
 
                 _maze.Graph.Reset();
                 Task.Factory.StartNew(() => _selectedSolver.SolveMaze(_maze.Graph));
-                //_selectedSolver.SolveMaze(_maze.Graph);
             }
         }
 
@@ -384,7 +404,7 @@ namespace aMaze_ingSolver
                     pbSolve.Value = pbSolve.Maximum;
 
                     ShowSolveTime(_selectedSolver.GetSolveTime());
-                    ShowPathLength(_selectedSolver.GetPathLength());
+                    //ShowPathLength(_selectedSolver.GetPathLength());
                     LogSolveTime(_selectedSolver);
                 }
             }
@@ -533,6 +553,24 @@ namespace aMaze_ingSolver
         {
             _selectedSolver = solver;
 
+            if (solver is ISteppableSolver steppableSolver)
+            {
+                miPlay.Enabled = true;
+                miPause.Enabled = true;
+                miStep.Enabled = true;
+                _steppableSolver = steppableSolver;
+
+                InitializeAnimation();
+                _steppableSolver.InitializeAnimation(_maze.Graph);
+            }
+            else
+            {
+                miPlay.Enabled = false;
+                miPause.Enabled = false;
+                miStep.Enabled = false;
+                _steppableSolver = null;
+            }
+
             if (!solver.SupportParallel)
                 chbParallel.Checked = false;
             chbParallel.Enabled = solver.SupportParallel;
@@ -546,6 +584,7 @@ namespace aMaze_ingSolver
             ShowSolveTime(_selectedSolver.GetSolveTime());
 
             btnSolve.Text = _selectedSolver.Solved ? "Solved" : "Solve";
+
         }
 
         private void chbParallel_Click(object sender, EventArgs e)
@@ -598,6 +637,43 @@ namespace aMaze_ingSolver
                 chbShowResult.Checked = false;
                 InvalidateMaze();
             }
+        }
+
+        private void miPlay_Click(object sender, EventArgs e)
+        {
+            _steppableSolver.Delay = 500;
+            _steppableSolver.OnAnimationProgress += RenderAnimation;
+            _steppableSolver.RunAnimated();
+        }
+
+        private void InitializeAnimation()
+        {
+            _animationBmp = new Bitmap(_image);
+        }
+
+        private void RenderAnimation(Vertex currentAnimationVertex)
+        {
+            _animationBmp.SetPixel(currentAnimationVertex.X, currentAnimationVertex.Y, Color.Red);
+
+            if (_scale >= 1.0f)
+                imgBox.Image = _animationBmp.ResizeImage((int)((float)_drawBmp.Width * _scale), (int)((float)_drawBmp.Height * _scale));
+            else
+                imgBox.Image = _animationBmp.ResizeImage(
+                    (int)((float)_drawBmp.Width * _scale),
+                    (int)((float)_drawBmp.Height * _scale),
+                    System.Drawing.Drawing2D.InterpolationMode.Bicubic);
+        }
+
+        private void miPause_Click(object sender, EventArgs e)
+        {
+            _runningAnimation = false;
+            _steppableSolver.PauseAnimation();
+        }
+
+        private void miStep_Click(object sender, EventArgs e)
+        {
+            Vertex vertex = _steppableSolver.PerformStep();
+            RenderAnimation(vertex);
         }
     }
 }

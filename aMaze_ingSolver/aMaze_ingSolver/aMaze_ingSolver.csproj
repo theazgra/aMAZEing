@@ -56,9 +56,10 @@
     <Compile Include="Algorithms\DepthFirst.cs" />
     <Compile Include="Algorithms\Dijkstra.cs" />
     <Compile Include="Algorithms\IMazeSolver.cs" />
-    <Compile Include="Algorithms\ISteppable.cs" />
+    <Compile Include="Algorithms\ISteppableSolver.cs" />
     <Compile Include="Algorithms\LeftTurn.cs" />
     <Compile Include="Algorithms\MazeSolver.cs" />
+    <Compile Include="Algorithms\SteppableSolver.cs" />
     <Compile Include="BitmapPlus.cs" />
     <Compile Include="Direction.cs" />
     <Compile Include="ExportTypeForm.cs">

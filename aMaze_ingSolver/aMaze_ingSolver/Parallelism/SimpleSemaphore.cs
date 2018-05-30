@@ -11,6 +11,7 @@ namespace aMaze_ingSolver.Parallelism
         private Queue<int> _tokens;
         private List<int> _leasedTokens;
 
+
         public SimpleSemaphore(int threadCount)
         {
             _maxThreadCount = threadCount;
@@ -24,6 +25,10 @@ namespace aMaze_ingSolver.Parallelism
 
         }
 
+        /// <summary>
+        /// Check if there is free token.
+        /// </summary>
+        /// <returns>True if token is avaible.</returns>
         public bool HasFreeToken()
         {
             lock (_lock)
@@ -32,12 +37,16 @@ namespace aMaze_ingSolver.Parallelism
             }
         }
 
+        /// <summary>
+        /// Get token.
+        /// </summary>
+        /// <returns>Unique token.</returns>
         public int GetToken()
         {
             lock (_lock)
             {
                 if (_tokens.Count <= 0)
-                    throw new Exception("No thread is avaible!");
+                    throw new Exception("No token is avaible!");
 
                 int token = _tokens.Dequeue();
                 _leasedTokens.Add(token);
@@ -45,6 +54,10 @@ namespace aMaze_ingSolver.Parallelism
             }
         }
 
+        /// <summary>
+        /// Return leased token.
+        /// </summary>
+        /// <param name="token">Leased token.</param>
         public void ReturnToken(int token)
         {
             lock (_lock)

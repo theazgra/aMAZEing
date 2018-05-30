@@ -4,6 +4,12 @@ namespace aMaze_ingSolver.GraphUtils
 {
     class Utils
     {
+        /// <summary>
+        /// Get direction between two vertices.
+        /// </summary>
+        /// <param name="origin">Origin.</param>
+        /// <param name="destination">Destination.</param>
+        /// <returns>Direction.</returns>
         public static Direction GetDirection(Point origin, Point destination)
         {
             int deltaX = origin.X - destination.X;
